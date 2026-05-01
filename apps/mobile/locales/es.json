@@ -1,0 +1,476 @@
+{
+  "login": {
+    "email": "Correo electrónico",
+    "emailPlaceholder": "tunombre@toplynk.com.br",
+    "password": "Contraseña",
+    "passwordPlaceholder": "Contraseña",
+    "remember": "Mantener la sesión iniciada",
+    "submit": "Entrar",
+    "errorRequired": "Introduce correo y contraseña.",
+    "errorNoApi": "Configura EXPO_PUBLIC_API_URL en el .env de la app para iniciar sesión.",
+    "footerPrefix": "¿No tienes cuenta?",
+    "footerLink": "Crea tu cuenta aquí"
+  },
+  "errors": {
+    "invalidEditFieldsResponse": "Respuesta inválida de la API al cargar los datos de edición.",
+    "invalidPublicProfileResponse": "Respuesta inválida de la API al cargar el perfil.",
+    "invalidCreateUserResponse": "Respuesta inválida de la API al crear la cuenta.",
+    "invalidLoginResponse": "Respuesta inválida de la API al iniciar sesión.",
+    "invalidOpenConversation": "Respuesta inválida al abrir la conversación.",
+    "invalidSendMessage": "Respuesta inválida al enviar el mensaje.",
+    "btoaUnavailable": "La codificación no está disponible en este entorno."
+  },
+  "language": {
+    "label": "Idioma de la app",
+    "pt": "Portugués",
+    "en": "Inglés",
+    "es": "Español"
+  },
+  "onboarding": {
+    "skip": "Omitir",
+    "continue": "Continuar",
+    "slide1": {
+      "title": "Descubre profesionales cerca de ti",
+      "description": "Encuentra personas con intereses afines y haz crecer tu red de forma sencilla."
+    },
+    "slide2": {
+      "title": "Conexiones que tienen sentido",
+      "description": "Haz match con profesionales alineados con tus objetivos e intereses."
+    },
+    "slide3": {
+      "title": "Conecta tu empresa con el talento adecuado",
+      "description": "Descubre profesionales cualificados, inicia conversaciones estratégicas y encuentra oportunidades de colaboración."
+    }
+  },
+  "tabs": {
+    "home": "Inicio",
+    "matches": "Matches",
+    "chats": "Chats",
+    "profile": "Perfil"
+  },
+  "matchesTab": {
+    "title": "Matches",
+    "subtitle": "Personas cerca de ti — toca una tarjeta para ver el perfil completo.",
+    "tabMatches": "Matches",
+    "tabForYou": "Para ti",
+    "chipAll": "Todos",
+    "chipInterests": "Intereses",
+    "chipDistance": "Distancia",
+    "chipRecent": "Recientes",
+    "km": "{{n}} km",
+    "matchPercent": "{{n}}% compatibilidad",
+    "searchA11y": "Buscar personas",
+    "nameScore": "{{name}} ({{n}}%)",
+    "emptyApiTitle": "Aún no hay nadie cerca",
+    "emptyApiSub": "Revisa la ubicación en tu perfil o amplía el radio de búsqueda en Inicio."
+  },
+  "matchesSearch": {
+    "placeholder": "Buscar personas",
+    "backA11y": "Volver",
+    "clearA11y": "Borrar búsqueda",
+    "noResultsTitle": "No hay resultados",
+    "noResultsSub": "Prueba a ajustar filtros o criterios de búsqueda para descubrir más posibles matches."
+  },
+  "userProfile": {
+    "title": "Perfil",
+    "back": "Volver",
+    "backA11y": "Volver",
+    "moreA11y": "Más opciones",
+    "moreSoon": "Más opciones próximamente.",
+    "notFound": "Perfil no encontrado.",
+    "network": "Red",
+    "networkSoon": "Próximamente.",
+    "proposals": "Recibir propuestas",
+    "proposalsSoon": "Próximamente.",
+    "aboutTitle": "Sobre mí",
+    "aboutPlaceholder": "Este perfil aún no tiene descripción.",
+    "sectionEmpty": "No indicado.",
+    "locationNotSet": "Ubicación no configurada en este perfil.",
+    "bioExtra": "Desarrollador full-stack apasionado por convertir ideas en soluciones digitales elegantes y funcionales. Siempre explorando nuevas tecnologías, arquitecturas y retos creativos para construir experiencias completas de principio a fin. Impulsado por la innovación, el código limpio y la colaboración — conectando tecnología y personas para generar impacto real.",
+    "photosTitle": "Fotos",
+    "areasTitle": "Ámbito profesional",
+    "interestsTitle": "Sobre",
+    "message": "Mensaje",
+    "messageSoon": "Chat próximamente.",
+    "interestChips": [
+      "Inteligencia artificial",
+      "Emprendimiento",
+      "Innovación",
+      "Networking",
+      "Desarrollo personal"
+    ]
+  },
+  "chatsTab": {
+    "title": "Chats",
+    "subtitle": "Tus mensajes con tus matches.",
+    "searchA11y": "Buscar personas",
+    "moreA11y": "Más opciones",
+    "moreSoon": "Más opciones próximamente.",
+    "segmentMessages": "Mensajes",
+    "segmentNewMatch": "Nuevo match",
+    "recent": "Recientes",
+    "openChatA11y": "Abrir chat con {{name}}",
+    "newMatchHint": "Toca para empezar a chatear",
+    "noMessagesYet": "Aún no hay mensajes",
+    "emptyList": "Aún no hay conversaciones. Abre un perfil y envía un mensaje.",
+    "emptyTitle": "Aún no hay conversaciones",
+    "emptySub": "Abre un perfil desde Matches y envía un mensaje para empezar.",
+    "signInTitle": "Inicia sesión para ver tus chats",
+    "signInSub": "Entra para sincronizar los mensajes con tu cuenta.",
+    "newMatchEmptyTitle": "Aún no hay nuevos matches",
+    "newMatchEmptySub": "Cuando alguien haga match contigo, podrás iniciar la conversación aquí."
+  },
+  "chat": {
+    "backA11y": "Volver",
+    "callA11y": "Llamada de voz",
+    "videoA11y": "Videollamada",
+    "inputPlaceholder": "Escribe un mensaje...",
+    "sendA11y": "Enviar",
+    "attachMenuA11y": "Adjuntar",
+    "attachCamera": "Cámara",
+    "attachDoc": "Documento",
+    "attachGallery": "Galería",
+    "attachAudio": "Audio",
+    "onlineMinsAgo": "Activo hace {{n}} min",
+    "offline": "Desconectado",
+    "online": "En línea",
+    "lastSeenMinutes": "Visto hace {{count}} min",
+    "lastSeenHours": "Visto hace {{count}} h",
+    "lastSeenDays": "Visto hace {{count}} d",
+    "errorNeedLogin": "Inicia sesión para chatear.",
+    "invalidPeerTitle": "Chat no disponible",
+    "invalidPeerSub": "Este enlace no corresponde a un usuario válido. Abre el chat desde Matches o Chats.",
+    "errorOpen": "No se pudo abrir la conversación.",
+    "errorLoadMessages": "No se pudieron actualizar los mensajes.",
+    "errorSend": "No se pudo enviar el mensaje.",
+    "emptyThread": "Aún no hay mensajes. Envía el primero.",
+    "dayToday": "Hoy",
+    "dayYesterday": "Ayer",
+    "liveThread": "Chat",
+    "peerFallback": "Usuario",
+    "moreSoon": "Más opciones próximamente.",
+    "sheetBlock": "Bloquear",
+    "sheetReport": "Denunciar",
+    "sheetCancel": "Cancelar",
+    "sheetBlockA11y": "Bloquear a esta persona",
+    "sheetReportA11y": "Denunciar a esta persona",
+    "sheetDismissA11y": "Cerrar menú",
+    "sheetBlockSoon": "El bloqueo estará disponible pronto.",
+    "openProfileA11y": "Ver perfil",
+    "reportTitle": "Denunciar usuario",
+    "reportSubtitle": "Selecciona un motivo:",
+    "reportReasonSpam": "Spam o estafa",
+    "reportReasonHarassment": "Acoso o comportamiento abusivo",
+    "reportReasonFake": "Perfil falso o suplantación",
+    "reportReasonInappropriate": "Contenido inapropiado",
+    "reportDetailsLabel": "Detalles adicionales (opcional)",
+    "reportDetailsPlaceholder": "Describe lo ocurrido con el mayor detalle posible — por ejemplo qué dijo o hizo la persona, fechas aproximadas o un patrón de conducta. Cuanto más claro sea el informe, más rápido podrá moderarlo el equipo.",
+    "reportCancel": "Cancelar",
+    "reportSend": "Enviar",
+    "reportSendSoon": "Gracias — revisaremos tu informe pronto.",
+    "reportDismissA11y": "Cerrar informe"
+  },
+  "interviewTab": {
+    "title": "Tus respuestas",
+    "subtitle": "Resumen de tu entrevista inteligente — lo usamos para el matching. (Pronto: detalles editables.)"
+  },
+  "discoverTab": {
+    "title": "Descubrir",
+    "subtitle": "Tarjetas con foto, distancia, puntuación de compatibilidad y resumen público.",
+    "demoLink": "Abrir flujo de match (demo)"
+  },
+  "discoverSwipe": {
+    "brand": "TOPLYNK",
+    "headerSoon": "Filtros y alertas próximamente.",
+    "labelPass": "PASAR",
+    "labelLike": "INTERÉS",
+    "labelSuper": "ACUERDO",
+    "kmAway": "A {{km}} km",
+    "subline": "Compatibilidad con tu perfil: {{score}}%",
+    "score": "{{n}}% match",
+    "langPt": "Portugués",
+    "langEn": "Inglés",
+    "langEs": "Español",
+    "toastPass": "Pasado — afinaremos las sugerencias.",
+    "toastLike": "Interés guardado — el match mutuo viene después.",
+    "toastSuper": "Alta prioridad — tu perfil destaca para esa persona.",
+    "toastRewind": "Tarjeta anterior restaurada.",
+    "toastRewindNone": "No hay nada que deshacer.",
+    "toastBoost": "¡El boost aún no está disponible — próximamente!",
+    "emptyTitle": "Ya estás al día",
+    "emptySub": "Nuevos perfiles aparecerán aquí cuando la API de descubrimiento devuelva resultados para tu zona y filtros.",
+    "openProfileA11y": "Abrir perfil",
+    "openNotificationsA11y": "Abrir notificaciones"
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "backA11y": "Volver",
+    "subtitle": "Actividad reciente en tu cuenta (elementos de ejemplo hasta conectar push con la API).",
+    "openMatchesHint": "Abre la pestaña de matches",
+    "openChatsHint": "Abre los chats",
+    "demo": {
+      "connection": {
+        "title": "¡Nueva conexión profesional! 🎉",
+        "body": "Has recibido una nueva solicitud de conexión. Ábrela para ver el perfil e iniciar una conversación.",
+        "time": "9:35"
+      },
+      "message": {
+        "title": "Nuevo mensaje",
+        "body": "Alguien respondió en tu chat. Toca para abrir el hilo y contestar.",
+        "time": "Ayer · 18:20"
+      },
+      "digest": {
+        "title": "Resumen semanal",
+        "body": "Esta semana: 12 perfiles compatibles en tu zona. Ajusta el radio o los intereses para afinar el matching.",
+        "time": "Lun · 8:00"
+      }
+    }
+  },
+  "profileTab": {
+    "title": "Perfil",
+    "subtitle": "Datos de la entrevista, perfil semántico y preferencias (radio, disponibilidad).",
+    "screenSubtitle": "Tu nombre, foto y datos usados para el matching.",
+    "guestTitle": "Inicia sesión para ver tu perfil",
+    "guestSub": "Entra para ver cómo te muestras a otros y gestionar tu cuenta.",
+    "guestLogin": "Entrar",
+    "loadError": "No se pudo cargar tu perfil.",
+    "retry": "Reintentar",
+    "errorSubRetry": "Comprueba la conexión e inténtalo de nuevo.",
+    "noApiHint": "Configura EXPO_PUBLIC_API_URL en el .env de la app para sincronizar con la API.",
+    "previewPublic": "Vista previa del perfil público",
+    "previewPublicA11y": "Abrir tu perfil público",
+    "editProfile": "Editar perfil",
+    "editProfileSub": "Usuario, rol, ciudad y biografía.",
+    "editProfileA11y": "Abrir editor simple de perfil",
+    "languageLabel": "Idioma de la app",
+    "signOut": "Cerrar sesión",
+    "signOutA11y": "Cerrar sesión de la cuenta"
+  },
+  "editProfile": {
+    "title": "Editar perfil",
+    "backA11y": "Volver",
+    "fieldUsername": "Nombre de usuario",
+    "fieldRole": "Rol",
+    "fieldCompany": "Empresa",
+    "fieldCity": "Ciudad o región",
+    "fieldBio": "Sobre ti",
+    "placeholderUsername": "Cómo quieres que te encuentren",
+    "placeholderRole": "p. ej. Diseñador de producto",
+    "placeholderCompany": "p. ej. ACME",
+    "placeholderCity": "p. ej. Madrid",
+    "placeholderBio": "Breve descripción para el matching…",
+    "save": "Guardar",
+    "saved": "Perfil actualizado.",
+    "saveError": "No se pudo guardar. Inténtalo de nuevo.",
+    "loadError": "No se pudieron cargar los datos.",
+    "retry": "Reintentar",
+    "missingSession": "Sesión no válida. Vuelve a iniciar sesión."
+  },
+  "match": {
+    "headerTitle": "Match",
+    "title": "Match",
+    "subtitle": "Marcador de posición alineado con el diseño del documento: fotos, nombre, rol, WhatsApp revelado, CTA para iniciar chat.",
+    "back": "Volver"
+  },
+  "setup": {
+    "a11yBack": "Volver",
+    "back": "Volver",
+    "continue": "Continuar",
+    "step1": {
+      "title": "Elige tu identidad profesional",
+      "subtitle": "Crea un nombre que te represente y cómo quieres que te encuentren.",
+      "usernamePlaceholder": "Usuario",
+      "professionalPlaceholder": "Nombre profesional",
+      "errorRequired": "Introduce usuario y nombre profesional.",
+      "errorMissingPassword": "Vuelve al registro: falta la contraseña guardada (mín. 8 caracteres).",
+      "errorApi": "No se pudo sincronizar con el servidor. Comprueba EXPO_PUBLIC_API_URL y que la API esté en marcha."
+    },
+    "step2": {
+      "title": "¿Dónde trabajas?",
+      "subtitle": "Indica tu rol y empresa, y elige uno o más ámbitos de práctica para conectar con personas en los mismos mercados.",
+      "rolePlaceholder": "Rol",
+      "companyPlaceholder": "Empresa",
+      "sectorSectionTitle": "Ámbitos de práctica",
+      "sectorHint": "Toca para seleccionar o anular. Puedes combinar varios.",
+      "errorRequired": "Introduce rol y empresa.",
+      "errorSector": "Selecciona al menos un ámbito de práctica.",
+      "sector": {
+        "tech": "Tecnología",
+        "design": "Diseño",
+        "product": "Producto",
+        "business": "Negocio",
+        "marketing": "Marketing",
+        "sales": "Ventas",
+        "hr": "RR. HH. y personas",
+        "finance": "Finanzas",
+        "operations": "Operaciones",
+        "health": "Salud",
+        "education": "Educación",
+        "legal": "Legal",
+        "data": "Datos y analítica",
+        "consulting": "Consultoría",
+        "creative": "Creativo y contenido",
+        "support": "Soporte y CX"
+      }
+    },
+    "step3": {
+      "title": "Cuéntanos sobre ti",
+      "description1": "Comparte tus intereses y un poco de tu trayectoria profesional.",
+      "description2": "Habla de tu camino, objetivos y qué buscas aquí. Un buen resumen genera conexiones más relevantes.",
+      "bioPlaceholder": "Describe tu experiencia, intereses y qué buscas en TOPLYNK...",
+      "interestsLabel": "Selecciona tus intereses",
+      "interestsHint": "Toca para seleccionar o anular. Puedes combinar varios.",
+      "errorRequired": "Escribe un breve resumen sobre ti para continuar.",
+      "errorInterest": "Selecciona al menos un interés.",
+      "interest": {
+        "networking": "Networking",
+        "learning": "Aprendizaje continuo",
+        "mentorship": "Mentoría (dar o recibir)",
+        "freelance": "Freelance y proyectos paralelos",
+        "startups": "Startups e innovación",
+        "remote": "Trabajo remoto",
+        "events": "Eventos y conferencias",
+        "communities": "Comunidades y meetups",
+        "leadership": "Liderazgo y gestión",
+        "sustainability": "Sostenibilidad y ESG",
+        "diversity": "Diversidad e inclusión",
+        "sideProjects": "Proyectos personales",
+        "careerChange": "Cambio de carrera",
+        "international": "Mercado internacional",
+        "wellbeing": "Bienestar laboral",
+        "collaboration": "Colaboración entre equipos"
+      }
+    },
+    "step4": {
+      "title": "¿Cuál es tu objetivo?",
+      "subtitle": "Networking, alianzas, contratación o nuevas oportunidades — elige qué buscas aquí.",
+      "goals": {
+        "networking": {
+          "name": "Hacer crecer tu red",
+          "description": "Conoce profesionales y fortalece tus contactos."
+        },
+        "partnerships": {
+          "name": "Alianzas y colaboración",
+          "description": "Encuentra personas y empresas para proyectos conjuntos."
+        },
+        "hiring": {
+          "name": "Contratar talento",
+          "description": "Encuentra candidatos alineados con lo que necesita tu empresa."
+        },
+        "opportunities": {
+          "name": "Nuevas oportunidades",
+          "description": "Explora roles, trabajo freelance y tu próximo paso."
+        }
+      }
+    },
+    "step5": {
+      "title": "¿Tu primera impresión empieza aquí?",
+      "subtitle": "Los perfiles con fotos profesionales reciben más atención. Usa una imagen nítida, fondo neutro y buena luz.",
+      "addPhoto": "Añadir foto",
+      "gridHint": "Toca \"Añadir foto\" para incluir tus fotos.",
+      "removePhotoA11y": "Quitar foto",
+      "errorPermission": "Necesitamos permiso para acceder a tus fotos.",
+      "errorFull": "Ya has añadido el máximo de 4 fotos.",
+      "errorAtLeastOne": "Añade al menos una foto para continuar."
+    },
+    "step6": {
+      "cta": "Activar mi ubicación",
+      "title": "¿Quieres encontrar profesionales cerca de ti?",
+      "subtitle": "Activa la ubicación para descubrir conexiones cercanas.",
+      "errorPermission": "Sin permiso de ubicación no podemos emparejarte con personas cercanas. Puedes activarlo más tarde en los ajustes del dispositivo.",
+      "errorFetch": "No pudimos leer tu posición ahora. Inténtalo más tarde o revisa el GPS."
+    }
+  },
+  "signup": {
+    "headerTitle": "Crear cuenta",
+    "privacyPrefix": "Acepto todas las ",
+    "privacyTerms": "políticas de privacidad",
+    "privacySuffix": ".",
+    "submit": "Crear cuenta",
+    "errorRequired": "Introduce correo y contraseña.",
+    "errorPrivacy": "Acepta las políticas de privacidad para continuar.",
+    "footerPrefix": "¿Ya tienes cuenta?",
+    "footerLink": "Entra aquí"
+  },
+  "entrevistaIa": {
+    "title": "Entrevista inteligente",
+    "skip": "Omitir por ahora",
+    "intro": "Chatea con el asistente TopLynk: escribe respuestas libres. Te guiará hasta que tu perfil esté listo para el matching (objetivos, momento, ámbito, cómo te gusta conectar, distancia y seguimiento).",
+    "send": "Enviar",
+    "confirmSelection": "Confirmar opciones",
+    "errorP1": "Selecciona al menos una opción.",
+    "errorP3": "Describe tu ámbito principal en una frase breve.",
+    "phase1Complete": "Fase 1 completada. ¡Gracias por tus respuestas!",
+    "phase2Soon": "A continuación, la IA generará preguntas a medida según lo que compartiste (según nuestro flujo de matching). Por ahora puedes explorar la app.",
+    "f2Handoff": "Genial. Prepararé algunas preguntas de seguimiento según lo que compartiste.",
+    "f2Loading": "Generando preguntas con IA…",
+    "chatBootLoading": "Iniciando la conversación…",
+    "f2Error": "No pudimos generar preguntas ahora. Comprueba la conexión o inténtalo de nuevo.",
+    "f2ErrorNoApiUrl": "Para usar la entrevista con IA, configura EXPO_PUBLIC_API_URL en el .env de la app (URL base de la API Nest, p. ej. http://192.168.x.x:3000) y OPENAI_API_KEY en el .env de la API. Ver .env.example en apps/mobile y apps/api.",
+    "f2Retrying": "Reintentando…",
+    "retryPhase2": "Reintentar",
+    "phase2Complete": "¡Entrevista completada! Tus respuestas ayudarán al matching.",
+    "errorF2Text": "Escribe una respuesta antes de enviar.",
+    "f2Placeholder": "Tu respuesta",
+    "chatPlaceholder": "Escribe tu mensaje…",
+    "chatErrorApi": "No se pudo completar el turno de la entrevista. Comprueba la conexión, EXPO_PUBLIC_API_URL y los logs de la API.",
+    "chatError401": "OpenAI rechazó la clave en el servidor (401). En apps/api/.env revisa OPENAI_API_KEY (sk-...), facturación/cuota; añade OPENAI_ORG_ID / OPENAI_PROJECT_ID si hace falta.",
+    "chatError429": "Límite de velocidad de OpenAI alcanzado. Espera un momento o revisa la cuota/plan de tu cuenta.",
+    "chatError502": "La API no obtuvo una respuesta válida de OpenAI. Reintenta o revisa los logs del servidor.",
+    "chatError503": "La API no está configurada para OpenAI (falta OPENAI_API_KEY en apps/api/.env).",
+    "chatErrorNetwork": "Error de red al llamar a la API. Comprueba EXPO_PUBLIC_API_URL (en un dispositivo real usa la IP de tu máquina, no localhost).",
+    "chatErrorEmpty": "Escribe un mensaje antes de enviar.",
+    "profileIncomplete": "Casi listo — faltan algunos campos estructurados (objetivos, momento, ámbito, presencial/remoto/híbrido o distancia). Responde una vez más dejándolo claro.",
+    "openApp": "Ir a la app",
+    "p1": {
+      "question": "¿Qué buscas aquí? (puedes elegir más de uno)",
+      "options": {
+        "find_clients": "Encontrar clientes para mi servicio/producto",
+        "hire_professionals": "Contratar profesionales/proveedores",
+        "strategic_partnerships": "Alianzas estratégicas",
+        "investment_for_business": "Inversión para mi negocio",
+        "invest_in_startups": "Invertir en negocios/startups",
+        "networking_general": "Networking en general"
+      }
+    },
+    "p2": {
+      "question": "¿Qué describe mejor tu momento profesional actual?",
+      "options": {
+        "starting": "Iniciando carrera/negocio",
+        "growing": "Crecimiento/escala",
+        "consolidated": "Consolidado, buscando nuevas oportunidades",
+        "transition": "Cambio de carrera/pivote"
+      }
+    },
+    "p3": {
+      "question": "¿Cuál es tu ámbito principal? (p. ej. Tecnología, Ventas, Legal — o escribe el tuyo.)",
+      "placeholder": "Tu ámbito principal"
+    },
+    "p4": {
+      "question": "¿Cómo prefieres trabajar/conectar?",
+      "options": {
+        "in_person": "Presencial",
+        "remote": "Remoto (en línea)",
+        "hybrid": "Híbrido (ambos)"
+      }
+    },
+    "p5": {
+      "question": "¿Qué distancia te parece ideal para conexiones cercanas?",
+      "options": {
+        "radius_2km": "Muy cerca (hasta 2 km)",
+        "radius_5km": "Cerca (hasta 5 km)",
+        "radius_10km": "Misma zona (hasta 10 km)",
+        "radius_50km": "Toda la ciudad (hasta 50 km)",
+        "radius_any": "Sin preferencia"
+      }
+    }
+  },
+  "modal": {
+    "title": "Modal"
+  },
+  "notFound": {
+    "header": "¡Ups!",
+    "title": "Esta pantalla no existe.",
+    "link": "Ir al inicio"
+  }
+}

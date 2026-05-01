@@ -1,0 +1,76 @@
+{
+  "expo": {
+    "name": "TopLynk",
+    "slug": "toplynk",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "mobile",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/toplynk-logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#121212"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "softwareKeyboardLayoutMode": "resize"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#121212",
+          "image": "./assets/images/toplynk-logo.png",
+          "imageWidth": 280,
+          "resizeMode": "contain"
+        }
+      ],
+      [
+        "expo-navigation-bar",
+        {
+          "visibility": "hidden",
+          "behavior": "overlay-swipe"
+        }
+      ],
+      "expo-localization",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Permitir que o TopLynk acesse suas fotos para montar seu perfil.",
+          "cameraPermission": "Permitir que o TopLynk use a câmera para adicionar fotos ao perfil."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "O TopLynk usa sua localização para mostrar profissionais e conexões próximas a você."
+        }
+      ],
+      "expo-secure-store"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4ec0035f-bdad-44a7-a41b-1f1ef019d02f"
+      }
+    }
+  }
+}

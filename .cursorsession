@@ -1,0 +1,61 @@
+{
+  "projeto": "toplynk",
+  "descricao": "Matching inteligente por proximidade e complementaridade de objetivos; entrevista em fases, perfil semantico com IA, score, cards e match com revelacao de WhatsApp.",
+  "cenario": "NOVO",
+  "perfil": null,
+  "referencias": [
+    "docs/ARQUITETURA_MATCHING_IA (1).md"
+  ],
+  "fase_atual": "1",
+  "beesy_version": "4.15.5-beta",
+  "decisions_applied_until": null,
+  "strategic_context_captured_at": "2026-04-30T00:00:00Z",
+  "fase_nome": "Sprint 2 em diante: entrevista F1 e integracoes",
+  "usuarios_alvo": "Profissionais B2B em networking geografico",
+  "prazo": null,
+  "ultimo_update": "2026-04-30T18:45:00-03:00",
+  "modulos": [
+    {
+      "nome": "mobile",
+      "path": "apps/mobile",
+      "status": "scaffold"
+    },
+    {
+      "nome": "arquitetura-matching",
+      "path": "docs",
+      "status": "especificacao"
+    }
+  ],
+  "proximos_passos": [
+    "Refinar backlog com /analista planejar usando o .md de arquitetura",
+    "Delimitar backend vs app com /arquiteto (IA, embeddings, geo, cache de scores)"
+  ],
+  "features_concluidas": [
+    "Sprint 1: Expo em apps/mobile com abas Entrevista / Descobrir / Perfil + rota Match"
+  ],
+  "features_pendentes": [
+    "Entrevista Fase 1 e 2 + prompts IA",
+    "Perfil semantico e embeddings",
+    "Algoritmo de score e feed de cards",
+    "Swipe, match mutuo, revelacao WhatsApp",
+    "Notificacoes e radar de proximidade"
+  ],
+  "decisoes_tecnicas": [
+    "Cliente mobile: Expo (React Native) em apps/mobile",
+    "Fonte de verdade funcional: docs/ARQUITETURA_MATCHING_IA (1).md"
+  ],
+  "comandos_recentes": [
+    "/jarvis"
+  ],
+  "contexto_rapido": "Jarvis executou cadeia inicial: sessao + roadmap + app Expo em apps/mobile.",
+  "autopilot": {
+    "active": false
+  },
+  "active_automation": null,
+  "compact_marker": {
+    "compacted_at": "2026-05-01T05:47:45Z",
+    "usage_percent": 93.744,
+    "messages_lost": 400
+  },
+  "compact_count": 3
+}

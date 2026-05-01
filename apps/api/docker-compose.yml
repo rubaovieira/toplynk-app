@@ -1,0 +1,67 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: toplynk-postgres
+    environment:
+      POSTGRES_USER: toplynk
+      POSTGRES_PASSWORD: toplynk
+      POSTGRES_DB: toplynk
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - toplynk_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U toplynk -d toplynk"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: toplynk-redis
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - toplynk_redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: toplynk-api
+    ports:
+      - "${API_PORT:-3000}:3000"
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_DRIVER: postgres
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: toplynk
+      DB_PASSWORD: toplynk
+      DB_NAME: toplynk
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:3000/health"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+volumes:
+  toplynk_pgdata:
+  toplynk_redisdata:

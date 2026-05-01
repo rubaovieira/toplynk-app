@@ -1,0 +1,476 @@
+{
+  "login": {
+    "email": "Email",
+    "emailPlaceholder": "yourname@toplynk.com.br",
+    "password": "Password",
+    "passwordPlaceholder": "Password",
+    "remember": "Keep me signed in",
+    "submit": "Sign in",
+    "errorRequired": "Please enter email and password.",
+    "errorNoApi": "Set EXPO_PUBLIC_API_URL in the app .env to sign in.",
+    "footerPrefix": "Don't have an account?",
+    "footerLink": "Create your account here"
+  },
+  "errors": {
+    "invalidEditFieldsResponse": "Invalid API response while loading edit fields.",
+    "invalidPublicProfileResponse": "Invalid API response while loading profile.",
+    "invalidCreateUserResponse": "Invalid API response while creating account.",
+    "invalidLoginResponse": "Invalid API response during sign-in.",
+    "invalidOpenConversation": "Invalid API response while opening conversation.",
+    "invalidSendMessage": "Invalid API response while sending message.",
+    "btoaUnavailable": "Encoding is not available in this environment."
+  },
+  "language": {
+    "label": "App language",
+    "pt": "Portuguese",
+    "en": "English",
+    "es": "Spanish"
+  },
+  "onboarding": {
+    "skip": "Skip",
+    "continue": "Continue",
+    "slide1": {
+      "title": "Discover professionals around you",
+      "description": "Find people with shared interests and grow your network simply."
+    },
+    "slide2": {
+      "title": "Connections that make sense",
+      "description": "Match with professionals aligned with your goals and interests."
+    },
+    "slide3": {
+      "title": "Connect your company to the right talent",
+      "description": "Discover qualified professionals, start strategic conversations, and find partnership opportunities."
+    }
+  },
+  "tabs": {
+    "home": "Home",
+    "matches": "Matches",
+    "chats": "Chats",
+    "profile": "Profile"
+  },
+  "matchesTab": {
+    "title": "Matches",
+    "subtitle": "People near you — tap a card to open their full profile.",
+    "tabMatches": "Matches",
+    "tabForYou": "For you",
+    "chipAll": "All",
+    "chipInterests": "Interests",
+    "chipDistance": "Distance",
+    "chipRecent": "Recent",
+    "km": "{{n}} km",
+    "matchPercent": "{{n}}% match",
+    "searchA11y": "Search people",
+    "nameScore": "{{name}} ({{n}}%)",
+    "emptyApiTitle": "No one nearby yet",
+    "emptyApiSub": "Check location on your profile or widen the search radius on Home."
+  },
+  "matchesSearch": {
+    "placeholder": "Search people",
+    "backA11y": "Back",
+    "clearA11y": "Clear search",
+    "noResultsTitle": "No results found",
+    "noResultsSub": "Try adjusting your filters or search criteria to discover more possible matches."
+  },
+  "userProfile": {
+    "title": "Profile",
+    "back": "Back",
+    "backA11y": "Back",
+    "moreA11y": "More options",
+    "moreSoon": "More options coming soon.",
+    "notFound": "Profile not found.",
+    "network": "Network",
+    "networkSoon": "Coming soon.",
+    "proposals": "Get proposals",
+    "proposalsSoon": "Coming soon.",
+    "aboutTitle": "About me",
+    "aboutPlaceholder": "No description on this profile yet.",
+    "sectionEmpty": "Not provided.",
+    "locationNotSet": "Location not set on this profile.",
+    "bioExtra": "Full-stack developer passionate about turning ideas into elegant, functional digital solutions. Always exploring new technologies, architectures, and creative challenges to build complete experiences from front to back. Driven by innovation, clean code, and collaboration—connecting technology and people to create real impact.",
+    "photosTitle": "Photos",
+    "areasTitle": "Field of work",
+    "interestsTitle": "About",
+    "message": "Message",
+    "messageSoon": "Chat coming soon.",
+    "interestChips": [
+      "Artificial intelligence",
+      "Entrepreneurship",
+      "Innovation",
+      "Networking",
+      "Personal development"
+    ]
+  },
+  "chatsTab": {
+    "title": "Chats",
+    "subtitle": "Your messages with your matches.",
+    "searchA11y": "Search people",
+    "moreA11y": "More options",
+    "moreSoon": "More options coming soon.",
+    "segmentMessages": "Messages",
+    "segmentNewMatch": "New match",
+    "recent": "Recent",
+    "openChatA11y": "Open chat with {{name}}",
+    "newMatchHint": "Tap to start chatting",
+    "noMessagesYet": "No messages yet",
+    "emptyList": "No conversations yet. Open a profile and send a message.",
+    "emptyTitle": "No conversations yet",
+    "emptySub": "Open a profile from Matches and send a message to get started.",
+    "signInTitle": "Sign in to see your chats",
+    "signInSub": "Log in to sync messages with your account.",
+    "newMatchEmptyTitle": "No new matches yet",
+    "newMatchEmptySub": "When someone matches with you, you can start the conversation here."
+  },
+  "chat": {
+    "backA11y": "Back",
+    "callA11y": "Voice call",
+    "videoA11y": "Video call",
+    "inputPlaceholder": "Type a message...",
+    "sendA11y": "Send",
+    "attachMenuA11y": "Attach",
+    "attachCamera": "Camera",
+    "attachDoc": "Document",
+    "attachGallery": "Gallery",
+    "attachAudio": "Audio",
+    "onlineMinsAgo": "Active {{n}} min ago",
+    "offline": "Offline",
+    "online": "Online",
+    "lastSeenMinutes": "Seen {{count}} min ago",
+    "lastSeenHours": "Seen {{count}} h ago",
+    "lastSeenDays": "Seen {{count}} d ago",
+    "errorNeedLogin": "Sign in to chat.",
+    "invalidPeerTitle": "Chat unavailable",
+    "invalidPeerSub": "This link does not match a valid user. Open the chat from Matches or Chats.",
+    "errorOpen": "Could not open the conversation.",
+    "errorLoadMessages": "Could not refresh messages.",
+    "errorSend": "Could not send the message.",
+    "emptyThread": "No messages yet. Send the first one.",
+    "dayToday": "Today",
+    "dayYesterday": "Yesterday",
+    "liveThread": "Chat",
+    "peerFallback": "User",
+    "moreSoon": "More options coming soon.",
+    "sheetBlock": "Block",
+    "sheetReport": "Report",
+    "sheetCancel": "Cancel",
+    "sheetBlockA11y": "Block this person",
+    "sheetReportA11y": "Report this person",
+    "sheetDismissA11y": "Close menu",
+    "sheetBlockSoon": "Blocking will be available soon.",
+    "openProfileA11y": "View profile",
+    "reportTitle": "Report user",
+    "reportSubtitle": "Select a reason for your report:",
+    "reportReasonSpam": "Spam or scam",
+    "reportReasonHarassment": "Harassment or abusive behavior",
+    "reportReasonFake": "Fake profile or impersonation",
+    "reportReasonInappropriate": "Inappropriate content",
+    "reportDetailsLabel": "Additional details (optional)",
+    "reportDetailsPlaceholder": "Describe what happened in as much detail as you can — for example what the person said or did, rough dates, or a pattern of behaviour. The clearer your report, the faster moderation can review it.",
+    "reportCancel": "Cancel",
+    "reportSend": "Send",
+    "reportSendSoon": "Thanks — we’ll review your report soon.",
+    "reportDismissA11y": "Close report"
+  },
+  "interviewTab": {
+    "title": "Your answers",
+    "subtitle": "Summary from your smart interview — we use this for matching. (Soon: editable details.)"
+  },
+  "discoverTab": {
+    "title": "Discover",
+    "subtitle": "Cards with photo, distance, compatibility score, and public summary.",
+    "demoLink": "Open match flow (demo)"
+  },
+  "discoverSwipe": {
+    "brand": "TOPLYNK",
+    "headerSoon": "Filters and alerts coming soon.",
+    "labelPass": "PASS",
+    "labelLike": "INTEREST",
+    "labelSuper": "DEAL",
+    "kmAway": "{{km}} km away",
+    "subline": "Compatibility with your profile: {{score}}%",
+    "score": "{{n}}% match",
+    "langPt": "Portuguese",
+    "langEn": "English",
+    "langEs": "Spanish",
+    "toastPass": "Passed — we’ll tune suggestions.",
+    "toastLike": "Interest saved — mutual match coming next.",
+    "toastSuper": "High priority — your profile is highlighted for them.",
+    "toastRewind": "Previous card restored.",
+    "toastRewindNone": "Nothing to undo.",
+    "toastBoost": "Boost isn’t available yet — coming soon!",
+    "emptyTitle": "You’re caught up",
+    "emptySub": "New profiles show up here when the discovery API returns results for your area and filters.",
+    "openProfileA11y": "Open profile",
+    "openNotificationsA11y": "Open notifications"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "backA11y": "Go back",
+    "subtitle": "Recent activity on your account (sample items until push is wired to the API).",
+    "openMatchesHint": "Opens the matches tab",
+    "openChatsHint": "Opens chats",
+    "demo": {
+      "connection": {
+        "title": "New professional connection! 🎉",
+        "body": "You received a new connection request. Open it to view the profile and start a conversation.",
+        "time": "9:35 AM"
+      },
+      "message": {
+        "title": "New message",
+        "body": "Someone replied in your chat. Tap to open the thread and respond.",
+        "time": "Yesterday · 6:20 PM"
+      },
+      "digest": {
+        "title": "Weekly digest",
+        "body": "This week: 12 compatible profiles in your area. Adjust radius or interests to refine matching.",
+        "time": "Mon · 8:00 AM"
+      }
+    }
+  },
+  "profileTab": {
+    "title": "Profile",
+    "subtitle": "Interview data, semantic profile, and preferences (radius, availability).",
+    "screenSubtitle": "Your name, photo, and details used for matching.",
+    "guestTitle": "Sign in to see your profile",
+    "guestSub": "Log in to see how you appear to others and manage your account.",
+    "guestLogin": "Sign in",
+    "loadError": "Could not load your profile.",
+    "retry": "Try again",
+    "errorSubRetry": "Check your connection and try again.",
+    "noApiHint": "Set EXPO_PUBLIC_API_URL in the app .env to sync with the API.",
+    "previewPublic": "Preview public profile",
+    "previewPublicA11y": "Open your public profile",
+    "editProfile": "Edit profile",
+    "editProfileSub": "Username, role, city, and bio.",
+    "editProfileA11y": "Open simple profile editor",
+    "languageLabel": "App language",
+    "signOut": "Sign out",
+    "signOutA11y": "Sign out of account"
+  },
+  "editProfile": {
+    "title": "Edit profile",
+    "backA11y": "Go back",
+    "fieldUsername": "Username",
+    "fieldRole": "Role",
+    "fieldCompany": "Company",
+    "fieldCity": "City or region",
+    "fieldBio": "About you",
+    "placeholderUsername": "How you want to be found",
+    "placeholderRole": "e.g. Product designer",
+    "placeholderCompany": "e.g. ACME",
+    "placeholderCity": "e.g. London",
+    "placeholderBio": "Short description for matching…",
+    "save": "Save",
+    "saved": "Profile updated.",
+    "saveError": "Could not save. Try again.",
+    "loadError": "Could not load your data.",
+    "retry": "Try again",
+    "missingSession": "Invalid session. Please sign in again."
+  },
+  "match": {
+    "headerTitle": "Match",
+    "title": "Match",
+    "subtitle": "Placeholder aligned with the doc layout: photos, name, role, revealed WhatsApp, CTA to start a chat.",
+    "back": "Back"
+  },
+  "setup": {
+    "a11yBack": "Back",
+    "back": "Back",
+    "continue": "Continue",
+    "step1": {
+      "title": "Choose your professional identity",
+      "subtitle": "Create a name that represents who you are and how you want to be found.",
+      "usernamePlaceholder": "Username",
+      "professionalPlaceholder": "Professional name",
+      "errorRequired": "Please enter username and professional name.",
+      "errorMissingPassword": "Go back to sign up: saved password is missing (min. 8 characters).",
+      "errorApi": "Could not sync with the server. Check EXPO_PUBLIC_API_URL and that the API is running."
+    },
+    "step2": {
+      "title": "Where do you work?",
+      "subtitle": "Enter your role and company, then pick one or more areas of practice to connect with people in the same markets.",
+      "rolePlaceholder": "Role",
+      "companyPlaceholder": "Company",
+      "sectorSectionTitle": "Areas of practice",
+      "sectorHint": "Tap to select or deselect. You can combine several.",
+      "errorRequired": "Please enter role and company.",
+      "errorSector": "Select at least one area of practice.",
+      "sector": {
+        "tech": "Technology",
+        "design": "Design",
+        "product": "Product",
+        "business": "Business",
+        "marketing": "Marketing",
+        "sales": "Sales",
+        "hr": "HR & people",
+        "finance": "Finance",
+        "operations": "Operations",
+        "health": "Healthcare",
+        "education": "Education",
+        "legal": "Legal",
+        "data": "Data & analytics",
+        "consulting": "Consulting",
+        "creative": "Creative & content",
+        "support": "Support & CX"
+      }
+    },
+    "step3": {
+      "title": "Tell us about yourself",
+      "description1": "Share your interests and a bit of your professional journey.",
+      "description2": "Tell us about your path, goals, and what you are looking for here. A good summary leads to more relevant connections.",
+      "bioPlaceholder": "Describe your experience, interests, and what you are looking for on TOPLYNK...",
+      "interestsLabel": "Select your interests",
+      "interestsHint": "Tap to select or deselect. You can combine several.",
+      "errorRequired": "Write a short summary about yourself to continue.",
+      "errorInterest": "Select at least one interest.",
+      "interest": {
+        "networking": "Networking",
+        "learning": "Continuous learning",
+        "mentorship": "Mentorship (giving or receiving)",
+        "freelance": "Freelance & side gigs",
+        "startups": "Startups & innovation",
+        "remote": "Remote work",
+        "events": "Events & conferences",
+        "communities": "Communities & meetups",
+        "leadership": "Leadership & management",
+        "sustainability": "Sustainability & ESG",
+        "diversity": "Diversity & inclusion",
+        "sideProjects": "Side projects",
+        "careerChange": "Career change",
+        "international": "International market",
+        "wellbeing": "Well-being at work",
+        "collaboration": "Cross-team collaboration"
+      }
+    },
+    "step4": {
+      "title": "What is your goal?",
+      "subtitle": "Networking, partnerships, hiring, or new opportunities — choose what you are looking for here.",
+      "goals": {
+        "networking": {
+          "name": "Grow your network",
+          "description": "Meet professionals and strengthen your connections."
+        },
+        "partnerships": {
+          "name": "Partnerships and collaboration",
+          "description": "Find people and companies for joint projects."
+        },
+        "hiring": {
+          "name": "Hire talent",
+          "description": "Find candidates aligned with what your company needs."
+        },
+        "opportunities": {
+          "name": "New opportunities",
+          "description": "Explore roles, freelance work, and your next step."
+        }
+      }
+    },
+    "step5": {
+      "title": "Your first impression starts here?",
+      "subtitle": "Profiles with professional photos get more attention. Use a sharp image, neutral background, and good lighting.",
+      "addPhoto": "Add photo",
+      "gridHint": "Tap \"Add photo\" to include your photos.",
+      "removePhotoA11y": "Remove photo",
+      "errorPermission": "We need permission to access your photos.",
+      "errorFull": "You have already added the maximum of 4 photos.",
+      "errorAtLeastOne": "Add at least one photo to continue."
+    },
+    "step6": {
+      "cta": "Turn on my location",
+      "title": "Want to find professionals near you?",
+      "subtitle": "Turn on location to discover connections close to you.",
+      "errorPermission": "Without location permission we cannot match you with people nearby. You can enable it later in your device settings.",
+      "errorFetch": "We could not read your position right now. Try again later or check your GPS."
+    }
+  },
+  "signup": {
+    "headerTitle": "Create account",
+    "privacyPrefix": "I accept all ",
+    "privacyTerms": "privacy policies",
+    "privacySuffix": ".",
+    "submit": "Create account",
+    "errorRequired": "Please enter email and password.",
+    "errorPrivacy": "Please accept the privacy policies to continue.",
+    "footerPrefix": "Already have an account?",
+    "footerLink": "Sign in here"
+  },
+  "entrevistaIa": {
+    "title": "Smart interview",
+    "skip": "Skip for now",
+    "intro": "Chat with the TopLynk assistant: type free-text answers. It will guide you until your profile is ready for matching (goals, moment, area, how you like to connect, distance, and follow-ups).",
+    "send": "Send",
+    "confirmSelection": "Confirm choices",
+    "errorP1": "Select at least one option.",
+    "errorP3": "Describe your main area in a short sentence.",
+    "phase1Complete": "Phase 1 complete. Thanks for your answers!",
+    "phase2Soon": "Next, the AI will generate tailored questions from what you shared (per our matching flow). For now, you can explore the app.",
+    "f2Handoff": "Great. I'll tailor a few follow-up questions based on what you shared.",
+    "f2Loading": "Generating questions with AI…",
+    "chatBootLoading": "Starting the conversation…",
+    "f2Error": "We couldn't generate questions right now. Check your connection or try again.",
+    "f2ErrorNoApiUrl": "To use the AI interview, set EXPO_PUBLIC_API_URL in the app's .env (Nest API base URL, e.g. http://192.168.x.x:3000) and OPENAI_API_KEY in the API's .env. See .env.example in apps/mobile and apps/api.",
+    "f2Retrying": "Trying again…",
+    "retryPhase2": "Try again",
+    "phase2Complete": "Interview complete! Your answers will help with matching.",
+    "errorF2Text": "Write an answer before sending.",
+    "f2Placeholder": "Your answer",
+    "chatPlaceholder": "Type your message…",
+    "chatErrorApi": "Could not complete the interview turn. Check your connection, EXPO_PUBLIC_API_URL, and API logs.",
+    "chatError401": "OpenAI rejected the key on the server (401). In apps/api/.env check OPENAI_API_KEY (sk-...), billing/quota; add OPENAI_ORG_ID / OPENAI_PROJECT_ID if required.",
+    "chatError429": "OpenAI rate limit reached. Wait a moment or check your account quota/plan.",
+    "chatError502": "The API could not get a valid response from OpenAI. Retry or check server logs.",
+    "chatError503": "The API is not configured for OpenAI (missing OPENAI_API_KEY in apps/api/.env).",
+    "chatErrorNetwork": "Network error calling the API. Check EXPO_PUBLIC_API_URL (on a real device use your machine's IP, not localhost).",
+    "chatErrorEmpty": "Write a message before sending.",
+    "profileIncomplete": "Almost there — some structured fields are still missing (goals, moment, area, in-person/remote/hybrid, or distance). Reply once more spelling those out clearly.",
+    "openApp": "Go to app",
+    "p1": {
+      "question": "What are you looking for here? (you can pick more than one)",
+      "options": {
+        "find_clients": "Find clients for my service/product",
+        "hire_professionals": "Hire professionals/vendors",
+        "strategic_partnerships": "Strategic partnerships",
+        "investment_for_business": "Investment for my business",
+        "invest_in_startups": "Invest in businesses/startups",
+        "networking_general": "Networking in general"
+      }
+    },
+    "p2": {
+      "question": "What best describes your current professional moment?",
+      "options": {
+        "starting": "Starting career/business",
+        "growing": "Growing/scaling",
+        "consolidated": "Established, looking for new opportunities",
+        "transition": "Career change/pivot"
+      }
+    },
+    "p3": {
+      "question": "What is your main area? (e.g. Technology, Sales, Legal — or write your own.)",
+      "placeholder": "Your main area"
+    },
+    "p4": {
+      "question": "How do you prefer to work/connect?",
+      "options": {
+        "in_person": "In person",
+        "remote": "Remote (online)",
+        "hybrid": "Hybrid (both)"
+      }
+    },
+    "p5": {
+      "question": "What distance feels ideal for nearby connections?",
+      "options": {
+        "radius_2km": "Very close (up to 2 km)",
+        "radius_5km": "Close (up to 5 km)",
+        "radius_10km": "Same area (up to 10 km)",
+        "radius_50km": "Whole city (up to 50 km)",
+        "radius_any": "No preference"
+      }
+    }
+  },
+  "modal": {
+    "title": "Modal"
+  },
+  "notFound": {
+    "header": "Oops!",
+    "title": "This screen does not exist.",
+    "link": "Go to home screen"
+  }
+}
