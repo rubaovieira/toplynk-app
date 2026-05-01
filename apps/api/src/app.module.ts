@@ -10,6 +10,7 @@ import { DiscoveryModule } from './discovery/discovery.module';
 import { MatchesModule } from './matches/matches.module';
 import { PushModule } from './push/push.module';
 import { InterviewModule } from './interview/interview.module';
+import { NotificationsModule } from './notifications/notifications.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -30,6 +31,7 @@ import { UsersModule } from './users/users.module';
     ChatsModule,
     PushModule,
     MatchesModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

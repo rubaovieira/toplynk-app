@@ -17,6 +17,7 @@ import {
   RefreshControl,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   View,
 } from "react-native";
@@ -28,16 +29,23 @@ import {
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { clearSession, getAccessToken } from "@/lib/auth-storage";
 import { getApiBaseUrl } from "@/lib/api-config";
-import { unregisterExpoToken } from "@/lib/push-api";
+import { logoutOneSignalUser } from "@/lib/onesignal";
+import { unregisterPushToken } from "@/lib/push-api";
 import {
-  clearStoredExpoPushToken,
-  getStoredExpoPushToken,
+  clearStoredPushRegistration,
+  getStoredPushRegistration,
 } from "@/lib/push-token-storage";
 import { decodeJwtSub } from "@/lib/jwt-sub";
 import { clearSetupUserId } from "@/lib/setup-user-session";
 import type { PublicProfileResponse } from "@/lib/users-api";
 import { fetchUserPublicProfile } from "@/lib/users-api";
 import { photoUri } from "@/lib/match-demo-deck";
+import {
+  fetchPushPreferences,
+  patchPushPreferences,
+  type PushPreferences,
+} from "@/lib/push-preferences-api";
+import { showValidationToast } from "@/lib/validation-toast";
 
 const BG = "#121212";
 const ACCENT = "#0A84FF";
@@ -54,6 +62,8 @@ export default function PerfilScreen() {
     "loading",
   );
   const [profile, setProfile] = useState<PublicProfileResponse | null>(null);
+  const [pushPrefs, setPushPrefs] = useState<PushPreferences | null>(null);
+  const [pushPrefsSaving, setPushPrefsSaving] = useState(false);
   const firstFocus = useRef(true);
 
   const load = useCallback(async (opts?: { silent?: boolean }) => {
@@ -62,18 +72,21 @@ export default function PerfilScreen() {
     if (!token?.trim()) {
       setPhase("guest");
       setProfile(null);
+      setPushPrefs(null);
       return;
     }
     const userId = decodeJwtSub(token);
     if (!userId) {
       setPhase("error");
       setProfile(null);
+      setPushPrefs(null);
       return;
     }
     const base = getApiBaseUrl();
     if (!base) {
       setPhase("error");
       setProfile(null);
+      setPushPrefs(null);
       return;
     }
     if (!silent) {
@@ -83,8 +96,14 @@ export default function PerfilScreen() {
       const data = await fetchUserPublicProfile(base, userId);
       setProfile(data);
       setPhase("ready");
+      try {
+        setPushPrefs(await fetchPushPreferences(base));
+      } catch {
+        setPushPrefs(null);
+      }
     } catch {
       setProfile(null);
+      setPushPrefs(null);
       setPhase("error");
     }
   }, []);
@@ -108,19 +127,20 @@ export default function PerfilScreen() {
 
   const onSignOut = useCallback(async () => {
     const base = getApiBaseUrl();
-    const stored = await getStoredExpoPushToken();
+    const stored = await getStoredPushRegistration();
     if (base && stored) {
       try {
-        await unregisterExpoToken(base, stored);
+        await unregisterPushToken(base, stored.token, stored.provider);
       } catch {
         /* ignore */
       }
       try {
-        await clearStoredExpoPushToken();
+        await clearStoredPushRegistration();
       } catch {
         /* ignore */
       }
     }
+    logoutOneSignalUser();
     try {
       await clearSession();
     } catch {
@@ -146,6 +166,50 @@ export default function PerfilScreen() {
       },
     } as Href);
   }, [profile, router]);
+
+  const onSetPushMessages = useCallback(
+    async (value: boolean) => {
+      const base = getApiBaseUrl();
+      if (!base || pushPrefs === null) return;
+      const prev = pushPrefs;
+      setPushPrefs({ ...pushPrefs, pushNotifyMessages: value });
+      setPushPrefsSaving(true);
+      try {
+        const next = await patchPushPreferences(base, {
+          pushNotifyMessages: value,
+        });
+        setPushPrefs(next);
+      } catch {
+        setPushPrefs(prev);
+        showValidationToast(t("profileTab.pushPrefsError"));
+      } finally {
+        setPushPrefsSaving(false);
+      }
+    },
+    [pushPrefs, t],
+  );
+
+  const onSetPushSocial = useCallback(
+    async (value: boolean) => {
+      const base = getApiBaseUrl();
+      if (!base || pushPrefs === null) return;
+      const prev = pushPrefs;
+      setPushPrefs({ ...pushPrefs, pushNotifySocial: value });
+      setPushPrefsSaving(true);
+      try {
+        const next = await patchPushPreferences(base, {
+          pushNotifySocial: value,
+        });
+        setPushPrefs(next);
+      } catch {
+        setPushPrefs(prev);
+        showValidationToast(t("profileTab.pushPrefsError"));
+      } finally {
+        setPushPrefsSaving(false);
+      }
+    },
+    [pushPrefs, t],
+  );
 
   const seed = profile?.photoSeeds?.[0] ?? "profile";
   const avatarUri = photoUri(seed, 256, 256);
@@ -307,6 +371,59 @@ export default function PerfilScreen() {
                 weight="bold"
               />
             </Pressable>
+
+            {pushPrefs ? (
+              <View style={styles.pushSection}>
+                <Text style={styles.langLabel}>
+                  {t("profileTab.pushSectionTitle")}
+                </Text>
+                <View style={styles.pushCard}>
+                  <View style={styles.pushRow}>
+                    <View style={styles.pushRowTextCol}>
+                      <Text style={styles.pushRowTitle}>
+                        {t("profileTab.pushMessages")}
+                      </Text>
+                      <Text style={styles.pushRowSub}>
+                        {t("profileTab.pushMessagesSub")}
+                      </Text>
+                    </View>
+                    <Switch
+                      accessibilityLabel={t("profileTab.pushMessages")}
+                      value={pushPrefs.pushNotifyMessages}
+                      onValueChange={(v) => void onSetPushMessages(v)}
+                      disabled={pushPrefsSaving}
+                      trackColor={{
+                        false: "#3A3A3C",
+                        true: "rgba(10,132,255,0.45)",
+                      }}
+                      thumbColor="#fff"
+                    />
+                  </View>
+                  <View style={styles.pushDivider} />
+                  <View style={styles.pushRow}>
+                    <View style={styles.pushRowTextCol}>
+                      <Text style={styles.pushRowTitle}>
+                        {t("profileTab.pushSocial")}
+                      </Text>
+                      <Text style={styles.pushRowSub}>
+                        {t("profileTab.pushSocialSub")}
+                      </Text>
+                    </View>
+                    <Switch
+                      accessibilityLabel={t("profileTab.pushSocial")}
+                      value={pushPrefs.pushNotifySocial}
+                      onValueChange={(v) => void onSetPushSocial(v)}
+                      disabled={pushPrefsSaving}
+                      trackColor={{
+                        false: "#3A3A3C",
+                        true: "rgba(10,132,255,0.45)",
+                      }}
+                      thumbColor="#fff"
+                    />
+                  </View>
+                </View>
+              </View>
+            ) : null}
 
             <View style={styles.langBlock}>
               <Text style={styles.langLabel}>
@@ -515,6 +632,43 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: MUTED,
     marginTop: 2,
+  },
+  pushSection: {
+    marginBottom: 20,
+  },
+  pushCard: {
+    backgroundColor: "rgba(255,255,255,0.05)",
+    borderRadius: 14,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: "rgba(255,255,255,0.08)",
+    overflow: "hidden",
+  },
+  pushRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 14,
+    paddingHorizontal: 14,
+    gap: 12,
+  },
+  pushRowTextCol: {
+    flex: 1,
+    minWidth: 0,
+  },
+  pushRowTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#fff",
+  },
+  pushRowSub: {
+    fontSize: 13,
+    color: MUTED,
+    marginTop: 4,
+    lineHeight: 18,
+  },
+  pushDivider: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: "rgba(255,255,255,0.08)",
+    marginLeft: 14,
   },
   langBlock: {
     marginTop: 8,

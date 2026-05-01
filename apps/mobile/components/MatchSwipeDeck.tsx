@@ -57,9 +57,11 @@ type SwipeKind = 'pass' | 'like' | 'super';
 
 type Props = {
   profiles: MatchProfile[];
+  /** Persiste pass/like/super no servidor; se falhar, o cartão não avança. */
+  onRecordSwipe?: (peerId: string, kind: SwipeKind) => Promise<void>;
 };
 
-export function MatchSwipeDeck({ profiles }: Props) {
+export function MatchSwipeDeck({ profiles, onRecordSwipe }: Props) {
   const { t } = useTranslation();
   const router = useRouter();
   const [index, setIndex] = useState(0);
@@ -130,6 +132,7 @@ export function MatchSwipeDeck({ profiles }: Props) {
 
   const flyOut = useCallback(
     (offX: number, offY: number, kind: SwipeKind) => {
+      const peerIdSwiped = profiles[index]?.id;
       Animated.parallel([
         Animated.timing(pan.x, {
           toValue: offX,
@@ -147,20 +150,34 @@ export function MatchSwipeDeck({ profiles }: Props) {
           useNativeDriver: true,
         }),
       ]).start(() => {
-        if (kind === 'pass') showValidationToast(t('discoverSwipe.toastPass'));
-        else if (kind === 'like') showValidationToast(t('discoverSwipe.toastLike'));
-        else showValidationToast(t('discoverSwipe.toastSuper'));
+        void (async () => {
+          if (onRecordSwipe && peerIdSwiped) {
+            try {
+              await onRecordSwipe(peerIdSwiped, kind);
+            } catch {
+              showValidationToast(t('discoverSwipe.swipeSaveError'));
+              resetPan();
+              fadeAnim.setValue(1);
+              setStoryPaused(false);
+              return;
+            }
+          }
 
-        setIndex((i) => {
-          historyRef.current.push(i);
-          return Math.min(i + 1, profiles.length);
-        });
-        setPhotoIndex(0);
-        resetPan();
-        setStoryPaused(false);
+          if (kind === 'pass') showValidationToast(t('discoverSwipe.toastPass'));
+          else if (kind === 'like') showValidationToast(t('discoverSwipe.toastLike'));
+          else showValidationToast(t('discoverSwipe.toastSuper'));
+
+          setIndex((i) => {
+            historyRef.current.push(i);
+            return Math.min(i + 1, profiles.length);
+          });
+          setPhotoIndex(0);
+          resetPan();
+          setStoryPaused(false);
+        })();
       });
     },
-    [pan, fadeAnim, profiles.length, resetPan, t],
+    [pan, fadeAnim, profiles, profiles.length, index, onRecordSwipe, resetPan, t],
   );
 
   const flyOutWithAnim = useCallback(

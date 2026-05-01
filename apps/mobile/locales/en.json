@@ -50,7 +50,7 @@
   },
   "matchesTab": {
     "title": "Matches",
-    "subtitle": "People near you — tap a card to open their full profile.",
+    "subtitle": "Home history and people who showed interest in you — tap a profile for details.",
     "tabMatches": "Matches",
     "tabForYou": "For you",
     "chipAll": "All",
@@ -62,7 +62,9 @@
     "searchA11y": "Search people",
     "nameScore": "{{name}} ({{n}}%)",
     "emptyApiTitle": "No one nearby yet",
-    "emptyApiSub": "Check location on your profile or widen the search radius on Home."
+    "emptyApiSub": "Check location on your profile or widen the search radius on Home.",
+    "emptyHistoryTitle": "Nothing here yet",
+    "emptyHistorySub": "On Home, pass or show interest in people. Your choices show up here to review."
   },
   "matchesSearch": {
     "placeholder": "Search people",
@@ -192,11 +194,12 @@
     "langEn": "English",
     "langEs": "Spanish",
     "toastPass": "Passed — we’ll tune suggestions.",
-    "toastLike": "Interest saved — mutual match coming next.",
-    "toastSuper": "High priority — your profile is highlighted for them.",
+    "toastLike": "We saved your interest. If they like you back, you’ll connect.",
+    "toastSuper": "Done — your profile will stand out to them.",
     "toastRewind": "Previous card restored.",
     "toastRewindNone": "Nothing to undo.",
     "toastBoost": "Boost isn’t available yet — coming soon!",
+    "swipeSaveError": "Couldn’t save your choice. Try again.",
     "emptyTitle": "You’re caught up",
     "emptySub": "New profiles show up here when the discovery API returns results for your area and filters.",
     "openProfileA11y": "Open profile",
@@ -205,7 +208,11 @@
   "notifications": {
     "title": "Notifications",
     "backA11y": "Go back",
-    "subtitle": "Recent activity on your account (sample items until push is wired to the API).",
+    "subtitle": "Layout samples. Sign in and connect the API to see real notifications.",
+    "subtitleLive": "Notifications from your account (interest, activity).",
+    "emptyTitle": "No notifications yet",
+    "emptySub": "When someone shows interest in your profile, it will appear here. Enable push notifications in your device settings.",
+    "examplesHeading": "Examples",
     "openMatchesHint": "Opens the matches tab",
     "openChatsHint": "Opens chats",
     "demo": {
@@ -243,6 +250,12 @@
     "editProfileSub": "Username, role, city, and bio.",
     "editProfileA11y": "Open simple profile editor",
     "languageLabel": "App language",
+    "pushSectionTitle": "Push notifications",
+    "pushMessages": "Messages",
+    "pushMessagesSub": "Alert when you receive a new chat message.",
+    "pushSocial": "Interests",
+    "pushSocialSub": "Alert when someone likes or highlights your profile in discovery.",
+    "pushPrefsError": "Could not update notification settings. Try again.",
     "signOut": "Sign out",
     "signOutA11y": "Sign out of account"
   },

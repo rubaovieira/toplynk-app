@@ -203,7 +203,9 @@ export default function SignupScreen() {
             </ScrollView>
           </View>
 
-          <LanguageSelector compact />
+          <View style={styles.languageBar}>
+            <LanguageSelector compact />
+          </View>
         </KeyboardAvoidingView>
       </SafeAreaView>
     </>
@@ -235,7 +237,7 @@ const styles = StyleSheet.create({
   formScrollContent: {
     paddingHorizontal: 24,
     paddingTop: 8,
-    paddingBottom: 16,
+    paddingBottom: 24,
   },
   formColumn: {
     width: "100%",
@@ -296,7 +298,11 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   eyeBtn: {
-    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "stretch",
+    paddingHorizontal: 10,
+    paddingVertical: 4,
   },
   privacyRow: {
     flexDirection: "row",
@@ -355,6 +361,14 @@ const styles = StyleSheet.create({
   footerLink: {
     color: LINK,
     fontWeight: "600",
+  },
+  languageBar: {
+    marginTop: 20,
+    paddingHorizontal: 24,
+    ...Platform.select({
+      android: { paddingBottom: 20 },
+      default: { paddingBottom: 10 },
+    }),
   },
   pressed: {
     opacity: 0.85,

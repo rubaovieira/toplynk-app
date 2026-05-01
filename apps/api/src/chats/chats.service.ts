@@ -177,7 +177,13 @@ export class ChatsService {
       .sendToUser(peerId, {
         title,
         body: text.slice(0, 140),
-        data: { type: 'message', conversationId: c.id },
+        data: {
+          type: 'message',
+          /** Deep link: a rota `/chat/[id]` usa o id do outro utilizador, não o da conversa. */
+          peerId: viewerId,
+          conversationId: c.id,
+          messageId: saved.id,
+        },
       })
       .catch(() => undefined);
     return row;

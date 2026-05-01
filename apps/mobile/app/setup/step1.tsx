@@ -25,6 +25,7 @@ import {
   clearPendingSignupPassword,
   getPendingSignupPassword,
 } from "@/lib/pending-signup-password";
+import { registerPushDeviceAfterAuth } from "@/lib/register-push-device";
 import { setSetupUserId } from "@/lib/setup-user-session";
 import {
   CreateUserConflictError,
@@ -75,6 +76,7 @@ export default function SetupStep1Screen() {
         await loginUser(base, pendingEmail, pendingPassword);
         await clearPendingSignupEmail();
         await clearPendingSignupPassword();
+        void registerPushDeviceAfterAuth();
       } catch (e) {
         if (e instanceof CreateUserConflictError) {
           showValidationToast(e.message);

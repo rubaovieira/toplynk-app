@@ -28,7 +28,7 @@ import {
 import { getApiBaseUrl } from "@/lib/api-config";
 import { localeFromI18nLanguage } from "@/lib/i18n";
 import { setDiscoveryCache } from "@/lib/discovery-cache";
-import { fetchDiscoveryNearby } from "@/lib/discovery-api";
+import { fetchDiscoverySwiped } from "@/lib/discovery-api";
 import type { MatchProfile } from "@/lib/match-demo-deck";
 import { photoUri } from "@/lib/match-demo-deck";
 
@@ -128,11 +128,9 @@ export default function MatchesScreen() {
     setLoading(true);
     try {
       const lang = localeFromI18nLanguage(i18n.language);
-      const list = await fetchDiscoveryNearby({
+      const list = await fetchDiscoverySwiped({
         baseUrl: base,
-        radiusKm: 100,
         limit: 30,
-        minInterestOverlap: 0,
         languageKey: lang,
       });
       setDiscoveryCache(list);
@@ -368,9 +366,9 @@ export default function MatchesScreen() {
               <UsersThree size={28} color={MUTED} weight="regular" />
             </View>
             <Text style={styles.emptyTitle}>
-              {t("matchesTab.emptyApiTitle")}
+              {t("matchesTab.emptyHistoryTitle")}
             </Text>
-            <Text style={styles.emptySub}>{t("matchesTab.emptyApiSub")}</Text>
+            <Text style={styles.emptySub}>{t("matchesTab.emptyHistorySub")}</Text>
           </View>
         }
         columnWrapperStyle={gridData.length ? styles.gridRow : undefined}

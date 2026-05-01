@@ -1,14 +1,13 @@
 import "@/lib/i18n";
 
-import { BrandedSplash } from "@/components/BrandedSplash";
 import * as NavigationBar from "expo-navigation-bar";
-import * as Notifications from "expo-notifications";
 import { useFonts } from "expo-font";
-import { Stack, router } from "expo-router";
+import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { AppState, LogBox, Platform } from "react-native";
+import * as Notifications from "expo-notifications";
+import { AppState, LogBox, Platform, View } from "react-native";
 import {
   DarkTheme,
   DefaultTheme,
@@ -21,9 +20,17 @@ import { useColorScheme } from "@/components/useColorScheme";
 import { hydrateLocaleFromStorage } from "@/lib/i18n";
 import { getApiBaseUrl } from "@/lib/api-config";
 import { getAccessToken } from "@/lib/auth-storage";
-import { registerExpoToken } from "@/lib/push-api";
-import { registerForPushAsync } from "@/lib/push-notifications";
-import { setStoredExpoPushToken } from "@/lib/push-token-storage";
+import { isExpoGo } from "@/lib/expo-go";
+import {
+  attachOneSignalNotificationOpenRouter,
+  ensureOneSignalInitialized,
+} from "@/lib/onesignal";
+import { getOneSignalAppId } from "@/lib/onesignal-config";
+import {
+  ensureAndroidPushChannels,
+  routeFromNotificationResponse,
+} from "@/lib/push-notifications";
+import { registerPushDeviceAfterAuth } from "@/lib/register-push-device";
 import { postMyPresence } from "@/lib/users-api";
 
 const APP_DARK_BG = "#121212";
@@ -47,7 +54,6 @@ export const unstable_settings = {
 };
 
 SplashScreen.preventAutoHideAsync();
-SplashScreen.setOptions({ fade: true, duration: 400 });
 
 /** Metro HMR por vezes spamma call stacks após `npm install` / módulos nativos — esconder no LogBox (dev). */
 if (__DEV__) {
@@ -78,7 +84,7 @@ export default function RootLayout() {
     return (
       <>
         <StatusBar style="light" />
-        <BrandedSplash />
+        <View style={{ flex: 1, backgroundColor: APP_DARK_BG }} />
       </>
     );
   }
@@ -122,24 +128,19 @@ function RootLayoutNav() {
   }, []);
 
   useEffect(() => {
+    if (Platform.OS === "web" || isExpoGo()) {
+      return;
+    }
+    ensureOneSignalInitialized();
+    if (getOneSignalAppId()) {
+      return attachOneSignalNotificationOpenRouter();
+    }
+    void ensureAndroidPushChannels();
+    void Notifications.getLastNotificationResponseAsync().then((r) =>
+      routeFromNotificationResponse(r),
+    );
     const sub = Notifications.addNotificationResponseReceivedListener(
-      (response) => {
-        const raw = response.notification.request.content.data;
-        const data =
-          raw && typeof raw === "object"
-            ? (raw as Record<string, unknown>)
-            : undefined;
-        const type = data?.type;
-        if (
-          type === "message" &&
-          data &&
-          typeof data.conversationId === "string"
-        ) {
-          router.push(`/chat/${data.conversationId}`);
-        } else if (type === "match") {
-          router.push("/notifications");
-        }
-      },
+      routeFromNotificationResponse,
     );
     return () => sub.remove();
   }, []);
@@ -148,20 +149,7 @@ function RootLayoutNav() {
     if (Platform.OS === "web") {
       return;
     }
-    const registerPush = async () => {
-      const base = getApiBaseUrl();
-      const jwt = await getAccessToken();
-      if (!base || !jwt) return;
-      try {
-        const expoToken = await registerForPushAsync();
-        if (!expoToken) return;
-        const platform = Platform.OS === "ios" ? "ios" : "android";
-        await registerExpoToken(base, expoToken, platform);
-        await setStoredExpoPushToken(expoToken);
-      } catch {
-        /* ignore */
-      }
-    };
+    const registerPush = () => void registerPushDeviceAfterAuth();
     void registerPush();
     const sub = AppState.addEventListener("change", (s) => {
       if (s === "active") void registerPush();

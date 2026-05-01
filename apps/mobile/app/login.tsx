@@ -18,6 +18,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 
 import { getApiBaseUrl } from "@/lib/api-config";
+import { registerPushDeviceAfterAuth } from "@/lib/register-push-device";
 import { clearSetupUserId, setSetupUserId } from "@/lib/setup-user-session";
 import { loginUser } from "@/lib/users-api";
 import { showValidationToast } from "@/lib/validation-toast";
@@ -61,6 +62,7 @@ export default function LoginScreen() {
       }
       const r = await loginUser(base, e, p);
       await setSetupUserId(r.user.id);
+      void registerPushDeviceAfterAuth();
       router.replace("/(tabs)");
     } catch (err) {
       const msg =
@@ -130,7 +132,7 @@ export default function LoginScreen() {
                   </Text>
                   <View style={styles.passwordWrap}>
                     <TextInput
-                      style={[styles.input, styles.passwordInput]}
+                      style={styles.passwordInput}
                       placeholder={t("login.passwordPlaceholder")}
                       placeholderTextColor={PLACEHOLDER}
                       secureTextEntry={secure}
@@ -216,13 +218,27 @@ const styles = StyleSheet.create({
   header: { paddingHorizontal: 8, paddingTop: 4 },
   backBtn: { alignSelf: "flex-start", padding: 12 },
   pressed: { opacity: 0.85 },
-  mainColumn: { flex: 1 },
-  logoRegion: { alignItems: "center", paddingTop: 8, paddingBottom: 8 },
+  mainColumn: { flex: 1, minHeight: 0 },
+  logoRegion: {
+    flex: 1,
+    minHeight: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 24,
+  },
   logo: { width: 220, height: 72 },
-  formScroll: { flex: 1 },
-  formScrollContent: { flexGrow: 1, paddingHorizontal: 24, paddingBottom: 24 },
-  formColumn: { flex: 1, justifyContent: "center" },
-  form: { width: "100%", maxWidth: 400, alignSelf: "center" },
+  formScroll: { flexShrink: 1 },
+  formScrollContent: {
+    paddingHorizontal: 24,
+    paddingTop: 8,
+    paddingBottom: 24,
+  },
+  formColumn: {
+    width: "100%",
+    maxWidth: 400,
+    alignSelf: "center",
+  },
+  form: { width: "100%" },
   label: { color: "#fff", fontSize: 14, fontWeight: "600" },
   labelSpaced: { marginTop: 16 },
   input: {
@@ -234,9 +250,29 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
   },
-  passwordWrap: { marginTop: 8, position: "relative" },
-  passwordInput: { paddingRight: 44 },
-  eyeBtn: { position: "absolute", right: 10, top: 14 },
+  passwordWrap: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: INPUT_BG,
+    borderRadius: 12,
+    marginTop: 8,
+    paddingRight: 8,
+  },
+  passwordInput: {
+    flex: 1,
+    minWidth: 0,
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+    fontSize: 16,
+    color: "#fff",
+  },
+  eyeBtn: {
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "stretch",
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
   rememberRow: { flexDirection: "row", alignItems: "center", marginTop: 18 },
   checkbox: {
     width: 22,

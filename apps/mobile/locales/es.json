@@ -50,7 +50,7 @@
   },
   "matchesTab": {
     "title": "Matches",
-    "subtitle": "Personas cerca de ti — toca una tarjeta para ver el perfil completo.",
+    "subtitle": "Historial de Inicio y personas que mostraron interés en ti — toca un perfil para ver detalles.",
     "tabMatches": "Matches",
     "tabForYou": "Para ti",
     "chipAll": "Todos",
@@ -62,7 +62,9 @@
     "searchA11y": "Buscar personas",
     "nameScore": "{{name}} ({{n}}%)",
     "emptyApiTitle": "Aún no hay nadie cerca",
-    "emptyApiSub": "Revisa la ubicación en tu perfil o amplía el radio de búsqueda en Inicio."
+    "emptyApiSub": "Revisa la ubicación en tu perfil o amplía el radio de búsqueda en Inicio.",
+    "emptyHistoryTitle": "Lista vacía",
+    "emptyHistorySub": "En Inicio, pasa o muestra interés en las personas. Tus acciones aparecen aquí para revisarlas."
   },
   "matchesSearch": {
     "placeholder": "Buscar personas",
@@ -192,11 +194,12 @@
     "langEn": "Inglés",
     "langEs": "Español",
     "toastPass": "Pasado — afinaremos las sugerencias.",
-    "toastLike": "Interés guardado — el match mutuo viene después.",
-    "toastSuper": "Alta prioridad — tu perfil destaca para esa persona.",
+    "toastLike": "Guardamos tu interés. Si la otra persona también, harán match.",
+    "toastSuper": "Listo — tu perfil se verá destacado para esa persona.",
     "toastRewind": "Tarjeta anterior restaurada.",
     "toastRewindNone": "No hay nada que deshacer.",
     "toastBoost": "¡El boost aún no está disponible — próximamente!",
+    "swipeSaveError": "No se pudo guardar tu elección. Inténtalo de nuevo.",
     "emptyTitle": "Ya estás al día",
     "emptySub": "Nuevos perfiles aparecerán aquí cuando la API de descubrimiento devuelva resultados para tu zona y filtros.",
     "openProfileA11y": "Abrir perfil",
@@ -205,7 +208,11 @@
   "notifications": {
     "title": "Notificaciones",
     "backA11y": "Volver",
-    "subtitle": "Actividad reciente en tu cuenta (elementos de ejemplo hasta conectar push con la API).",
+    "subtitle": "Ejemplos de diseño. Inicia sesión y conecta la API para ver notificaciones reales.",
+    "subtitleLive": "Notificaciones de tu cuenta (intereses, actividad).",
+    "emptyTitle": "Aún no hay notificaciones",
+    "emptySub": "Cuando alguien muestre interés en tu perfil, aparecerá aquí. Activa las notificaciones push en el dispositivo.",
+    "examplesHeading": "Ejemplos",
     "openMatchesHint": "Abre la pestaña de matches",
     "openChatsHint": "Abre los chats",
     "demo": {
@@ -243,6 +250,12 @@
     "editProfileSub": "Usuario, rol, ciudad y biografía.",
     "editProfileA11y": "Abrir editor simple de perfil",
     "languageLabel": "Idioma de la app",
+    "pushSectionTitle": "Notificaciones push",
+    "pushMessages": "Mensajes",
+    "pushMessagesSub": "Aviso al recibir un mensaje nuevo en el chat.",
+    "pushSocial": "Intereses",
+    "pushSocialSub": "Aviso cuando alguien dé me gusta o destaque tu perfil en discovery.",
+    "pushPrefsError": "No se pudieron actualizar las preferencias. Inténtalo de nuevo.",
     "signOut": "Cerrar sesión",
     "signOutA11y": "Cerrar sesión de la cuenta"
   },

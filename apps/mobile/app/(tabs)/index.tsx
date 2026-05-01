@@ -15,7 +15,11 @@ import { MatchSwipeDeck } from "@/components/MatchSwipeDeck";
 import { getApiBaseUrl } from "@/lib/api-config";
 import { localeFromI18nLanguage } from "@/lib/i18n";
 import { setDiscoveryCache } from "@/lib/discovery-cache";
-import { fetchDiscoveryNearby } from "@/lib/discovery-api";
+import {
+  fetchDiscoveryNearby,
+  postDiscoverySwipe,
+  type DiscoverySwipeAction,
+} from "@/lib/discovery-api";
 import type { MatchProfile } from "@/lib/match-demo-deck";
 
 const BG = "#121212";
@@ -49,6 +53,15 @@ export default function DiscoverHomeScreen() {
       setLoadingDeck(false);
     }
   }, [i18n.language]);
+
+  const onRecordSwipe = useCallback(
+    async (peerId: string, kind: DiscoverySwipeAction) => {
+      const base = getApiBaseUrl();
+      if (!base) return;
+      await postDiscoverySwipe({ baseUrl: base, peerId, action: kind });
+    },
+    [],
+  );
 
   useEffect(() => {
     void loadDeck();
@@ -84,7 +97,7 @@ export default function DiscoverHomeScreen() {
       </View>
 
       <View style={styles.body}>
-        <MatchSwipeDeck profiles={profiles} />
+        <MatchSwipeDeck profiles={profiles} onRecordSwipe={onRecordSwipe} />
       </View>
     </SafeAreaView>
   );

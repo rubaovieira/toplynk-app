@@ -50,7 +50,7 @@
   },
   "matchesTab": {
     "title": "Matches",
-    "subtitle": "Perfis por perto — toque em um perfil para ver todos os detalhes.",
+    "subtitle": "Histórico do Início e pessoas que mostraram interesse em você — toque em um perfil para ver os detalhes.",
     "tabMatches": "Matches",
     "tabForYou": "Para você",
     "chipAll": "Todos",
@@ -62,7 +62,9 @@
     "searchA11y": "Pesquisar pessoas",
     "nameScore": "{{name}} ({{n}}%)",
     "emptyApiTitle": "Nenhum perfil por perto",
-    "emptyApiSub": "Confira a localização no perfil ou aumente o raio de busca em Início."
+    "emptyApiSub": "Confira a localização no perfil ou aumente o raio de busca em Início.",
+    "emptyHistoryTitle": "Lista vazia",
+    "emptyHistorySub": "No Início, passe ou mostre interesse nas pessoas. As avaliações aparecem aqui para você rever."
   },
   "matchesSearch": {
     "placeholder": "Pesquisar pessoas",
@@ -192,11 +194,12 @@
     "langEn": "English",
     "langEs": "Espanhol",
     "toastPass": "Passou — vamos mostrar menos perfis assim.",
-    "toastLike": "Interesse registrado — se a outra pessoa também se interessar, o match acontece.",
-    "toastSuper": "Interesse especial enviado — seu perfil ganha destaque para essa pessoa.",
+    "toastLike": "Registramos seu interesse. Se a pessoa curtir de volta, vocês se conectam.",
+    "toastSuper": "Pronto — seu perfil vai aparecer em destaque para essa pessoa.",
     "toastRewind": "Perfil anterior restaurado.",
     "toastRewindNone": "Nada para desfazer.",
     "toastBoost": "O Impulso ainda não está disponível — vem aí em breve!",
+    "swipeSaveError": "Não foi possível salvar sua escolha. Tente de novo.",
     "emptyTitle": "Por hoje é isso",
     "emptySub": "Por enquanto, não há mais perfis para mostrar. Volte mais tarde — novas sugestões vão aparecer na sua área. Confira a localização e os filtros na aba Início para ver mais pessoas.",
     "openProfileA11y": "Abrir perfil",
@@ -205,7 +208,11 @@
   "notifications": {
     "title": "Notificações",
     "backA11y": "Voltar",
-    "subtitle": "As novidades da sua conta aparecem aqui. (Exemplos até as notificações estarem ativas.)",
+    "subtitle": "Exemplos de layout. Faça login e conecte a API para ver notificações reais.",
+    "subtitleLive": "Notificações da sua conta (interesses, atividades).",
+    "emptyTitle": "Nenhuma notificação ainda",
+    "emptySub": "Quando alguém mostrar interesse no seu perfil, você verá aqui. Ative as notificações push nas configurações do aparelho.",
+    "examplesHeading": "Exemplos",
     "openMatchesHint": "Abra a aba de matches",
     "openChatsHint": "Abra as conversas",
     "demo": {
@@ -243,6 +250,12 @@
     "editProfileSub": "Nome público, cargo, cidade e descrição.",
     "editProfileA11y": "Abrir edição simples do perfil",
     "languageLabel": "Idioma do app",
+    "pushSectionTitle": "Notificações push",
+    "pushMessages": "Mensagens",
+    "pushMessagesSub": "Aviso quando receber uma nova mensagem no chat.",
+    "pushSocial": "Interesses",
+    "pushSocialSub": "Aviso quando alguém gostar ou destacar o seu perfil no discovery.",
+    "pushPrefsError": "Não foi possível atualizar as preferências. Tente de novo.",
     "signOut": "Sair da conta",
     "signOutA11y": "Sair da conta"
   },

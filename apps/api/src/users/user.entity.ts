@@ -37,4 +37,12 @@ export class User {
   /** Última atividade (login / POST presença). Usado para “online” aproximado no chat. */
   @Column({ name: 'last_seen_at', type: 'timestamptz', nullable: true })
   lastSeenAt: Date | null;
+
+  /** Push de novas mensagens (chat). */
+  @Column({ name: 'push_notify_messages', type: 'boolean', default: true })
+  pushNotifyMessages: boolean;
+
+  /** Push de likes/supers no discovery. */
+  @Column({ name: 'push_notify_social', type: 'boolean', default: true })
+  pushNotifySocial: boolean;
 }
