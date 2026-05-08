@@ -485,5 +485,11 @@
     "header": "Oops!",
     "title": "This screen does not exist.",
     "link": "Go to home screen"
+  },
+  "interviewGate": {
+    "title": "Your interview is incomplete",
+    "subtitle": "Create your profile intelligently",
+    "explanation": "The AI interview is important so TopLynk can suggest professionals and opportunities aligned with your goals, interests and work preferences. Complete it now to start finding valuable connections!",
+    "startNow": "Start interview now"
   }
 }

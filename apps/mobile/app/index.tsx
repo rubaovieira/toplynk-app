@@ -4,10 +4,11 @@ import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 import { getIsLoggedIn } from "@/lib/auth-storage";
 import { getHasCompletedOnboarding } from "@/lib/onboarding-storage";
+import { getInterviewStatus } from "@/lib/interview-status";
 
 export default function GateScreen() {
   const [loading, setLoading] = useState(true);
-  const [target, setTarget] = useState<"onboarding" | "login" | "tabs" | null>(
+  const [target, setTarget] = useState<"onboarding" | "login" | "interview-gate" | "tabs" | null>(
     null,
   );
 
@@ -20,7 +21,12 @@ export default function GateScreen() {
       } else if (!loggedIn) {
         setTarget("login");
       } else {
-        setTarget("tabs");
+        const interviewStatus = await getInterviewStatus();
+        if (interviewStatus === 'pending') {
+          setTarget('interview-gate');
+        } else {
+          setTarget("tabs");
+        }
       }
     } finally {
       setLoading(false);
@@ -47,6 +53,9 @@ export default function GateScreen() {
   }
   if (target === "onboarding") {
     return <Redirect href="/onboarding" />;
+  }
+  if (target === "interview-gate") {
+    return <Redirect href="/interview-gate" />;
   }
 
   return null;

@@ -4,15 +4,14 @@ export class AddProfileEmbeddingPgvector1746300001000 implements MigrationInterf
   name = 'AddProfileEmbeddingPgvector1746300001000';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`CREATE EXTENSION IF NOT EXISTS vector`);
-    await queryRunner.query(`
-      ALTER TABLE "users"
-      ADD COLUMN IF NOT EXISTS "profile_embedding" vector(1536) NULL
-    `);
+    // Add embedding timestamp column (pgvector not available in PostgreSQL 14 on Homebrew)
     await queryRunner.query(`
       ALTER TABLE "users"
       ADD COLUMN IF NOT EXISTS "embedding_updated_at" TIMESTAMP WITH TIME ZONE NULL
     `);
+
+    // Vector column skipped due to pgvector extension not being available on PG 14 Homebrew
+    // Can be added later when upgrading to PostgreSQL 17+
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

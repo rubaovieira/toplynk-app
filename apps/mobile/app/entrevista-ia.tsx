@@ -32,6 +32,7 @@ import {
   saveEntrevistaFase2,
 } from "@/lib/entrevista-storage";
 import { showValidationToast } from "@/lib/validation-toast";
+import { setInterviewStatus } from "@/lib/interview-status";
 
 const BG = "#121212";
 const BUBBLE_ASSISTANT = "#1E1E1E";
@@ -148,6 +149,7 @@ export default function EntrevistaIAScreen() {
         /* sync servidor opcional se token expirou, etc. */
       }
     }
+    await setInterviewStatus('completed');
     return true;
   }, []);
 
@@ -278,7 +280,8 @@ export default function EntrevistaIAScreen() {
     t,
   ]);
 
-  const onSkip = useCallback(() => {
+  const onSkip = useCallback(async () => {
+    await setInterviewStatus('pending');
     goToDiscoverHome();
   }, [goToDiscoverHome]);
 

@@ -485,5 +485,11 @@
     "header": "Ops!",
     "title": "Esta tela não existe.",
     "link": "Ir para a tela inicial"
+  },
+  "interviewGate": {
+    "title": "Sua entrevista está incompleta",
+    "subtitle": "Crie seu perfil de forma inteligente",
+    "explanation": "A entrevista IA é importante para que o TopLynk consiga sugerir profissionais e oportunidades alinhadas aos seus objetivos, interesses e preferências de trabalho. Completa agora para comecar a encontrar conexoes!",
+    "startNow": "Fazer entrevista agora"
   }
 }
