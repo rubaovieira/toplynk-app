@@ -15,7 +15,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.rubens.toplynk",
+      "bundleIdentifier": "com.rubens.toplynkapp",
       "appleTeamId": "7B56FH46HS",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
