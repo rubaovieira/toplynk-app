@@ -16,6 +16,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.rubens.toplynk",
+      "appleTeamId": "7B56FH46HS",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
