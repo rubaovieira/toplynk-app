@@ -28,7 +28,7 @@ const oneSignalPluginMode =
 const androidPackage =
   (process.env.ANDROID_PACKAGE || "").trim() || "com.obora.toplynk";
 const iosBundleIdentifier =
-  (process.env.IOS_BUNDLE_ID || "").trim() || "com.obora.toplynk";
+  (process.env.IOS_BUNDLE_ID || "").trim() || "com.rubens.toplynk";
 
 module.exports = () => ({
   ...appJson,
