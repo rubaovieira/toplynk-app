@@ -37,6 +37,10 @@ module.exports = () => ({
     ios: {
       ...appJson.expo.ios,
       bundleIdentifier: iosBundleIdentifier,
+      infoPlist: {
+        ...(appJson.expo.ios?.infoPlist || {}),
+        ITSAppUsesNonExemptEncryption: false,
+      },
     },
     android: {
       ...appJson.expo.android,
