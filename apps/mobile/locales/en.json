@@ -203,7 +203,10 @@
     "emptyTitle": "You’re caught up",
     "emptySub": "New profiles show up here when the discovery API returns results for your area and filters.",
     "openProfileA11y": "Open profile",
-    "openNotificationsA11y": "Open notifications"
+    "openNotificationsA11y": "Open notifications",
+    "loadErrorTitle": "Couldn’t load",
+    "loadErrorSub": "Check your connection and try again.",
+    "retry": "Try again"
   },
   "notifications": {
     "title": "Notifications",

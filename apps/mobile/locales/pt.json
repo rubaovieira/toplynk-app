@@ -203,7 +203,10 @@
     "emptyTitle": "Por hoje é isso",
     "emptySub": "Por enquanto, não há mais perfis para mostrar. Volte mais tarde — novas sugestões vão aparecer na sua área. Confira a localização e os filtros na aba Início para ver mais pessoas.",
     "openProfileA11y": "Abrir perfil",
-    "openNotificationsA11y": "Abrir notificações"
+    "openNotificationsA11y": "Abrir notificações",
+    "loadErrorTitle": "Não foi possível carregar",
+    "loadErrorSub": "Verifique sua conexão e tente novamente.",
+    "retry": "Tentar de novo"
   },
   "notifications": {
     "title": "Notificações",

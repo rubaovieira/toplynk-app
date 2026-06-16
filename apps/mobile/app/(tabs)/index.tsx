@@ -30,11 +30,18 @@ export default function DiscoverHomeScreen() {
   const router = useRouter();
   const [profiles, setProfiles] = useState<MatchProfile[]>([]);
   const [loadingDeck, setLoadingDeck] = useState(false);
+  /** Distingue "deck vazio" (API respondeu []) de "falha ao carregar" (rede/timeout) para mostrar retry. */
+  const [loadError, setLoadError] = useState(false);
 
   const loadDeck = useCallback(async () => {
     const base = getApiBaseUrl();
-    if (!base) return;
+    if (!base) {
+      // Sem URL de API configurada: não há o que carregar — mostra erro com retry em vez de spinner preso.
+      setLoadError(true);
+      return;
+    }
     setLoadingDeck(true);
+    setLoadError(false);
     try {
       const lang = localeFromI18nLanguage(i18n.language);
       const list = await fetchDiscoveryNearby({
@@ -47,8 +54,11 @@ export default function DiscoverHomeScreen() {
       // Sempre aplica o resultado da API: [] = ecrã vazio (antes mantinha demo e parecia dados reais).
       setDiscoveryCache(list);
       setProfiles(list);
+      setLoadError(false);
     } catch {
+      // Timeout/rede: nunca deixa a tela presa em spinner — limpa loading e oferece "tentar de novo".
       setProfiles([]);
+      setLoadError(true);
     } finally {
       setLoadingDeck(false);
     }
@@ -97,7 +107,37 @@ export default function DiscoverHomeScreen() {
       </View>
 
       <View style={styles.body}>
-        <MatchSwipeDeck profiles={profiles} onRecordSwipe={onRecordSwipe} />
+        {loadError && profiles.length === 0 ? (
+          <View style={styles.stateWrap}>
+            <Text style={styles.stateTitle}>
+              {t("discoverSwipe.loadErrorTitle")}
+            </Text>
+            <Text style={styles.stateSub}>{t("discoverSwipe.loadErrorSub")}</Text>
+            <Pressable
+              onPress={() => void loadDeck()}
+              disabled={loadingDeck}
+              accessibilityRole="button"
+              style={({ pressed }) => [
+                styles.retryBtn,
+                (pressed || loadingDeck) && styles.retryBtnPressed,
+              ]}
+            >
+              {loadingDeck ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <Text style={styles.retryBtnText}>
+                  {t("discoverSwipe.retry")}
+                </Text>
+              )}
+            </Pressable>
+          </View>
+        ) : loadingDeck && profiles.length === 0 ? (
+          <View style={styles.stateWrap}>
+            <ActivityIndicator size="large" color="#2196F3" />
+          </View>
+        ) : (
+          <MatchSwipeDeck profiles={profiles} onRecordSwipe={onRecordSwipe} />
+        )}
       </View>
     </SafeAreaView>
   );
@@ -147,4 +187,36 @@ const styles = StyleSheet.create({
     paddingHorizontal: 2,
   },
   headerSpinner: { marginLeft: 4 },
+  stateWrap: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 36,
+    gap: 12,
+  },
+  stateTitle: {
+    color: "#fff",
+    fontSize: 20,
+    fontWeight: "700",
+    textAlign: "center",
+  },
+  stateSub: {
+    color: "#8e8e93",
+    fontSize: 15,
+    lineHeight: 22,
+    textAlign: "center",
+    maxWidth: 300,
+  },
+  retryBtn: {
+    marginTop: 8,
+    minWidth: 160,
+    minHeight: 48,
+    paddingHorizontal: 24,
+    borderRadius: 999,
+    backgroundColor: "#2196F3",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  retryBtnPressed: { opacity: 0.85 },
+  retryBtnText: { color: "#fff", fontSize: 16, fontWeight: "700" },
 });

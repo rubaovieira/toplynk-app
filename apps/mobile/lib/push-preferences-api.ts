@@ -1,4 +1,5 @@
 import { apiJsonHeaders } from "@/lib/api-headers";
+import { fetchWithTimeout } from "@/lib/api-fetch";
 
 export type PushPreferences = {
   pushNotifyMessages: boolean;
@@ -22,7 +23,7 @@ function nestErrorMessage(res: Response, bodyText: string): string {
 export async function fetchPushPreferences(
   baseUrl: string,
 ): Promise<PushPreferences | null> {
-  const res = await fetch(`${baseUrl.replace(/\/$/, "")}/push/preferences`, {
+  const res = await fetchWithTimeout(`${baseUrl.replace(/\/$/, "")}/push/preferences`, {
     method: "GET",
     headers: await apiJsonHeaders(),
   });
@@ -50,7 +51,7 @@ export async function patchPushPreferences(
   baseUrl: string,
   patch: Partial<PushPreferences>,
 ): Promise<PushPreferences> {
-  const res = await fetch(`${baseUrl.replace(/\/$/, "")}/push/preferences`, {
+  const res = await fetchWithTimeout(`${baseUrl.replace(/\/$/, "")}/push/preferences`, {
     method: "PATCH",
     headers: await apiJsonHeaders(),
     body: JSON.stringify(patch),

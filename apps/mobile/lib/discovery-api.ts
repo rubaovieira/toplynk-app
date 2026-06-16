@@ -1,4 +1,5 @@
 import { apiJsonHeaders } from '@/lib/api-headers';
+import { fetchWithTimeout } from '@/lib/api-fetch';
 
 import type { MatchProfile } from '@/lib/match-demo-deck';
 
@@ -34,7 +35,7 @@ export async function fetchDiscoveryNearby(params: DiscoveryNearbyParams): Promi
   if (params.minInterestOverlap != null) q.set('minInterestOverlap', String(params.minInterestOverlap));
   const qs = q.toString();
   const url = `${base}/discovery/nearby${qs ? `?${qs}` : ''}`;
-  const res = await fetch(url, { headers: await apiJsonHeaders() });
+  const res = await fetchWithTimeout(url, { headers: await apiJsonHeaders() });
   if (!res.ok) {
     throw new Error(`discovery ${res.status}`);
   }
@@ -73,7 +74,7 @@ export async function fetchDiscoverySwiped(params: DiscoverySwipedParams): Promi
   if (params.limit != null) q.set('limit', String(params.limit));
   const qs = q.toString();
   const url = `${base}/discovery/swiped${qs ? `?${qs}` : ''}`;
-  const res = await fetch(url, { headers: await apiJsonHeaders() });
+  const res = await fetchWithTimeout(url, { headers: await apiJsonHeaders() });
   if (!res.ok) {
     throw new Error(`discovery swiped ${res.status}`);
   }
@@ -103,7 +104,7 @@ export async function postDiscoverySwipe(params: {
   action: DiscoverySwipeAction;
 }): Promise<void> {
   const base = params.baseUrl.replace(/\/$/, '');
-  const res = await fetch(`${base}/discovery/swipe`, {
+  const res = await fetchWithTimeout(`${base}/discovery/swipe`, {
     method: 'POST',
     headers: await apiJsonHeaders(),
     body: JSON.stringify({ peerId: params.peerId, action: params.action }),

@@ -203,7 +203,10 @@
     "emptyTitle": "Ya estás al día",
     "emptySub": "Nuevos perfiles aparecerán aquí cuando la API de descubrimiento devuelva resultados para tu zona y filtros.",
     "openProfileA11y": "Abrir perfil",
-    "openNotificationsA11y": "Abrir notificaciones"
+    "openNotificationsA11y": "Abrir notificaciones",
+    "loadErrorTitle": "No se pudo cargar",
+    "loadErrorSub": "Verifica tu conexión e inténtalo de nuevo.",
+    "retry": "Reintentar"
   },
   "notifications": {
     "title": "Notificaciones",
