@@ -206,7 +206,12 @@
     "openNotificationsA11y": "Open notifications",
     "loadErrorTitle": "Couldn’t load",
     "loadErrorSub": "Check your connection and try again.",
-    "retry": "Try again"
+    "retry": "Try again",
+    "locationTitle": "Turn on your location",
+    "locationSub": "We need your location to show professionals near you.",
+    "enableLocation": "Enable location",
+    "locationDenied": "Location permission denied. Enable it in your device settings.",
+    "locationError": "Couldn’t get your location. Please try again."
   },
   "notifications": {
     "title": "Notifications",

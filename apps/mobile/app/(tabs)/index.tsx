@@ -1,5 +1,5 @@
 import { type Href, useRouter } from "expo-router";
-import { Bell } from "phosphor-react-native";
+import { Bell, MapPin } from "phosphor-react-native";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -16,10 +16,13 @@ import { getApiBaseUrl } from "@/lib/api-config";
 import { localeFromI18nLanguage } from "@/lib/i18n";
 import { setDiscoveryCache } from "@/lib/discovery-cache";
 import {
+  DiscoveryNoLocationError,
   fetchDiscoveryNearby,
   postDiscoverySwipe,
   type DiscoverySwipeAction,
 } from "@/lib/discovery-api";
+import { enableLocationAndSave } from "@/lib/enable-location";
+import { showValidationToast } from "@/lib/validation-toast";
 import type { MatchProfile } from "@/lib/match-demo-deck";
 
 const BG = "#121212";
@@ -32,6 +35,9 @@ export default function DiscoverHomeScreen() {
   const [loadingDeck, setLoadingDeck] = useState(false);
   /** Distingue "deck vazio" (API respondeu []) de "falha ao carregar" (rede/timeout) para mostrar retry. */
   const [loadError, setLoadError] = useState(false);
+  /** Perfil sem localização: o /discovery/nearby exige geo (400). Mostra CTA para ativar em vez de erro. */
+  const [needsLocation, setNeedsLocation] = useState(false);
+  const [enablingLocation, setEnablingLocation] = useState(false);
 
   const loadDeck = useCallback(async () => {
     const base = getApiBaseUrl();
@@ -42,6 +48,7 @@ export default function DiscoverHomeScreen() {
     }
     setLoadingDeck(true);
     setLoadError(false);
+    setNeedsLocation(false);
     try {
       const lang = localeFromI18nLanguage(i18n.language);
       const list = await fetchDiscoveryNearby({
@@ -55,14 +62,36 @@ export default function DiscoverHomeScreen() {
       setDiscoveryCache(list);
       setProfiles(list);
       setLoadError(false);
-    } catch {
-      // Timeout/rede: nunca deixa a tela presa em spinner — limpa loading e oferece "tentar de novo".
+    } catch (e) {
       setProfiles([]);
-      setLoadError(true);
+      if (e instanceof DiscoveryNoLocationError) {
+        // Perfil sem geo: não é "erro de rede" — pede para ativar a localização.
+        setNeedsLocation(true);
+      } else {
+        // Timeout/rede: nunca deixa a tela presa em spinner — oferece "tentar de novo".
+        setLoadError(true);
+      }
     } finally {
       setLoadingDeck(false);
     }
   }, [i18n.language]);
+
+  const onEnableLocation = useCallback(async () => {
+    setEnablingLocation(true);
+    try {
+      const r = await enableLocationAndSave();
+      if (r === "saved") {
+        setNeedsLocation(false);
+        await loadDeck();
+      } else if (r === "denied") {
+        showValidationToast(t("discoverSwipe.locationDenied"));
+      } else {
+        showValidationToast(t("discoverSwipe.locationError"));
+      }
+    } finally {
+      setEnablingLocation(false);
+    }
+  }, [loadDeck, t]);
 
   const onRecordSwipe = useCallback(
     async (peerId: string, kind: DiscoverySwipeAction) => {
@@ -107,7 +136,36 @@ export default function DiscoverHomeScreen() {
       </View>
 
       <View style={styles.body}>
-        {loadError && profiles.length === 0 ? (
+        {needsLocation && profiles.length === 0 ? (
+          <View style={styles.stateWrap}>
+            <View style={styles.stateIconWrap}>
+              <MapPin size={30} color="#2196F3" weight="fill" />
+            </View>
+            <Text style={styles.stateTitle}>
+              {t("discoverSwipe.locationTitle")}
+            </Text>
+            <Text style={styles.stateSub}>
+              {t("discoverSwipe.locationSub")}
+            </Text>
+            <Pressable
+              onPress={() => void onEnableLocation()}
+              disabled={enablingLocation}
+              accessibilityRole="button"
+              style={({ pressed }) => [
+                styles.retryBtn,
+                (pressed || enablingLocation) && styles.retryBtnPressed,
+              ]}
+            >
+              {enablingLocation ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <Text style={styles.retryBtnText}>
+                  {t("discoverSwipe.enableLocation")}
+                </Text>
+              )}
+            </Pressable>
+          </View>
+        ) : loadError && profiles.length === 0 ? (
           <View style={styles.stateWrap}>
             <Text style={styles.stateTitle}>
               {t("discoverSwipe.loadErrorTitle")}
@@ -193,6 +251,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 36,
     gap: 12,
+  },
+  stateIconWrap: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: "rgba(33,150,243,0.12)",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 4,
   },
   stateTitle: {
     color: "#fff",

@@ -27,6 +27,14 @@ type DiscoveryApiCard = {
   cityLabel?: string;
 };
 
+/** `/discovery/nearby` retorna 400 quando o perfil do viewer está sem latitude/longitude. */
+export class DiscoveryNoLocationError extends Error {
+  constructor() {
+    super('discovery: viewer sem localização no perfil');
+    this.name = 'DiscoveryNoLocationError';
+  }
+}
+
 export async function fetchDiscoveryNearby(params: DiscoveryNearbyParams): Promise<MatchProfile[]> {
   const base = params.baseUrl.replace(/\/$/, '');
   const q = new URLSearchParams();
@@ -37,6 +45,16 @@ export async function fetchDiscoveryNearby(params: DiscoveryNearbyParams): Promi
   const url = `${base}/discovery/nearby${qs ? `?${qs}` : ''}`;
   const res = await fetchWithTimeout(url, { headers: await apiJsonHeaders() });
   if (!res.ok) {
+    if (res.status === 400) {
+      let msg = '';
+      try {
+        const j = (await res.json()) as { message?: unknown };
+        if (typeof j?.message === 'string') msg = j.message;
+      } catch {
+        /* corpo opcional */
+      }
+      if (/localiza/i.test(msg)) throw new DiscoveryNoLocationError();
+    }
     throw new Error(`discovery ${res.status}`);
   }
   const data = (await res.json()) as DiscoveryApiCard[];

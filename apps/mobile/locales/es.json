@@ -206,7 +206,12 @@
     "openNotificationsA11y": "Abrir notificaciones",
     "loadErrorTitle": "No se pudo cargar",
     "loadErrorSub": "Verifica tu conexión e inténtalo de nuevo.",
-    "retry": "Reintentar"
+    "retry": "Reintentar",
+    "locationTitle": "Activa tu ubicación",
+    "locationSub": "Necesitamos tu ubicación para mostrarte profesionales cerca de ti.",
+    "enableLocation": "Activar ubicación",
+    "locationDenied": "Permiso de ubicación denegado. Actívalo en los ajustes del dispositivo.",
+    "locationError": "No se pudo obtener tu ubicación. Inténtalo de nuevo."
   },
   "notifications": {
     "title": "Notificaciones",
