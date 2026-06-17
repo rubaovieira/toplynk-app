@@ -1,0 +1,7 @@
+node_modules
+.git
+apps/api
+apps/mobile
+.expo
+**/dist
+**/node_modules

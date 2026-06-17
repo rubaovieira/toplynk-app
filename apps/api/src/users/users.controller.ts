@@ -1,8 +1,10 @@
 import {
   Body,
   Controller,
+  Delete,
   ForbiddenException,
   Get,
+  HttpCode,
   Param,
   ParseUUIDPipe,
   Patch,
@@ -39,6 +41,14 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt'))
   touchPresence(@Req() req: Request & { user: AuthUserPayload }): Promise<{ ok: true }> {
     return this.usersService.touchLastSeen(req.user.sub).then(() => ({ ok: true as const }));
+  }
+
+  /** Apagar a própria conta (Guideline 5.1.1(v)). Irreversível. */
+  @Delete('me')
+  @HttpCode(200)
+  @UseGuards(AuthGuard('jwt'))
+  deleteMe(@Req() req: Request & { user: AuthUserPayload }): Promise<{ ok: true }> {
+    return this.usersService.deleteOwnAccount(req.user.sub);
   }
 
   @Get(':id/public')

@@ -45,4 +45,12 @@ export class User {
   /** Push de likes/supers no discovery. */
   @Column({ name: 'push_notify_social', type: 'boolean', default: true })
   pushNotifySocial: boolean;
+
+  /** Aceitação do EULA / Termos de Uso no cadastro (Guideline 1.2). */
+  @Column({ name: 'eula_accepted_at', type: 'timestamptz', nullable: true })
+  eulaAcceptedAt: Date | null;
+
+  /** Conta anonimizada via "Apagar conta" (Guideline 5.1.1(v)); login fica bloqueado. */
+  @Column({ name: 'deleted_at', type: 'timestamptz', nullable: true })
+  deletedAt: Date | null;
 }

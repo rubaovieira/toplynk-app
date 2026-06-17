@@ -1,13 +1,9 @@
 import { type Href, useLocalSearchParams, useRouter } from "expo-router";
 import {
   CaretLeftIcon,
-  Check,
   Checks,
   DotsThreeVertical,
   PaperPlaneRight,
-  Prohibit,
-  UserMinus,
-  Warning,
 } from "phosphor-react-native";
 import {
   useCallback,
@@ -23,10 +19,9 @@ import { useTranslation } from "react-i18next";
 import type { KeyboardEvent } from "react-native";
 import {
   ActivityIndicator,
+  Alert,
   Image,
   Keyboard,
-  KeyboardAvoidingView,
-  Modal,
   Platform,
   Pressable,
   RefreshControl,
@@ -41,6 +36,10 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 
+import { ReportUserModal } from "@/components/ReportUserModal";
+import { UserMoreSheet } from "@/components/UserMoreSheet";
+import type { ReportReason } from "@/lib/moderation-api";
+import { blockUser, submitReport } from "@/lib/moderation-api";
 import { attachChatRealtime, createChatSocket } from "@/lib/chat-socket";
 import type { ChatMessageRow } from "@/lib/chats-api";
 import {
@@ -280,433 +279,6 @@ function ChatHeader({
   );
 }
 
-const REPORT_REASON_KEYS = [
-  "reportReasonSpam",
-  "reportReasonHarassment",
-  "reportReasonFake",
-  "reportReasonInappropriate",
-] as const;
-
-function ChatReportModal({
-  visible,
-  onClose,
-  t,
-}: {
-  visible: boolean;
-  onClose: () => void;
-  t: TFunction;
-}) {
-  const insets = useSafeAreaInsets();
-  const [selected, setSelected] = useState<(typeof REPORT_REASON_KEYS)[number]>(
-    REPORT_REASON_KEYS[0],
-  );
-  const [details, setDetails] = useState("");
-
-  useEffect(() => {
-    if (!visible) {
-      setSelected(REPORT_REASON_KEYS[0]);
-      setDetails("");
-    }
-  }, [visible]);
-
-  const submit = useCallback(() => {
-    showValidationToast(t("chat.reportSendSoon"));
-    onClose();
-  }, [onClose, t]);
-
-  return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="fade"
-      statusBarTranslucent
-      onRequestClose={onClose}
-    >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-        style={reportModalStyles.kav}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 40 : 0}
-      >
-        <View style={reportModalStyles.wrap}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t("chat.reportDismissA11y")}
-            style={[StyleSheet.absoluteFill, reportModalStyles.dim]}
-            onPress={onClose}
-          />
-          <View
-            style={[
-              reportModalStyles.card,
-              { paddingBottom: Math.max(20, insets.bottom) },
-            ]}
-          >
-            <Text style={reportModalStyles.title}>{t("chat.reportTitle")}</Text>
-            <Text style={reportModalStyles.subtitle}>
-              {t("chat.reportSubtitle")}
-            </Text>
-
-            <ScrollView
-              style={reportModalStyles.reasonList}
-              keyboardShouldPersistTaps="handled"
-              showsVerticalScrollIndicator={false}
-            >
-              {REPORT_REASON_KEYS.map((key) => {
-                const on = selected === key;
-                return (
-                  <Pressable
-                    key={key}
-                    accessibilityRole="radio"
-                    accessibilityState={{ checked: on }}
-                    onPress={() => setSelected(key)}
-                    style={({ pressed }) => [
-                      reportModalStyles.reasonRow,
-                      pressed && reportModalStyles.reasonRowPressed,
-                    ]}
-                  >
-                    <View
-                      style={[
-                        reportModalStyles.radioOuter,
-                        on && reportModalStyles.radioOuterOn,
-                      ]}
-                    >
-                      {on ? (
-                        <Check size={11} color="#fff" weight="bold" />
-                      ) : null}
-                    </View>
-                    <Prohibit
-                      size={18}
-                      color={on ? "#E57373" : "rgba(231,115,115,0.45)"}
-                      style={reportModalStyles.reasonBan}
-                      weight="regular"
-                    />
-                    <Text
-                      style={[
-                        reportModalStyles.reasonLabel,
-                        !on && reportModalStyles.reasonLabelDim,
-                      ]}
-                    >
-                      {t(`chat.${key}`)}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </ScrollView>
-
-            <Text style={reportModalStyles.fieldLabel}>
-              {t("chat.reportDetailsLabel")}
-            </Text>
-            <TextInput
-              value={details}
-              onChangeText={setDetails}
-              placeholder={t("chat.reportDetailsPlaceholder")}
-              placeholderTextColor="#636366"
-              style={reportModalStyles.textArea}
-              multiline
-              maxLength={2000}
-              textAlignVertical="top"
-            />
-
-            <View style={reportModalStyles.actionsRow}>
-              <Pressable
-                accessibilityRole="button"
-                onPress={onClose}
-                style={({ pressed }) => [
-                  reportModalStyles.btnGhost,
-                  pressed && reportModalStyles.btnPressed,
-                ]}
-              >
-                <Text style={reportModalStyles.btnGhostText}>
-                  {t("chat.reportCancel")}
-                </Text>
-              </Pressable>
-              <Pressable
-                accessibilityRole="button"
-                onPress={submit}
-                style={({ pressed }) => [
-                  reportModalStyles.btnPrimary,
-                  pressed && reportModalStyles.btnPressed,
-                ]}
-              >
-                <Text style={reportModalStyles.btnPrimaryText}>
-                  {t("chat.reportSend")}
-                </Text>
-              </Pressable>
-            </View>
-          </View>
-        </View>
-      </KeyboardAvoidingView>
-    </Modal>
-  );
-}
-
-const reportModalStyles = StyleSheet.create({
-  kav: {
-    flex: 1,
-  },
-  wrap: {
-    flex: 1,
-    justifyContent: "center",
-    paddingHorizontal: 22,
-  },
-  dim: {
-    backgroundColor: "rgba(0,0,0,0.58)",
-  },
-  card: {
-    backgroundColor: "#121212",
-    borderRadius: 20,
-    paddingHorizontal: 20,
-    paddingTop: 22,
-    maxHeight: "88%",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#E57373",
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 15,
-    color: "#fff",
-    marginBottom: 16,
-    lineHeight: 21,
-  },
-  reasonList: {
-    maxHeight: 220,
-    marginBottom: 16,
-  },
-  reasonRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 12,
-    paddingRight: 8,
-  },
-  reasonRowPressed: {
-    opacity: 0.85,
-  },
-  radioOuter: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    borderWidth: 2,
-    borderColor: "#5C5C5E",
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 12,
-  },
-  radioOuterOn: {
-    backgroundColor: "#2196F3",
-    borderColor: "#2196F3",
-  },
-  reasonBan: {
-    marginRight: 10,
-    width: 22,
-    textAlign: "center",
-  },
-  reasonLabel: {
-    flex: 1,
-    fontSize: 16,
-    color: "#fff",
-  },
-  reasonLabelDim: {
-    color: "rgba(255,255,255,0.45)",
-  },
-  fieldLabel: {
-    fontSize: 13,
-    color: "#AEAEB2",
-    marginBottom: 8,
-  },
-  textArea: {
-    minHeight: 100,
-    maxHeight: 140,
-    backgroundColor: "#2C2C2E",
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontSize: 15,
-    color: "#fff",
-    marginBottom: 20,
-  },
-  actionsRow: {
-    flexDirection: "row",
-    gap: 12,
-  },
-  btnGhost: {
-    flex: 1,
-    paddingVertical: 14,
-    borderRadius: 999,
-    borderWidth: 1.5,
-    borderColor: "#0A84FF",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  btnGhostText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#0A84FF",
-  },
-  btnPrimary: {
-    flex: 1,
-    paddingVertical: 14,
-    borderRadius: 999,
-    backgroundColor: "#2196F3",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  btnPrimaryText: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#fff",
-  },
-  btnPressed: {
-    opacity: 0.88,
-  },
-});
-
-function ChatMoreSheet({
-  visible,
-  onClose,
-  onReportPress,
-  t,
-}: {
-  visible: boolean;
-  onClose: () => void;
-  onReportPress: () => void;
-  t: TFunction;
-}) {
-  const insets = useSafeAreaInsets();
-  const bottomPad = Math.max(insets.bottom, Platform.OS === "android" ? 20 : 8);
-
-  return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="slide"
-      statusBarTranslucent
-      onRequestClose={onClose}
-    >
-      <View style={moreSheetStyles.overlay}>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={t("chat.sheetDismissA11y")}
-          style={StyleSheet.absoluteFill}
-          onPress={onClose}
-        />
-        <View style={[moreSheetStyles.panel, { paddingBottom: bottomPad }]}>
-          <View style={moreSheetStyles.handle} accessibilityRole="none" />
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t("chat.sheetBlockA11y")}
-            style={({ pressed }) => [
-              moreSheetStyles.row,
-              pressed && moreSheetStyles.rowPressed,
-            ]}
-            onPress={() => {
-              onClose();
-              showValidationToast(t("chat.sheetBlockSoon"));
-            }}
-          >
-            <UserMinus
-              size={20}
-              color="#fff"
-              style={moreSheetStyles.rowIcon}
-              weight="regular"
-            />
-            <Text style={moreSheetStyles.rowLabel}>{t("chat.sheetBlock")}</Text>
-          </Pressable>
-          <View style={moreSheetStyles.sep} />
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t("chat.sheetReportA11y")}
-            style={({ pressed }) => [
-              moreSheetStyles.row,
-              pressed && moreSheetStyles.rowPressed,
-            ]}
-            onPress={() => {
-              onClose();
-              onReportPress();
-            }}
-          >
-            <Warning
-              size={20}
-              color="#fff"
-              style={moreSheetStyles.rowIcon}
-              weight="fill"
-            />
-            <Text style={moreSheetStyles.rowLabel}>
-              {t("chat.sheetReport")}
-            </Text>
-          </Pressable>
-          <View style={moreSheetStyles.sep} />
-          <Pressable
-            accessibilityRole="button"
-            style={({ pressed }) => [
-              moreSheetStyles.row,
-              pressed && moreSheetStyles.rowPressed,
-            ]}
-            onPress={onClose}
-          >
-            <View style={moreSheetStyles.rowIconSpacer} />
-            <Text style={moreSheetStyles.rowLabel}>
-              {t("chat.sheetCancel")}
-            </Text>
-          </Pressable>
-        </View>
-      </View>
-    </Modal>
-  );
-}
-
-const moreSheetStyles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    justifyContent: "flex-end",
-    backgroundColor: "transparent",
-  },
-  panel: {
-    backgroundColor: "#121212",
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    paddingTop: 6,
-  },
-  handle: {
-    alignSelf: "center",
-    width: 40,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: "#48484A",
-    marginBottom: 10,
-  },
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-  },
-  rowPressed: {
-    opacity: 0.75,
-  },
-  rowIcon: {
-    width: 28,
-    textAlign: "center",
-    marginRight: 14,
-  },
-  rowIconSpacer: {
-    width: 28,
-    marginRight: 14,
-  },
-  rowLabel: {
-    flex: 1,
-    fontSize: 17,
-    color: "#fff",
-    fontWeight: "400",
-  },
-  sep: {
-    height: StyleSheet.hairlineWidth,
-    marginLeft: 62,
-    backgroundColor: "rgba(255,255,255,0.14)",
-  },
-});
-
 function InvalidPeerChatScreen() {
   const router = useRouter();
   const { t } = useTranslation();
@@ -755,6 +327,7 @@ function LiveChatScreen({ peerId }: { peerId: string }) {
   const scrollRef = useRef<ScrollView>(null);
   const [moreOpen, setMoreOpen] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
+  const [reportSubmitting, setReportSubmitting] = useState(false);
   const [myUserId, setMyUserId] = useState<string | undefined>(undefined);
   const [peerName, setPeerName] = useState("");
   const [avatarUri, setAvatarUri] = useState(() =>
@@ -985,6 +558,64 @@ function LiveChatScreen({ peerId }: { peerId: string }) {
     router.push({ pathname: "/user-profile", params: { id: peerId } } as Href);
   }, [router, peerId]);
 
+  const doBlockPeer = useCallback(async () => {
+    const base = getApiBaseUrl();
+    if (!base) {
+      showValidationToast(t("chat.errorOpen"));
+      return;
+    }
+    try {
+      await blockUser(base, peerId);
+      showValidationToast(t("chat.blockSuccess"));
+      router.back();
+    } catch (e) {
+      const msg =
+        e instanceof Error && e.message.trim() ? e.message : t("chat.blockError");
+      showValidationToast(msg);
+    }
+  }, [peerId, router, t]);
+
+  const onBlockPeer = useCallback(() => {
+    Alert.alert(t("chat.blockConfirmTitle"), t("chat.blockConfirmBody"), [
+      { text: t("chat.blockConfirmCancel"), style: "cancel" },
+      {
+        text: t("chat.blockConfirmOk"),
+        style: "destructive",
+        onPress: () => void doBlockPeer(),
+      },
+    ]);
+  }, [doBlockPeer, t]);
+
+  const onSubmitReport = useCallback(
+    async (reason: ReportReason, details: string) => {
+      const base = getApiBaseUrl();
+      if (!base) {
+        showValidationToast(t("chat.errorOpen"));
+        return;
+      }
+      setReportSubmitting(true);
+      try {
+        await submitReport(base, {
+          reportedUserId: peerId,
+          reason,
+          details,
+          conversationId: conversationId ?? undefined,
+        });
+        setReportOpen(false);
+        showValidationToast(t("chat.reportSuccess"));
+      } catch (e) {
+        const msg =
+          e instanceof Error && e.message.trim()
+            ? e.message
+            : t("chat.reportError");
+        showValidationToast(msg);
+      } finally {
+        setReportSubmitting(false);
+      }
+    },
+    [peerId, conversationId, t],
+  );
+
   if (authRequired) {
     return (
       <SafeAreaView style={styles.safe} edges={["top"]}>
@@ -1023,16 +654,17 @@ function LiveChatScreen({ peerId }: { peerId: string }) {
           onMore={() => setMoreOpen(true)}
           t={t}
         />
-        <ChatMoreSheet
+        <UserMoreSheet
           visible={moreOpen}
           onClose={() => setMoreOpen(false)}
-          onReportPress={() => setReportOpen(true)}
-          t={t}
+          onBlock={onBlockPeer}
+          onReport={() => setReportOpen(true)}
         />
-        <ChatReportModal
+        <ReportUserModal
           visible={reportOpen}
+          submitting={reportSubmitting}
           onClose={() => setReportOpen(false)}
-          t={t}
+          onSubmit={onSubmitReport}
         />
         <View
           style={[
@@ -1060,16 +692,17 @@ function LiveChatScreen({ peerId }: { peerId: string }) {
         onMore={() => setMoreOpen(true)}
         t={t}
       />
-      <ChatMoreSheet
+      <UserMoreSheet
         visible={moreOpen}
         onClose={() => setMoreOpen(false)}
-        onReportPress={() => setReportOpen(true)}
-        t={t}
+        onBlock={onBlockPeer}
+        onReport={() => setReportOpen(true)}
       />
-      <ChatReportModal
+      <ReportUserModal
         visible={reportOpen}
+        submitting={reportSubmitting}
         onClose={() => setReportOpen(false)}
-        t={t}
+        onSubmit={onSubmitReport}
       />
 
       <View style={[styles.flex, { paddingBottom: keyboardBottomPad }]}>

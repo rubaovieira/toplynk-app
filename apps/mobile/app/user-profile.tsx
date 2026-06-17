@@ -3,13 +3,15 @@ import {
   CaretLeftIcon,
   ChatCircle,
   CheckCircle,
+  DotsThreeVertical,
   MapPin,
 } from "phosphor-react-native";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
+  Alert,
   Image,
   Pressable,
   ScrollView,
@@ -22,11 +24,15 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 
+import { ReportUserModal } from "@/components/ReportUserModal";
+import { UserMoreSheet } from "@/components/UserMoreSheet";
 import { getApiBaseUrl } from "@/lib/api-config";
 import { localeFromI18nLanguage } from "@/lib/i18n";
 import { getDiscoveryCachedProfile } from "@/lib/discovery-cache";
 import type { MatchProfile } from "@/lib/match-demo-deck";
 import { photoUri } from "@/lib/match-demo-deck";
+import type { ReportReason } from "@/lib/moderation-api";
+import { blockUser, submitReport } from "@/lib/moderation-api";
 import {
   fetchUserPublicProfile,
   publicProfileToMatchProfile,
@@ -137,6 +143,63 @@ export default function UserProfileScreen() {
     return t("userProfile.aboutPlaceholder");
   }, [profile, t]);
 
+  const [moreOpen, setMoreOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportSubmitting, setReportSubmitting] = useState(false);
+
+  const doBlock = useCallback(async () => {
+    const base = getApiBaseUrl();
+    if (!base || !id) {
+      showValidationToast(t("chat.blockError"));
+      return;
+    }
+    try {
+      await blockUser(base, id);
+      showValidationToast(t("chat.blockSuccess"));
+      router.back();
+    } catch (e) {
+      const msg =
+        e instanceof Error && e.message.trim() ? e.message : t("chat.blockError");
+      showValidationToast(msg);
+    }
+  }, [id, router, t]);
+
+  const onBlock = useCallback(() => {
+    Alert.alert(t("chat.blockConfirmTitle"), t("chat.blockConfirmBody"), [
+      { text: t("chat.blockConfirmCancel"), style: "cancel" },
+      {
+        text: t("chat.blockConfirmOk"),
+        style: "destructive",
+        onPress: () => void doBlock(),
+      },
+    ]);
+  }, [doBlock, t]);
+
+  const onSubmitReport = useCallback(
+    async (reason: ReportReason, details: string) => {
+      const base = getApiBaseUrl();
+      if (!base || !id) {
+        showValidationToast(t("chat.reportError"));
+        return;
+      }
+      setReportSubmitting(true);
+      try {
+        await submitReport(base, { reportedUserId: id, reason, details });
+        setReportOpen(false);
+        showValidationToast(t("chat.reportSuccess"));
+      } catch (e) {
+        const msg =
+          e instanceof Error && e.message.trim()
+            ? e.message
+            : t("chat.reportError");
+        showValidationToast(msg);
+      } finally {
+        setReportSubmitting(false);
+      }
+    },
+    [id, t],
+  );
+
   if (!id) {
     return (
       <SafeAreaView style={styles.safe} edges={["top"]}>
@@ -196,8 +259,36 @@ export default function UserProfileScreen() {
             <CaretLeftIcon size={22} color="#fff" weight="bold" />
           </Pressable>
           <Text style={styles.headerTitle}>{t("userProfile.title")}</Text>
-          <View style={styles.headerIcon} />
+          {!previewAsOthers ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t("chatsTab.moreA11y")}
+              hitSlop={12}
+              onPress={() => setMoreOpen(true)}
+              style={({ pressed }) => [
+                styles.headerIcon,
+                pressed && styles.pressed,
+              ]}
+            >
+              <DotsThreeVertical size={22} color="#fff" weight="bold" />
+            </Pressable>
+          ) : (
+            <View style={styles.headerIcon} />
+          )}
         </View>
+
+        <UserMoreSheet
+          visible={moreOpen}
+          onClose={() => setMoreOpen(false)}
+          onBlock={onBlock}
+          onReport={() => setReportOpen(true)}
+        />
+        <ReportUserModal
+          visible={reportOpen}
+          submitting={reportSubmitting}
+          onClose={() => setReportOpen(false)}
+          onSubmit={onSubmitReport}
+        />
 
         <ScrollView
           style={styles.scroll}

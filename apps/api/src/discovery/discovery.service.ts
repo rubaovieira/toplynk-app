@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, Logger, NotFoundException } from '@nes
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 
+import { ModerationService } from '../moderation/moderation.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { PushService } from '../push/push.service';
 import { User } from '../users/user.entity';
@@ -66,6 +67,7 @@ export class DiscoveryService {
     private readonly incoming: Repository<DiscoveryIncoming>,
     private readonly push: PushService,
     private readonly appNotifications: NotificationsService,
+    private readonly moderation: ModerationService,
   ) {}
 
   private assertViewerGeo(viewer: User): { vlat: number; vlng: number; viewerInterests: string[] } {
@@ -236,6 +238,8 @@ export class DiscoveryService {
     if (!viewer) throw new NotFoundException();
     const { vlat, vlng, viewerInterests } = this.assertViewerGeo(viewer);
 
+    const blockedIds = await this.moderation.blockedIdsFor(viewerId);
+
     const incomingRows = await this.incoming.find({
       where: { recipientId: viewerId },
       order: { createdAt: 'DESC' },
@@ -292,6 +296,7 @@ export class DiscoveryService {
     }
 
     return Array.from(byId.values())
+      .filter((x) => !blockedIds.has(x.card.id))
       .sort((a, b) => b.ts - a.ts)
       .slice(0, lim)
       .map((x) => x.card);
@@ -312,6 +317,10 @@ export class DiscoveryService {
       select: { peerId: true },
     });
     const excluded = new Set(swipedRows.map((r) => r.peerId));
+
+    // Bloqueios (qualquer direção) nunca aparecem no discovery (Guideline 1.2).
+    const blockedIds = await this.moderation.blockedIdsFor(viewerId);
+    for (const id of blockedIds) excluded.add(id);
 
     const others = await this.users
       .createQueryBuilder('u')

@@ -1,8 +1,8 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { plainToInstance } from 'class-transformer';
 import * as bcrypt from 'bcryptjs';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 
 import { EmbeddingsService } from '../embeddings/embeddings.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -24,6 +24,8 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly users: Repository<User>,
+    @InjectDataSource()
+    private readonly dataSource: DataSource,
     private readonly embeddings: EmbeddingsService,
   ) {}
 
@@ -43,6 +45,8 @@ export class UsersService {
       displayName: dto.displayName.trim(),
       setupProfile,
       passwordHash,
+      // O cadastro no app só chega aqui após aceitar o EULA/Termos (Guideline 1.2).
+      eulaAcceptedAt: new Date(),
     });
     const saved = await this.users.save(row);
     void this.embeddings.tryRefreshEmbeddingForUser(saved.id).catch(() => undefined);
@@ -136,6 +140,66 @@ export class UsersService {
     const saved = await this.users.save(user);
     void this.embeddings.tryRefreshEmbeddingForUser(saved.id).catch(() => undefined);
     return this.toResponse(saved);
+  }
+
+  /**
+   * Apagar conta (Guideline 5.1.1(v)): remove o conteúdo pessoal e anonimiza o registo,
+   * mantendo a linha apenas para integridade referencial (ex.: denúncias). Login fica vedado
+   * por `deleted_at`. É irreversível.
+   */
+  async deleteOwnAccount(userId: string): Promise<{ ok: true }> {
+    const user = await this.users.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException('Utilizador não encontrado');
+    }
+
+    const qr = this.dataSource.createQueryRunner();
+    await qr.connect();
+    await qr.startTransaction();
+    try {
+      await qr.query(
+        `DELETE FROM "messages" WHERE "conversation_id" IN (SELECT "id" FROM "conversations" WHERE "user_a_id" = $1 OR "user_b_id" = $1)`,
+        [userId],
+      );
+      await qr.query(`DELETE FROM "conversations" WHERE "user_a_id" = $1 OR "user_b_id" = $1`, [userId]);
+      await qr.query(`DELETE FROM "discovery_swipes" WHERE "viewer_id" = $1 OR "peer_id" = $1`, [userId]);
+      await qr.query(`DELETE FROM "discovery_incoming" WHERE "recipient_id" = $1 OR "actor_id" = $1`, [userId]);
+      await qr.query(`DELETE FROM "app_notifications" WHERE "user_id" = $1`, [userId]);
+      await qr.query(`DELETE FROM "device_tokens" WHERE "user_id" = $1`, [userId]);
+      await qr.query(`DELETE FROM "user_blocks" WHERE "blocker_id" = $1 OR "blocked_id" = $1`, [userId]);
+
+      await qr.query(
+        `UPDATE "users" SET
+          "email" = 'deleted-' || "id"::text || '@deleted.toplynk.app',
+          "display_name" = 'Conta removida',
+          "password_hash" = NULL,
+          "setup_profile" = NULL,
+          "last_seen_at" = NULL,
+          "embedding_updated_at" = NULL,
+          "push_notify_messages" = false,
+          "push_notify_social" = false,
+          "deleted_at" = now()
+         WHERE "id" = $1`,
+        [userId],
+      );
+
+      // profile_embedding (pgvector) é opcional consoante o ambiente.
+      const hasEmb: Array<{ exists: boolean }> = await qr.query(
+        `SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'users' AND column_name = 'profile_embedding') AS "exists"`,
+      );
+      if (hasEmb?.[0]?.exists) {
+        await qr.query(`UPDATE "users" SET "profile_embedding" = NULL WHERE "id" = $1`, [userId]);
+      }
+
+      await qr.commitTransaction();
+    } catch (e) {
+      await qr.rollbackTransaction();
+      throw e;
+    } finally {
+      await qr.release();
+    }
+
+    return { ok: true };
   }
 
   private toResponse(user: User): UserResponseDto {

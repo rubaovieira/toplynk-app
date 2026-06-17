@@ -1,4 +1,4 @@
-import { Link, router } from "expo-router";
+import { type Href, Link, router } from "expo-router";
 import { CaretLeftIcon, Check, Eye, EyeSlash } from "phosphor-react-native";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -39,6 +39,14 @@ export default function LoginScreen() {
 
   const onBack = useCallback(() => {
     router.replace("/onboarding");
+  }, []);
+
+  const onOpenTerms = useCallback(() => {
+    router.push("/legal/eula" as Href);
+  }, []);
+
+  const onOpenPrivacy = useCallback(() => {
+    router.push("/legal/privacy" as Href);
   }, []);
 
   const onSubmit = useCallback(async () => {
@@ -202,6 +210,18 @@ export default function LoginScreen() {
                       </Text>
                     </Link>
                   </Text>
+
+                  <Text style={styles.legalLine}>
+                    {t("login.legalPrefix")}
+                    <Text style={styles.legalLink} onPress={onOpenTerms}>
+                      {t("login.legalTerms")}
+                    </Text>
+                    {t("login.legalMiddle")}
+                    <Text style={styles.legalLink} onPress={onOpenPrivacy}>
+                      {t("login.legalPrivacy")}
+                    </Text>
+                    {t("login.legalSuffix")}
+                  </Text>
                 </View>
               </View>
             </ScrollView>
@@ -304,4 +324,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   footerLink: { color: LINK, fontWeight: "600" },
+  legalLine: {
+    marginTop: 18,
+    color: "rgba(255,255,255,0.5)",
+    fontSize: 12,
+    lineHeight: 18,
+    textAlign: "center",
+  },
+  legalLink: {
+    color: "rgba(255,255,255,0.7)",
+    textDecorationLine: "underline",
+  },
 });

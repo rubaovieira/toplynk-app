@@ -27,7 +27,7 @@ export class AuthService {
       .where('LOWER(u.email) = :email', { email: normalized })
       .getOne();
 
-    if (!user?.passwordHash) {
+    if (!user?.passwordHash || user.deletedAt) {
       throw new UnauthorizedException('Credenciais inválidas');
     }
     const ok = await bcrypt.compare(password, user.passwordHash);

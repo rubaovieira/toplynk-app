@@ -9,6 +9,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { ModerationService } from '../moderation/moderation.service';
 import { PushService } from '../push/push.service';
 import { pickPhotoRefsFromSetup } from '../users/public-profile.mapper';
 import { User } from '../users/user.entity';
@@ -55,6 +56,7 @@ export class ChatsService {
     @Inject(forwardRef(() => ChatGateway))
     private readonly chatGateway: ChatGateway,
     private readonly push: PushService,
+    private readonly moderation: ModerationService,
   ) {}
 
   async openConversation(viewerId: string, peerId: string): Promise<OpenConversationResult> {
@@ -64,6 +66,9 @@ export class ChatsService {
     const peer = await this.users.findOne({ where: { id: peerId } });
     if (!peer) {
       throw new NotFoundException('Utilizador não encontrado');
+    }
+    if (await this.moderation.isBlockedEitherWay(viewerId, peerId)) {
+      throw new ForbiddenException('Conversa indisponível: há um bloqueio entre vocês');
     }
     const [userAId, userBId] = orderedPair(viewerId, peerId);
     let row = await this.conversations.findOne({ where: { userAId, userBId } });
@@ -85,9 +90,12 @@ export class ChatsService {
       .orderBy('c.updated_at', 'DESC')
       .getMany();
 
+    const blockedIds = await this.moderation.blockedIdsFor(viewerId);
+
     const out: ConversationListRow[] = [];
     for (const c of rows) {
       const peerId = c.userAId === viewerId ? c.userBId : c.userAId;
+      if (blockedIds.has(peerId)) continue;
       const peer = await this.users.findOne({ where: { id: peerId } });
       const peerName = peer?.displayName ?? 'Utilizador';
       const sp =
@@ -151,6 +159,10 @@ export class ChatsService {
 
   async sendMessage(conversationId: string, viewerId: string, body: string): Promise<MessageRow> {
     const c = await this.assertParticipant(conversationId, viewerId);
+    const peerId = c.userAId === viewerId ? c.userBId : c.userAId;
+    if (await this.moderation.isBlockedEitherWay(viewerId, peerId)) {
+      throw new ForbiddenException('Não é possível enviar: há um bloqueio entre vocês');
+    }
     const text = body.trim();
     if (!text) {
       throw new BadRequestException('Mensagem vazia');
@@ -170,7 +182,6 @@ export class ChatsService {
       createdAt: saved.createdAt.toISOString(),
     };
     this.chatGateway.emitNewMessage(c.id, row);
-    const peerId = c.userAId === viewerId ? c.userBId : c.userAId;
     const sender = await this.users.findOne({ where: { id: viewerId } });
     const title = sender?.displayName?.trim() || 'Mensagem';
     void this.push

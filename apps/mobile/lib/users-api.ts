@@ -238,6 +238,18 @@ export async function loginUser(baseUrl: string, email: string, password: string
   return data;
 }
 
+/** Apaga (anonimiza) a conta do utilizador autenticado — Guideline 5.1.1(v). Irreversível. */
+export async function deleteMyAccount(baseUrl: string): Promise<void> {
+  const res = await fetchWithTimeout(`${baseUrl.replace(/\/$/, '')}/users/me`, {
+    method: 'DELETE',
+    headers: await apiJsonHeaders(),
+  });
+  const raw = await res.text();
+  if (!res.ok) {
+    throw new Error(nestErrorMessage(res, raw));
+  }
+}
+
 export async function patchUserProfile(
   baseUrl: string,
   userId: string,
