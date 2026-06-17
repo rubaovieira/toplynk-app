@@ -9,7 +9,12 @@
     "errorRequired": "Introduce correo y contraseña.",
     "errorNoApi": "Configura EXPO_PUBLIC_API_URL en el .env de la app para iniciar sesión.",
     "footerPrefix": "¿No tienes cuenta?",
-    "footerLink": "Crea tu cuenta aquí"
+    "footerLink": "Crea tu cuenta aquí",
+    "legalPrefix": "Al continuar, aceptas los ",
+    "legalTerms": "Términos de Uso",
+    "legalMiddle": " y la ",
+    "legalPrivacy": "Política de Privacidad",
+    "legalSuffix": "."
   },
   "errors": {
     "invalidEditFieldsResponse": "Respuesta inválida de la API al cargar los datos de edición.",
@@ -170,7 +175,15 @@
     "reportCancel": "Cancelar",
     "reportSend": "Enviar",
     "reportSendSoon": "Gracias — revisaremos tu informe pronto.",
-    "reportDismissA11y": "Cerrar informe"
+    "reportDismissA11y": "Cerrar informe",
+    "blockSuccess": "Usuario bloqueado. Ya no verás a esta persona.",
+    "blockError": "No se pudo bloquear ahora. Inténtalo de nuevo.",
+    "blockConfirmTitle": "¿Bloquear usuario?",
+    "blockConfirmBody": "Ambos dejarán de aparecer el uno al otro y no podrán intercambiar mensajes. Puedes desbloquear luego en Perfil > Cuentas bloqueadas.",
+    "blockConfirmCancel": "Cancelar",
+    "blockConfirmOk": "Bloquear",
+    "reportSuccess": "Denuncia enviada. Nuestro equipo la revisa en un plazo de 24 horas.",
+    "reportError": "No se pudo enviar la denuncia. Inténtalo de nuevo."
   },
   "interviewTab": {
     "title": "Tus respuestas",
@@ -203,7 +216,15 @@
     "emptyTitle": "Ya estás al día",
     "emptySub": "Nuevos perfiles aparecerán aquí cuando la API de descubrimiento devuelva resultados para tu zona y filtros.",
     "openProfileA11y": "Abrir perfil",
-    "openNotificationsA11y": "Abrir notificaciones"
+    "openNotificationsA11y": "Abrir notificaciones",
+    "loadErrorTitle": "No se pudo cargar",
+    "loadErrorSub": "Verifica tu conexión e inténtalo de nuevo.",
+    "retry": "Reintentar",
+    "locationTitle": "Activa tu ubicación",
+    "locationSub": "Necesitamos tu ubicación para mostrarte profesionales cerca de ti.",
+    "enableLocation": "Activar ubicación",
+    "locationDenied": "Permiso de ubicación denegado. Actívalo en los ajustes del dispositivo.",
+    "locationError": "No se pudo obtener tu ubicación. Inténtalo de nuevo."
   },
   "notifications": {
     "title": "Notificaciones",
@@ -257,7 +278,13 @@
     "pushSocialSub": "Aviso cuando alguien dé me gusta o destaque tu perfil en discovery.",
     "pushPrefsError": "No se pudieron actualizar las preferencias. Inténtalo de nuevo.",
     "signOut": "Cerrar sesión",
-    "signOutA11y": "Cerrar sesión de la cuenta"
+    "signOutA11y": "Cerrar sesión de la cuenta",
+    "blockedAccounts": "Cuentas bloqueadas",
+    "blockedAccountsSub": "Gestiona a quién has bloqueado.",
+    "terms": "Términos de Uso y EULA",
+    "termsSub": "Reglas de la comunidad, contenido y privacidad.",
+    "privacy": "Política de Privacidad",
+    "privacySub": "Qué datos recopilamos y cómo los usamos."
   },
   "editProfile": {
     "title": "Editar perfil",
@@ -402,6 +429,12 @@
     "submit": "Crear cuenta",
     "errorRequired": "Introduce correo y contraseña.",
     "errorPrivacy": "Acepta las políticas de privacidad para continuar.",
+    "errorEula": "Acepta los Términos de Uso y la Política de Privacidad para continuar.",
+    "eulaPrefix": "He leído y acepto los ",
+    "eulaTermsLink": "Términos de Uso (EULA)",
+    "eulaMiddle": " y la ",
+    "eulaPrivacyLink": "Política de Privacidad",
+    "eulaSuffix": ", incluida la tolerancia cero al contenido ofensivo y a los usuarios abusivos.",
     "footerPrefix": "¿Ya tienes cuenta?",
     "footerLink": "Entra aquí"
   },
@@ -485,5 +518,57 @@
     "header": "¡Ups!",
     "title": "Esta pantalla no existe.",
     "link": "Ir al inicio"
+  },
+  "deleteAccount": {
+    "button": "Eliminar mi cuenta",
+    "title": "Eliminar cuenta",
+    "body": "Esta acción es permanente. Tu perfil, fotos, conversaciones y conexiones se eliminarán y tus datos personales se anonimizarán. No se puede deshacer.",
+    "confirm": "Eliminar cuenta definitivamente",
+    "cancel": "Cancelar",
+    "done": "Tu cuenta ha sido eliminada.",
+    "error": "No se pudo eliminar la cuenta ahora. Inténtalo de nuevo."
+  },
+  "blockedUsers": {
+    "title": "Cuentas bloqueadas",
+    "backA11y": "Volver",
+    "emptyTitle": "Sin cuentas bloqueadas",
+    "emptySub": "Cuando bloquees a alguien, aparecerá aquí para que puedas desbloquearlo cuando quieras.",
+    "unblock": "Desbloquear",
+    "unblockDone": "Usuario desbloqueado.",
+    "unblockError": "No se pudo desbloquear. Inténtalo de nuevo.",
+    "error": "No se pudo cargar la lista.",
+    "retry": "Reintentar"
+  },
+  "eula": {
+    "title": "Términos de Uso y EULA",
+    "backA11y": "Volver",
+    "updated": "Última actualización: 17 de junio de 2026",
+    "intro": "Estos Términos de Uso (el Acuerdo de Licencia de Usuario Final, o \"EULA\") rigen el uso de la app TopLynk. Al crear una cuenta, iniciar sesión o usar TopLynk, aceptas íntegramente estos términos. Si no estás de acuerdo, no uses la app.",
+    "sections": [
+      { "heading": "1. Elegibilidad", "body": "Debes tener al menos 18 años y capacidad legal para aceptar este acuerdo. TopLynk es una app de conexiones profesionales." },
+      { "heading": "2. Tolerancia cero al contenido ofensivo y al abuso", "body": "No hay tolerancia para el contenido objetable ni para los usuarios abusivos. No puedes publicar, enviar ni compartir contenido ilegal, ofensivo, difamatorio, de acoso, odio, violencia, contenido sexual explícito, spam, fraude ni que infrinja derechos de terceros. Quien cometa abuso verá su contenido eliminado y su cuenta suspendida o cerrada." },
+      { "heading": "3. Denuncia de contenido", "body": "En cualquier perfil o conversación puedes denunciar contenido objetable tocando \"⋮\" y luego \"Denunciar\". Revisamos todas las denuncias y actuamos en un plazo de 24 horas, eliminando el contenido objetable y expulsando a los usuarios que lo publicaron." },
+      { "heading": "4. Bloqueo de usuarios", "body": "Puedes bloquear a cualquier usuario en cualquier momento desde su perfil o la conversación (\"⋮\" > \"Bloquear\"). Las personas bloqueadas dejan de verte, de aparecerte y ya no pueden enviarte mensajes. Gestiona la lista en Perfil > Cuentas bloqueadas." },
+      { "heading": "5. Conducta del usuario", "body": "Eres el único responsable del contenido que publicas y de tus interacciones. Aceptas tratar a los demás con respeto y no usar TopLynk con fines ilícitos." },
+      { "heading": "6. Moderación y cierre", "body": "Podemos eliminar contenido y suspender o cerrar cuentas que infrinjan estos términos, con o sin aviso previo, especialmente en casos de contenido objetable o abuso." },
+      { "heading": "7. Eliminación de cuenta", "body": "Puedes eliminar tu cuenta en cualquier momento en Perfil > Eliminar mi cuenta. La eliminación es permanente: quitamos tu contenido personal y anonimizamos tus datos." },
+      { "heading": "8. Privacidad", "body": "Tratamos tus datos según nuestra Política de Privacidad, disponible en toplynk.com.br/politica-de-privacidade." },
+      { "heading": "9. Limitación de responsabilidad", "body": "TopLynk se ofrece \"tal cual\". No nos responsabilizamos por la conducta de los usuarios, pero actuamos para mantener la comunidad segura conforme a estos términos." }
+    ],
+    "contact": "Dudas o soporte: suporte@toplynk.com.br."
+  },
+  "privacyPolicy": {
+    "title": "Política de Privacidad",
+    "backA11y": "Volver",
+    "updated": "Última actualización: 17 de junio de 2026",
+    "intro": "Esta Política describe qué datos recopila TopLynk, cómo los usamos y cómo puedes ejercer tus derechos. Al usar la app, aceptas este tratamiento.",
+    "sections": [
+      { "heading": "1. Datos que recopilamos", "body": "Registro: nombre, correo y contraseña (almacenada cifrada). Perfil: rol, empresa, áreas, intereses, biografía y fotos que añades. Ubicación aproximada, cuando la activas, para sugerir conexiones cercanas. Uso: conversaciones, intereses (me gusta), denuncias y bloqueos, para operar y moderar el servicio." },
+      { "heading": "2. Cómo usamos tus datos", "body": "Para crear y mantener tu cuenta, sugerir conexiones relevantes, permitir conversaciones, enviar notificaciones y mantener la comunidad segura (moderación de denuncias y bloqueos)." },
+      { "heading": "3. Compartición", "body": "No vendemos tus datos personales. Solo compartimos con proveedores que hacen posible el servicio (por ejemplo, notificaciones push e infraestructura) y cuando lo exige la ley." },
+      { "heading": "4. Tus derechos y eliminación de cuenta", "body": "Puedes acceder y editar tus datos en la app. Puedes eliminar tu cuenta en cualquier momento en Perfil > Eliminar mi cuenta: la eliminación quita tu contenido personal y anonimiza tus datos de forma permanente." },
+      { "heading": "5. Seguridad", "body": "Aplicamos medidas técnicas y organizativas para proteger tus datos, incluida la transmisión cifrada y el almacenamiento seguro de contraseñas." }
+    ],
+    "contact": "Para ejercer tus derechos o consultas: suporte@toplynk.com.br."
   }
 }

@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { ChatsModule } from './chats/chats.module';
 import { DiscoveryModule } from './discovery/discovery.module';
 import { MatchesModule } from './matches/matches.module';
+import { ModerationModule } from './moderation/moderation.module';
 import { PushModule } from './push/push.module';
 import { InterviewModule } from './interview/interview.module';
 import { NotificationsModule } from './notifications/notifications.module';
@@ -32,6 +33,7 @@ import { UsersModule } from './users/users.module';
     PushModule,
     MatchesModule,
     NotificationsModule,
+    ModerationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

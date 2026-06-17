@@ -1,4 +1,5 @@
 import { apiJsonHeadersPublic } from '@/lib/api-headers';
+import { fetchWithTimeout, LONG_API_TIMEOUT_MS } from '@/lib/api-fetch';
 import type { InterviewApiMessage, InterviewTurnResult } from '@/lib/entrevista-chat-openai';
 
 function nestMessage(body: unknown): string {
@@ -17,14 +18,18 @@ export async function runInterviewTurn(params: {
   messages: InterviewApiMessage[];
 }): Promise<InterviewTurnResult> {
   const url = `${params.baseUrl.replace(/\/$/, '')}/interview/turn`;
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: apiJsonHeadersPublic(),
-    body: JSON.stringify({
-      locale: params.locale,
-      messages: params.messages,
-    }),
-  });
+  const res = await fetchWithTimeout(
+    url,
+    {
+      method: 'POST',
+      headers: apiJsonHeadersPublic(),
+      body: JSON.stringify({
+        locale: params.locale,
+        messages: params.messages,
+      }),
+    },
+    LONG_API_TIMEOUT_MS,
+  );
 
   if (!res.ok) {
     let detail = '';

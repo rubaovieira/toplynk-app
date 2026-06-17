@@ -9,7 +9,12 @@
     "errorRequired": "Please enter email and password.",
     "errorNoApi": "Set EXPO_PUBLIC_API_URL in the app .env to sign in.",
     "footerPrefix": "Don't have an account?",
-    "footerLink": "Create your account here"
+    "footerLink": "Create your account here",
+    "legalPrefix": "By continuing, you agree to the ",
+    "legalTerms": "Terms of Use",
+    "legalMiddle": " and the ",
+    "legalPrivacy": "Privacy Policy",
+    "legalSuffix": "."
   },
   "errors": {
     "invalidEditFieldsResponse": "Invalid API response while loading edit fields.",
@@ -170,7 +175,15 @@
     "reportCancel": "Cancel",
     "reportSend": "Send",
     "reportSendSoon": "Thanks — we’ll review your report soon.",
-    "reportDismissA11y": "Close report"
+    "reportDismissA11y": "Close report",
+    "blockSuccess": "User blocked. You won’t see this person anymore.",
+    "blockError": "Could not block right now. Try again.",
+    "blockConfirmTitle": "Block user?",
+    "blockConfirmBody": "You and this person will stop appearing to each other and can no longer exchange messages. You can unblock later in Profile > Blocked accounts.",
+    "blockConfirmCancel": "Cancel",
+    "blockConfirmOk": "Block",
+    "reportSuccess": "Report sent. Our team reviews it within 24 hours.",
+    "reportError": "Could not send the report. Try again."
   },
   "interviewTab": {
     "title": "Your answers",
@@ -203,7 +216,15 @@
     "emptyTitle": "You’re caught up",
     "emptySub": "New profiles show up here when the discovery API returns results for your area and filters.",
     "openProfileA11y": "Open profile",
-    "openNotificationsA11y": "Open notifications"
+    "openNotificationsA11y": "Open notifications",
+    "loadErrorTitle": "Couldn’t load",
+    "loadErrorSub": "Check your connection and try again.",
+    "retry": "Try again",
+    "locationTitle": "Turn on your location",
+    "locationSub": "We need your location to show professionals near you.",
+    "enableLocation": "Enable location",
+    "locationDenied": "Location permission denied. Enable it in your device settings.",
+    "locationError": "Couldn’t get your location. Please try again."
   },
   "notifications": {
     "title": "Notifications",
@@ -257,7 +278,13 @@
     "pushSocialSub": "Alert when someone likes or highlights your profile in discovery.",
     "pushPrefsError": "Could not update notification settings. Try again.",
     "signOut": "Sign out",
-    "signOutA11y": "Sign out of account"
+    "signOutA11y": "Sign out of account",
+    "blockedAccounts": "Blocked accounts",
+    "blockedAccountsSub": "Manage the people you blocked.",
+    "terms": "Terms of Use & EULA",
+    "termsSub": "Community rules, content, and privacy.",
+    "privacy": "Privacy Policy",
+    "privacySub": "What data we collect and how we use it."
   },
   "editProfile": {
     "title": "Edit profile",
@@ -402,6 +429,12 @@
     "submit": "Create account",
     "errorRequired": "Please enter email and password.",
     "errorPrivacy": "Please accept the privacy policies to continue.",
+    "errorEula": "Please accept the Terms of Use and Privacy Policy to continue.",
+    "eulaPrefix": "I have read and accept the ",
+    "eulaTermsLink": "Terms of Use (EULA)",
+    "eulaMiddle": " and the ",
+    "eulaPrivacyLink": "Privacy Policy",
+    "eulaSuffix": ", including the zero-tolerance policy for objectionable content and abusive users.",
     "footerPrefix": "Already have an account?",
     "footerLink": "Sign in here"
   },
@@ -491,5 +524,57 @@
     "subtitle": "Create your profile intelligently",
     "explanation": "The AI interview is important so TopLynk can suggest professionals and opportunities aligned with your goals, interests and work preferences. Complete it now to start finding valuable connections!",
     "startNow": "Start interview now"
+  },
+  "deleteAccount": {
+    "button": "Delete my account",
+    "title": "Delete account",
+    "body": "This action is permanent. Your profile, photos, chats, and connections will be removed and your personal data anonymized. This cannot be undone.",
+    "confirm": "Delete account permanently",
+    "cancel": "Cancel",
+    "done": "Your account has been deleted.",
+    "error": "Could not delete the account right now. Try again."
+  },
+  "blockedUsers": {
+    "title": "Blocked accounts",
+    "backA11y": "Back",
+    "emptyTitle": "No blocked accounts",
+    "emptySub": "When you block someone, they appear here so you can unblock them whenever you want.",
+    "unblock": "Unblock",
+    "unblockDone": "User unblocked.",
+    "unblockError": "Could not unblock. Try again.",
+    "error": "Could not load the list.",
+    "retry": "Try again"
+  },
+  "eula": {
+    "title": "Terms of Use & EULA",
+    "backA11y": "Back",
+    "updated": "Last updated: June 17, 2026",
+    "intro": "These Terms of Use (the End User License Agreement, or \"EULA\") govern your use of the TopLynk app. By creating an account, signing in, or using TopLynk, you fully agree to these terms. If you do not agree, do not use the app.",
+    "sections": [
+      { "heading": "1. Eligibility", "body": "You must be at least 18 years old and legally able to accept this agreement. TopLynk is a professional networking app." },
+      { "heading": "2. Zero tolerance for objectionable content and abuse", "body": "There is no tolerance for objectionable content or abusive users. You may not post, send, or share illegal, offensive, defamatory, harassing, hateful, violent, sexually explicit, spam, fraudulent content, or content that infringes others' rights. Anyone who engages in abuse will have their content removed and their account suspended or terminated." },
+      { "heading": "3. Reporting content", "body": "On any profile or chat you can report objectionable content by tapping \"⋮\" and then \"Report\". We review every report and act within 24 hours, removing objectionable content and ejecting the users who posted it." },
+      { "heading": "4. Blocking users", "body": "You can block any user at any time from their profile or chat (\"⋮\" > \"Block\"). Blocked people stop seeing you, stop appearing to you, and can no longer message you. Manage the list in Profile > Blocked accounts." },
+      { "heading": "5. User conduct", "body": "You are solely responsible for the content you post and your interactions. You agree to treat others with respect and not to use TopLynk for any unlawful purpose." },
+      { "heading": "6. Moderation and termination", "body": "We may remove content and suspend or terminate accounts that violate these terms, with or without notice, especially in cases of objectionable content or abuse." },
+      { "heading": "7. Account deletion", "body": "You can delete your account at any time in Profile > Delete my account. Deletion is permanent: we remove your personal content and anonymize your data." },
+      { "heading": "8. Privacy", "body": "We handle your data according to our Privacy Policy, available at toplynk.com.br/politica-de-privacidade." },
+      { "heading": "9. Disclaimer", "body": "TopLynk is provided \"as is\". We are not responsible for user conduct, but we act to keep the community safe under these terms." }
+    ],
+    "contact": "Questions or support: suporte@toplynk.com.br."
+  },
+  "privacyPolicy": {
+    "title": "Privacy Policy",
+    "backA11y": "Back",
+    "updated": "Last updated: June 17, 2026",
+    "intro": "This Policy describes what data TopLynk collects, how we use it, and how you can exercise your rights. By using the app, you agree to this processing.",
+    "sections": [
+      { "heading": "1. Data we collect", "body": "Sign-up: name, email, and password (stored encrypted). Profile: role, company, areas, interests, bio, and photos you add. Approximate location, when you enable it, to suggest nearby connections. Usage: chats, interests (likes), reports, and blocks, to operate and moderate the service." },
+      { "heading": "2. How we use your data", "body": "To create and maintain your account, suggest relevant connections, enable chats, send notifications, and keep the community safe (moderating reports and blocks)." },
+      { "heading": "3. Sharing", "body": "We do not sell your personal data. We share only with providers that enable the service (for example, push notifications and infrastructure) and when required by law." },
+      { "heading": "4. Your rights and account deletion", "body": "You can access and edit your data in the app. You can delete your account at any time in Profile > Delete my account: deletion removes your personal content and anonymizes your data permanently." },
+      { "heading": "5. Security", "body": "We apply technical and organizational measures to protect your data, including encrypted transmission and secure password storage." }
+    ],
+    "contact": "To exercise your rights or for questions: suporte@toplynk.com.br."
   }
 }

@@ -1,11 +1,10 @@
-import { Stack, router } from "expo-router";
+import { type Href, Stack, router } from "expo-router";
 import { CaretLeftIcon, Check, Eye, EyeSlash } from "phosphor-react-native";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Image,
   KeyboardAvoidingView,
-  Linking,
   Platform,
   Pressable,
   ScrollView,
@@ -29,21 +28,23 @@ const ACCENT = "#2196F3";
 const LINK = "#42A5F5";
 const PLACEHOLDER = "#8A8A8A";
 
-const PRIVACY_URL = "https://toplynk.com.br/politica-de-privacidade";
-
 export default function SignupScreen() {
   const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [secure, setSecure] = useState(true);
-  const [acceptedPrivacy, setAcceptedPrivacy] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   const onBack = useCallback(() => {
     router.back();
   }, []);
 
   const onOpenPrivacy = useCallback(() => {
-    void Linking.openURL(PRIVACY_URL);
+    router.push("/legal/privacy" as Href);
+  }, []);
+
+  const onOpenTerms = useCallback(() => {
+    router.push("/legal/eula" as Href);
   }, []);
 
   const onSubmit = useCallback(async () => {
@@ -53,8 +54,8 @@ export default function SignupScreen() {
       showValidationToast(t("signup.errorRequired"));
       return;
     }
-    if (!acceptedPrivacy) {
-      showValidationToast(t("signup.errorPrivacy"));
+    if (!acceptedTerms) {
+      showValidationToast(t("signup.errorEula"));
       return;
     }
     try {
@@ -65,7 +66,7 @@ export default function SignupScreen() {
       /* continua mesmo sem guardar — registo na API fica opcional */
     }
     router.replace("/setup/step1");
-  }, [email, password, acceptedPrivacy, t]);
+  }, [email, password, acceptedTerms, t]);
 
   return (
     <>
@@ -151,29 +152,33 @@ export default function SignupScreen() {
 
                   <View style={styles.privacyRow}>
                     <Pressable
-                      onPress={() => setAcceptedPrivacy((v) => !v)}
+                      onPress={() => setAcceptedTerms((v) => !v)}
                       hitSlop={4}
                       style={styles.privacyCheckHit}
                       accessibilityRole="checkbox"
-                      accessibilityState={{ checked: acceptedPrivacy }}
+                      accessibilityState={{ checked: acceptedTerms }}
                     >
                       <View
                         style={[
                           styles.checkbox,
-                          acceptedPrivacy && styles.checkboxOn,
+                          acceptedTerms && styles.checkboxOn,
                         ]}
                       >
-                        {acceptedPrivacy ? (
+                        {acceptedTerms ? (
                           <Check size={12} color="#fff" weight="bold" />
                         ) : null}
                       </View>
                     </Pressable>
                     <Text style={styles.privacyText}>
-                      {t("signup.privacyPrefix")}
-                      <Text style={styles.privacyLink} onPress={onOpenPrivacy}>
-                        {t("signup.privacyTerms")}
+                      {t("signup.eulaPrefix")}
+                      <Text style={styles.privacyLink} onPress={onOpenTerms}>
+                        {t("signup.eulaTermsLink")}
                       </Text>
-                      {t("signup.privacySuffix")}
+                      {t("signup.eulaMiddle")}
+                      <Text style={styles.privacyLink} onPress={onOpenPrivacy}>
+                        {t("signup.eulaPrivacyLink")}
+                      </Text>
+                      {t("signup.eulaSuffix")}
                     </Text>
                   </View>
 

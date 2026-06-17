@@ -4,6 +4,8 @@ import { join } from 'path';
 import { DataSource } from 'typeorm';
 import { DiscoveryIncoming } from './discovery/discovery-incoming.entity';
 import { DiscoverySwipe } from './discovery/discovery-swipe.entity';
+import { ContentReport } from './moderation/content-report.entity';
+import { UserBlock } from './moderation/user-block.entity';
 import { AppNotification } from './notifications/app-notification.entity';
 import { DeviceToken } from './push/device-token.entity';
 import { User } from './users/user.entity';
@@ -17,7 +19,7 @@ const AppDataSource = new DataSource({
   username: process.env.DB_USER ?? 'postgres',
   password: process.env.DB_PASSWORD ?? 'postgres',
   database: process.env.DB_NAME ?? 'toplynk',
-  entities: [User, DeviceToken, DiscoverySwipe, DiscoveryIncoming, AppNotification],
+  entities: [User, DeviceToken, DiscoverySwipe, DiscoveryIncoming, AppNotification, UserBlock, ContentReport],
   migrations: [join(__dirname, 'migrations', '*.{ts,js}')],
   synchronize: false,
 });

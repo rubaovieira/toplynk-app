@@ -1,4 +1,5 @@
 import { apiJsonHeaders } from '@/lib/api-headers';
+import { fetchWithTimeout } from '@/lib/api-fetch';
 
 export type AppNotificationItem = {
   id: string;
@@ -16,7 +17,7 @@ export async function fetchNotifications(params: {
   const q = new URLSearchParams();
   if (params.limit != null) q.set('limit', String(params.limit));
   const qs = q.toString();
-  const res = await fetch(`${base}/notifications${qs ? `?${qs}` : ''}`, {
+  const res = await fetchWithTimeout(`${base}/notifications${qs ? `?${qs}` : ''}`, {
     headers: await apiJsonHeaders(),
   });
   if (!res.ok) {

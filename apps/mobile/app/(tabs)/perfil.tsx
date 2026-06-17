@@ -2,9 +2,13 @@ import { useFocusEffect } from "@react-navigation/native";
 import {
   CaretRightIcon,
   Eye,
+  FileText,
   MapPin,
   PencilSimple,
+  Prohibit,
+  ShieldCheck,
   SignOut,
+  TrashSimple,
   UserCircle,
 } from "phosphor-react-native";
 import { type Href, useRouter } from "expo-router";
@@ -13,6 +17,7 @@ import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
   Image,
+  Modal,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -38,7 +43,7 @@ import {
 import { decodeJwtSub } from "@/lib/jwt-sub";
 import { clearSetupUserId } from "@/lib/setup-user-session";
 import type { PublicProfileResponse } from "@/lib/users-api";
-import { fetchUserPublicProfile } from "@/lib/users-api";
+import { deleteMyAccount, fetchUserPublicProfile } from "@/lib/users-api";
 import { photoUri } from "@/lib/match-demo-deck";
 import {
   fetchPushPreferences,
@@ -64,6 +69,8 @@ export default function PerfilScreen() {
   const [profile, setProfile] = useState<PublicProfileResponse | null>(null);
   const [pushPrefs, setPushPrefs] = useState<PushPreferences | null>(null);
   const [pushPrefsSaving, setPushPrefsSaving] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const firstFocus = useRef(true);
 
   const load = useCallback(async (opts?: { silent?: boolean }) => {
@@ -153,6 +160,47 @@ export default function PerfilScreen() {
     }
     router.replace("/login");
   }, [router]);
+
+  const onConfirmDelete = useCallback(async () => {
+    const base = getApiBaseUrl();
+    if (!base) {
+      showValidationToast(t("profileTab.noApiHint"));
+      return;
+    }
+    setDeleting(true);
+    try {
+      await deleteMyAccount(base);
+    } catch (e) {
+      setDeleting(false);
+      const msg =
+        e instanceof Error && e.message.trim()
+          ? e.message
+          : t("deleteAccount.error");
+      showValidationToast(msg);
+      return;
+    }
+    // Limpeza local (best-effort): tokens de push e tokens de sessão já foram apagados no servidor.
+    try {
+      await clearStoredPushRegistration();
+    } catch {
+      /* ignore */
+    }
+    logoutOneSignalUser();
+    try {
+      await clearSession();
+    } catch {
+      /* ignore */
+    }
+    try {
+      await clearSetupUserId();
+    } catch {
+      /* ignore */
+    }
+    setDeleting(false);
+    setDeleteModalOpen(false);
+    showValidationToast(t("deleteAccount.done"));
+    router.replace("/onboarding");
+  }, [router, t]);
 
   const openPublicPreview = useCallback(() => {
     if (!profile?.id) return;
@@ -372,6 +420,79 @@ export default function PerfilScreen() {
               />
             </Pressable>
 
+            <Pressable
+              style={({ pressed }) => [
+                styles.menuRow,
+                pressed && styles.pressed,
+              ]}
+              onPress={() => router.push("/blocked-users" as Href)}
+              accessibilityRole="button"
+              accessibilityLabel={t("profileTab.blockedAccounts")}
+            >
+              <View style={styles.menuIconWrap}>
+                <Prohibit size={18} color="#fff" weight="regular" />
+              </View>
+              <View style={styles.menuTextCol}>
+                <Text style={styles.menuTitle}>
+                  {t("profileTab.blockedAccounts")}
+                </Text>
+                <Text style={styles.menuSub}>
+                  {t("profileTab.blockedAccountsSub")}
+                </Text>
+              </View>
+              <CaretRightIcon
+                size={14}
+                color="rgba(255,255,255,0.28)"
+                weight="bold"
+              />
+            </Pressable>
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.menuRow,
+                pressed && styles.pressed,
+              ]}
+              onPress={() => router.push("/legal/eula" as Href)}
+              accessibilityRole="button"
+              accessibilityLabel={t("profileTab.terms")}
+            >
+              <View style={styles.menuIconWrap}>
+                <FileText size={18} color="#fff" weight="regular" />
+              </View>
+              <View style={styles.menuTextCol}>
+                <Text style={styles.menuTitle}>{t("profileTab.terms")}</Text>
+                <Text style={styles.menuSub}>{t("profileTab.termsSub")}</Text>
+              </View>
+              <CaretRightIcon
+                size={14}
+                color="rgba(255,255,255,0.28)"
+                weight="bold"
+              />
+            </Pressable>
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.menuRow,
+                pressed && styles.pressed,
+              ]}
+              onPress={() => router.push("/legal/privacy" as Href)}
+              accessibilityRole="button"
+              accessibilityLabel={t("profileTab.privacy")}
+            >
+              <View style={styles.menuIconWrap}>
+                <ShieldCheck size={18} color="#fff" weight="regular" />
+              </View>
+              <View style={styles.menuTextCol}>
+                <Text style={styles.menuTitle}>{t("profileTab.privacy")}</Text>
+                <Text style={styles.menuSub}>{t("profileTab.privacySub")}</Text>
+              </View>
+              <CaretRightIcon
+                size={14}
+                color="rgba(255,255,255,0.28)"
+                weight="bold"
+              />
+            </Pressable>
+
             {pushPrefs ? (
               <View style={styles.pushSection}>
                 <Text style={styles.langLabel}>
@@ -453,7 +574,87 @@ export default function PerfilScreen() {
             <Text style={styles.signOutText}>{t("profileTab.signOut")}</Text>
           </Pressable>
         ) : null}
+
+        {phase === "ready" ? (
+          <Pressable
+            style={({ pressed }) => [
+              styles.deleteAccountBtn,
+              pressed && styles.pressed,
+            ]}
+            onPress={() => setDeleteModalOpen(true)}
+            accessibilityRole="button"
+            accessibilityLabel={t("deleteAccount.button")}
+          >
+            <TrashSimple
+              size={15}
+              color="#FF453A"
+              style={styles.deleteAccountIcon}
+              weight="regular"
+            />
+            <Text style={styles.deleteAccountText}>
+              {t("deleteAccount.button")}
+            </Text>
+          </Pressable>
+        ) : null}
       </ScrollView>
+
+      <Modal
+        visible={deleteModalOpen}
+        transparent
+        animationType="fade"
+        statusBarTranslucent
+        onRequestClose={() => {
+          if (!deleting) setDeleteModalOpen(false);
+        }}
+      >
+        <View style={styles.modalWrap}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t("deleteAccount.cancel")}
+            style={[StyleSheet.absoluteFill, styles.modalDim]}
+            onPress={() => {
+              if (!deleting) setDeleteModalOpen(false);
+            }}
+          />
+          <View style={styles.modalCard}>
+            <View style={styles.modalIconWrap}>
+              <TrashSimple size={26} color="#FF453A" weight="bold" />
+            </View>
+            <Text style={styles.modalTitle}>{t("deleteAccount.title")}</Text>
+            <Text style={styles.modalBody}>{t("deleteAccount.body")}</Text>
+            <Pressable
+              style={({ pressed }) => [
+                styles.modalDeleteBtn,
+                (pressed || deleting) && styles.pressed,
+              ]}
+              onPress={() => void onConfirmDelete()}
+              disabled={deleting}
+              accessibilityRole="button"
+            >
+              {deleting ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.modalDeleteText}>
+                  {t("deleteAccount.confirm")}
+                </Text>
+              )}
+            </Pressable>
+            <Pressable
+              style={({ pressed }) => [
+                styles.modalCancelBtn,
+                pressed && styles.pressed,
+              ]}
+              onPress={() => setDeleteModalOpen(false)}
+              disabled={deleting}
+              accessibilityRole="button"
+            >
+              <Text style={styles.modalCancelText}>
+                {t("deleteAccount.cancel")}
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -699,5 +900,86 @@ const styles = StyleSheet.create({
     color: "#FF453A",
     fontSize: 16,
     fontWeight: "700",
+  },
+  deleteAccountBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 14,
+    marginTop: 14,
+  },
+  deleteAccountIcon: {
+    marginRight: 8,
+  },
+  deleteAccountText: {
+    color: "#FF453A",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  modalWrap: {
+    flex: 1,
+    justifyContent: "center",
+    paddingHorizontal: 28,
+  },
+  modalDim: {
+    backgroundColor: "rgba(0,0,0,0.62)",
+  },
+  modalCard: {
+    backgroundColor: "#1C1C1E",
+    borderRadius: 20,
+    paddingHorizontal: 22,
+    paddingTop: 24,
+    paddingBottom: 16,
+    alignItems: "center",
+  },
+  modalIconWrap: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: "rgba(255,69,58,0.14)",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+  },
+  modalTitle: {
+    color: "#fff",
+    fontSize: 19,
+    fontWeight: "800",
+    textAlign: "center",
+    marginBottom: 10,
+    letterSpacing: -0.3,
+  },
+  modalBody: {
+    color: "rgba(255,255,255,0.7)",
+    fontSize: 14,
+    lineHeight: 21,
+    textAlign: "center",
+    marginBottom: 22,
+  },
+  modalDeleteBtn: {
+    width: "100%",
+    backgroundColor: "#FF453A",
+    borderRadius: 14,
+    paddingVertical: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: 52,
+  },
+  modalDeleteText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "700",
+  },
+  modalCancelBtn: {
+    width: "100%",
+    paddingVertical: 14,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 6,
+  },
+  modalCancelText: {
+    color: "rgba(255,255,255,0.85)",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });

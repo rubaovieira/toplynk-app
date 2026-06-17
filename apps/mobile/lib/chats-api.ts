@@ -1,4 +1,5 @@
 import { apiJsonHeaders } from '@/lib/api-headers';
+import { fetchWithTimeout } from '@/lib/api-fetch';
 import i18n from '@/lib/i18n';
 
 export type ConversationListRow = {
@@ -39,7 +40,7 @@ function nestErrorMessage(res: Response, bodyText: string): string {
 
 export async function listChatConversations(baseUrl: string): Promise<ConversationListRow[]> {
   const base = baseUrl.replace(/\/$/, '');
-  const res = await fetch(`${base}/chats`, { headers: await apiJsonHeaders() });
+  const res = await fetchWithTimeout(`${base}/chats`, { headers: await apiJsonHeaders() });
   const raw = await res.text();
   if (!res.ok) throw new Error(nestErrorMessage(res, raw));
   const data = JSON.parse(raw) as unknown;
@@ -49,7 +50,7 @@ export async function listChatConversations(baseUrl: string): Promise<Conversati
 
 export async function openChatConversation(baseUrl: string, peerId: string): Promise<OpenChatResult> {
   const base = baseUrl.replace(/\/$/, '');
-  const res = await fetch(`${base}/chats/open`, {
+  const res = await fetchWithTimeout(`${base}/chats/open`, {
     method: 'POST',
     headers: await apiJsonHeaders(),
     body: JSON.stringify({ peerId }),
@@ -65,7 +66,7 @@ export async function openChatConversation(baseUrl: string, peerId: string): Pro
 
 export async function fetchChatMessages(baseUrl: string, conversationId: string): Promise<ChatMessageRow[]> {
   const base = baseUrl.replace(/\/$/, '');
-  const res = await fetch(`${base}/chats/${encodeURIComponent(conversationId)}/messages`, {
+  const res = await fetchWithTimeout(`${base}/chats/${encodeURIComponent(conversationId)}/messages`, {
     headers: await apiJsonHeaders(),
   });
   const raw = await res.text();
@@ -81,7 +82,7 @@ export async function sendChatMessage(
   body: string,
 ): Promise<ChatMessageRow> {
   const base = baseUrl.replace(/\/$/, '');
-  const res = await fetch(`${base}/chats/${encodeURIComponent(conversationId)}/messages`, {
+  const res = await fetchWithTimeout(`${base}/chats/${encodeURIComponent(conversationId)}/messages`, {
     method: 'POST',
     headers: await apiJsonHeaders(),
     body: JSON.stringify({ body }),

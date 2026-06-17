@@ -1,4 +1,5 @@
 import { apiJsonHeaders, apiJsonHeadersPublic } from '@/lib/api-headers';
+import { fetchWithTimeout } from '@/lib/api-fetch';
 import i18n from '@/lib/i18n';
 import { setAccessToken } from '@/lib/auth-storage';
 import type { MatchProfile } from '@/lib/match-demo-deck';
@@ -85,7 +86,7 @@ export async function fetchProfileEditFields(
   baseUrl: string,
   userId: string,
 ): Promise<ProfileEditFieldsResponse> {
-  const res = await fetch(
+  const res = await fetchWithTimeout(
     `${baseUrl.replace(/\/$/, '')}/users/${encodeURIComponent(userId)}/profile-fields`,
     {
       method: 'GET',
@@ -110,7 +111,7 @@ export async function fetchProfileEditFields(
 }
 
 export async function fetchUserPublicProfile(baseUrl: string, userId: string): Promise<PublicProfileResponse> {
-  const res = await fetch(`${baseUrl.replace(/\/$/, '')}/users/${encodeURIComponent(userId)}/public`, {
+  const res = await fetchWithTimeout(`${baseUrl.replace(/\/$/, '')}/users/${encodeURIComponent(userId)}/public`, {
     method: 'GET',
     headers: await apiJsonHeaders(),
   });
@@ -128,7 +129,7 @@ export async function fetchUserPublicProfile(baseUrl: string, userId: string): P
 /** Atualiza o teu `last_seen_at` no servidor (para outros verem “online”). */
 export async function postMyPresence(baseUrl: string): Promise<void> {
   const url = `${baseUrl.replace(/\/$/, '')}/users/me/presence`;
-  const res = await fetch(url, {
+  const res = await fetchWithTimeout(url, {
     method: 'POST',
     headers: await apiJsonHeaders(),
     body: '{}',
@@ -177,7 +178,7 @@ function nestErrorMessage(res: Response, bodyText: string): string {
 }
 
 export async function createUser(baseUrl: string, body: CreateUserPayload): Promise<CreateUserResponse> {
-  const res = await fetch(`${baseUrl.replace(/\/$/, '')}/users`, {
+  const res = await fetchWithTimeout(`${baseUrl.replace(/\/$/, '')}/users`, {
     method: 'POST',
     headers: apiJsonHeadersPublic(),
     body: JSON.stringify({
@@ -217,7 +218,7 @@ export async function createUser(baseUrl: string, body: CreateUserPayload): Prom
 }
 
 export async function loginUser(baseUrl: string, email: string, password: string): Promise<LoginResponse> {
-  const res = await fetch(`${baseUrl.replace(/\/$/, '')}/auth/login`, {
+  const res = await fetchWithTimeout(`${baseUrl.replace(/\/$/, '')}/auth/login`, {
     method: 'POST',
     headers: apiJsonHeadersPublic(),
     body: JSON.stringify({
@@ -237,12 +238,24 @@ export async function loginUser(baseUrl: string, email: string, password: string
   return data;
 }
 
+/** Apaga (anonimiza) a conta do utilizador autenticado — Guideline 5.1.1(v). Irreversível. */
+export async function deleteMyAccount(baseUrl: string): Promise<void> {
+  const res = await fetchWithTimeout(`${baseUrl.replace(/\/$/, '')}/users/me`, {
+    method: 'DELETE',
+    headers: await apiJsonHeaders(),
+  });
+  const raw = await res.text();
+  if (!res.ok) {
+    throw new Error(nestErrorMessage(res, raw));
+  }
+}
+
 export async function patchUserProfile(
   baseUrl: string,
   userId: string,
   patch: UserProfilePatch,
 ): Promise<void> {
-  const res = await fetch(`${baseUrl.replace(/\/$/, '')}/users/${encodeURIComponent(userId)}/profile`, {
+  const res = await fetchWithTimeout(`${baseUrl.replace(/\/$/, '')}/users/${encodeURIComponent(userId)}/profile`, {
     method: 'PATCH',
     headers: await apiJsonHeaders(),
     body: JSON.stringify(patch),

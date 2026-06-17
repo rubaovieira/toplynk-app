@@ -1,4 +1,5 @@
 import { apiJsonHeaders } from "@/lib/api-headers";
+import { fetchWithTimeout } from "@/lib/api-fetch";
 
 export type PushProvider = "expo" | "onesignal";
 
@@ -22,7 +23,7 @@ export async function registerPushToken(
   platform: "ios" | "android" | "web",
   provider: PushProvider = "expo",
 ): Promise<void> {
-  const res = await fetch(`${baseUrl.replace(/\/$/, "")}/push/tokens`, {
+  const res = await fetchWithTimeout(`${baseUrl.replace(/\/$/, "")}/push/tokens`, {
     method: "POST",
     headers: await apiJsonHeaders(),
     body: JSON.stringify({ token, platform, provider }),
@@ -49,7 +50,7 @@ export async function unregisterPushToken(
 ): Promise<void> {
   const body: Record<string, unknown> = { token };
   if (provider) body.provider = provider;
-  const res = await fetch(`${baseUrl.replace(/\/$/, "")}/push/tokens`, {
+  const res = await fetchWithTimeout(`${baseUrl.replace(/\/$/, "")}/push/tokens`, {
     method: "DELETE",
     headers: await apiJsonHeaders(),
     body: JSON.stringify(body),

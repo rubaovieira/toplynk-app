@@ -446,13 +446,19 @@ export function MatchSwipeDeck({ profiles, onRecordSwipe }: Props) {
             </Text>
             <Text style={styles.subline} numberOfLines={2}>
               {t('discoverSwipe.subline', {
-                score: Math.round(current.compatibility),
+                score: Math.round(
+                  typeof current.compatibility === 'number' ? current.compatibility : 0,
+                ),
               })}
             </Text>
             <View style={styles.pillRow}>
               <View style={styles.pill}>
                 <MapPin size={13} color="#f0f0f0" weight="fill" />
-                <Text style={styles.pillText}>{t('discoverSwipe.kmAway', { km: current.distanceKm.toFixed(1) })}</Text>
+                <Text style={styles.pillText}>
+                  {t('discoverSwipe.kmAway', {
+                    km: (typeof current.distanceKm === 'number' ? current.distanceKm : 0).toFixed(1),
+                  })}
+                </Text>
               </View>
               <View style={styles.pill}>
                 <Translate size={13} color="#f0f0f0" weight="regular" />

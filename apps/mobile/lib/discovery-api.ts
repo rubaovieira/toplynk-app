@@ -1,4 +1,5 @@
 import { apiJsonHeaders } from '@/lib/api-headers';
+import { fetchWithTimeout } from '@/lib/api-fetch';
 
 import type { MatchProfile } from '@/lib/match-demo-deck';
 
@@ -26,6 +27,14 @@ type DiscoveryApiCard = {
   cityLabel?: string;
 };
 
+/** `/discovery/nearby` retorna 400 quando o perfil do viewer está sem latitude/longitude. */
+export class DiscoveryNoLocationError extends Error {
+  constructor() {
+    super('discovery: viewer sem localização no perfil');
+    this.name = 'DiscoveryNoLocationError';
+  }
+}
+
 export async function fetchDiscoveryNearby(params: DiscoveryNearbyParams): Promise<MatchProfile[]> {
   const base = params.baseUrl.replace(/\/$/, '');
   const q = new URLSearchParams();
@@ -34,8 +43,18 @@ export async function fetchDiscoveryNearby(params: DiscoveryNearbyParams): Promi
   if (params.minInterestOverlap != null) q.set('minInterestOverlap', String(params.minInterestOverlap));
   const qs = q.toString();
   const url = `${base}/discovery/nearby${qs ? `?${qs}` : ''}`;
-  const res = await fetch(url, { headers: await apiJsonHeaders() });
+  const res = await fetchWithTimeout(url, { headers: await apiJsonHeaders() });
   if (!res.ok) {
+    if (res.status === 400) {
+      let msg = '';
+      try {
+        const j = (await res.json()) as { message?: unknown };
+        if (typeof j?.message === 'string') msg = j.message;
+      } catch {
+        /* corpo opcional */
+      }
+      if (/localiza/i.test(msg)) throw new DiscoveryNoLocationError();
+    }
     throw new Error(`discovery ${res.status}`);
   }
   const data = (await res.json()) as DiscoveryApiCard[];
@@ -73,7 +92,7 @@ export async function fetchDiscoverySwiped(params: DiscoverySwipedParams): Promi
   if (params.limit != null) q.set('limit', String(params.limit));
   const qs = q.toString();
   const url = `${base}/discovery/swiped${qs ? `?${qs}` : ''}`;
-  const res = await fetch(url, { headers: await apiJsonHeaders() });
+  const res = await fetchWithTimeout(url, { headers: await apiJsonHeaders() });
   if (!res.ok) {
     throw new Error(`discovery swiped ${res.status}`);
   }
@@ -103,7 +122,7 @@ export async function postDiscoverySwipe(params: {
   action: DiscoverySwipeAction;
 }): Promise<void> {
   const base = params.baseUrl.replace(/\/$/, '');
-  const res = await fetch(`${base}/discovery/swipe`, {
+  const res = await fetchWithTimeout(`${base}/discovery/swipe`, {
     method: 'POST',
     headers: await apiJsonHeaders(),
     body: JSON.stringify({ peerId: params.peerId, action: params.action }),
