@@ -88,8 +88,8 @@ This yields:
 - (Optional) **App Information → License Agreement** → you may paste the EULA text or
   keep the in-app EULA. The in-app gate is what satisfies 1.2.
 
-> ⚠️ Confirm/replace the placeholder support email `suporte@toplynk.com.br` used in
-> the app EULA and on the web pages with your real support inbox before resubmitting.
+> Support email used across the app (EULA/Privacy) and the web pages:
+> `guilhermemeneguelli@gmail.com`.
 
 ---
 
