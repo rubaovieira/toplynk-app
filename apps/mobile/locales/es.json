@@ -222,7 +222,7 @@
     "retry": "Reintentar",
     "locationTitle": "Activa tu ubicación",
     "locationSub": "Necesitamos tu ubicación para mostrarte profesionales cerca de ti.",
-    "enableLocation": "Activar ubicación",
+    "enableLocation": "Continuar",
     "locationDenied": "Permiso de ubicación denegado. Actívalo en los ajustes del dispositivo.",
     "locationError": "No se pudo obtener tu ubicación. Inténtalo de nuevo."
   },
@@ -414,7 +414,7 @@
       "errorAtLeastOne": "Añade al menos una foto para continuar."
     },
     "step6": {
-      "cta": "Activar mi ubicación",
+      "cta": "Continuar",
       "title": "¿Quieres encontrar profesionales cerca de ti?",
       "subtitle": "Activa la ubicación para descubrir conexiones cercanas.",
       "errorPermission": "Sin permiso de ubicación no podemos emparejarte con personas cercanas. Puedes activarlo más tarde en los ajustes del dispositivo.",
