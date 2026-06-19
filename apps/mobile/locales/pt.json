@@ -222,7 +222,7 @@
     "retry": "Tentar de novo",
     "locationTitle": "Ative sua localização",
     "locationSub": "Precisamos da sua localização para mostrar profissionais perto de você.",
-    "enableLocation": "Ativar localização",
+    "enableLocation": "Continuar",
     "locationDenied": "Permissão de localização negada. Ative nas configurações do aparelho.",
     "locationError": "Não foi possível obter sua localização. Tente novamente."
   },
@@ -414,7 +414,7 @@
       "errorAtLeastOne": "Adicione pelo menos uma foto para continuar."
     },
     "step6": {
-      "cta": "Ativar minha localização",
+      "cta": "Continuar",
       "title": "Quer encontrar profissionais próximos?",
       "subtitle": "Ative sua localização para descobrir conexões perto de você.",
       "errorPermission": "Sem permissão de localização não conseguimos aproximar você de quem está por perto. Você pode ativar depois nas configurações do celular.",

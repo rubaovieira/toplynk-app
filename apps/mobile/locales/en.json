@@ -222,7 +222,7 @@
     "retry": "Try again",
     "locationTitle": "Turn on your location",
     "locationSub": "We need your location to show professionals near you.",
-    "enableLocation": "Enable location",
+    "enableLocation": "Continue",
     "locationDenied": "Location permission denied. Enable it in your device settings.",
     "locationError": "Couldn’t get your location. Please try again."
   },
@@ -414,7 +414,7 @@
       "errorAtLeastOne": "Add at least one photo to continue."
     },
     "step6": {
-      "cta": "Turn on my location",
+      "cta": "Continue",
       "title": "Want to find professionals near you?",
       "subtitle": "Turn on location to discover connections close to you.",
       "errorPermission": "Without location permission we cannot match you with people nearby. You can enable it later in your device settings.",
