@@ -86,6 +86,38 @@ export class DiscoveryService {
     return { vlat, vlng, viewerInterests };
   }
 
+  /**
+   * MANOBRA "mostrar todos" (env `DISCOVERY_SHOW_ALL`): lê a geo do viewer SEM lançar 400.
+   * Quando o cadastro não capturou localização, devolve lat/lng nulos — o deck ainda é
+   * montado (distância fica desconhecida) em vez de bloquear a tela pedindo localização.
+   */
+  private readViewerGeoLoose(viewer: User): { vlat: number | null; vlng: number | null; viewerInterests: string[] } {
+    const sp =
+      viewer?.setupProfile && typeof viewer.setupProfile === 'object' && !Array.isArray(viewer.setupProfile)
+        ? (viewer.setupProfile as Record<string, unknown>)
+        : undefined;
+    if (!sp) return { vlat: null, vlng: null, viewerInterests: [] };
+    const vlatRaw = Number(sp.latitude);
+    const vlngRaw = Number(sp.longitude);
+    const viewerInterests = Array.isArray(sp.interestIds)
+      ? sp.interestIds.filter((x): x is string => typeof x === 'string')
+      : [];
+    return {
+      vlat: Number.isFinite(vlatRaw) ? vlatRaw : null,
+      vlng: Number.isFinite(vlngRaw) ? vlngRaw : null,
+      viewerInterests,
+    };
+  }
+
+  /**
+   * Liga a manobra de lançamento: ignora o raio e mostra TODOS os perfis cadastrados
+   * (inclusive quem não concedeu localização). Reversível: basta remover a env e reiniciar.
+   */
+  private static showAllEnabled(): boolean {
+    const v = (process.env.DISCOVERY_SHOW_ALL ?? '').trim().toLowerCase();
+    return v === 'true' || v === '1' || v === 'yes' || v === 'on';
+  }
+
   private toDiscoveryCard(
     peer: User,
     distanceKm: number,
@@ -308,9 +340,14 @@ export class DiscoveryService {
     limit: number,
     minInterestOverlap: number,
   ): Promise<DiscoveryCard[]> {
+    const showAll = DiscoveryService.showAllEnabled();
+
     const viewer = await this.users.findOne({ where: { id: viewerId } });
     if (!viewer) throw new NotFoundException();
-    const { vlat, vlng, viewerInterests } = this.assertViewerGeo(viewer);
+    // Em modo "mostrar todos" não exigimos geo do viewer (evita o 400 que vira tela vazia / CTA de localização).
+    const { vlat, vlng, viewerInterests } = showAll
+      ? this.readViewerGeoLoose(viewer)
+      : this.assertViewerGeo(viewer);
 
     const swipedRows = await this.swipes.find({
       where: { viewerId },
@@ -322,12 +359,16 @@ export class DiscoveryService {
     const blockedIds = await this.moderation.blockedIdsFor(viewerId);
     for (const id of blockedIds) excluded.add(id);
 
-    const others = await this.users
+    const qb = this.users
       .createQueryBuilder('u')
       .where('u.id != :id', { id: viewerId })
-      .andWhere(`u.setup_profile::jsonb ? 'latitude'`)
-      .andWhere(`u.setup_profile::jsonb ? 'longitude'`)
-      .getMany();
+      // Contas apagadas/anonimizadas (Guideline 5.1.1v) nunca devem aparecer no deck.
+      .andWhere('u.deleted_at IS NULL');
+    // Fora do modo "mostrar todos", mantém a exigência de geo na própria query (comportamento original).
+    if (!showAll) {
+      qb.andWhere(`u.setup_profile::jsonb ? 'latitude'`).andWhere(`u.setup_profile::jsonb ? 'longitude'`);
+    }
+    const others = await qb.getMany();
 
     const pool: PoolRow[] = [];
 
@@ -338,9 +379,16 @@ export class DiscoveryService {
       const s = sp as Record<string, unknown>;
       const lat = Number(s.latitude);
       const lng = Number(s.longitude);
-      if (!Number.isFinite(lat) || !Number.isFinite(lng)) continue;
-      const d = haversineKm(vlat, vlng, lat, lng);
-      if (d > radiusKm) continue;
+      const hasGeo = Number.isFinite(lat) && Number.isFinite(lng);
+
+      // Distância só é real quando os dois lados têm geo; senão fica 0 (desconhecida) no modo "mostrar todos".
+      const d = hasGeo && vlat != null && vlng != null ? haversineKm(vlat, vlng, lat, lng) : 0;
+
+      if (!showAll) {
+        if (!hasGeo) continue;
+        if (d > radiusKm) continue;
+      }
+
       const theirInterests = Array.isArray(s.interestIds)
         ? s.interestIds.filter((x): x is string => typeof x === 'string')
         : [];
