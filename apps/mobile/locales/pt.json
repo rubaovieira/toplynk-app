@@ -1,4 +1,7 @@
 {
+  "session": {
+    "expired": "Sua sessão expirou. Entre novamente para continuar."
+  },
   "login": {
     "email": "E-mail",
     "emailPlaceholder": "seuemail@toplynk.com.br",

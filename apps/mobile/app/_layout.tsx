@@ -2,7 +2,8 @@ import "@/lib/i18n";
 
 import * as NavigationBar from "expo-navigation-bar";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Stack, router } from "expo-router";
+import { useTranslation } from "react-i18next";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
@@ -19,7 +20,9 @@ import { ValidationToastHost } from "@/components/ValidationToastHost";
 import { useColorScheme } from "@/components/useColorScheme";
 import { hydrateLocaleFromStorage } from "@/lib/i18n";
 import { getApiBaseUrl } from "@/lib/api-config";
-import { getAccessToken } from "@/lib/auth-storage";
+import { clearSession, getAccessToken } from "@/lib/auth-storage";
+import { setUnauthorizedHandler } from "@/lib/session-expired";
+import { showValidationToast } from "@/lib/validation-toast";
 import { isExpoGo } from "@/lib/expo-go";
 import {
   attachOneSignalNotificationOpenRouter,
@@ -94,6 +97,22 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  const { t } = useTranslation();
+
+  /**
+   * Sessão expirada: qualquer requisição autenticada que receba 401 (token vencido/inválido)
+   * limpa a sessão e volta ao login, em vez de deixar o app preso recebendo 401 em cadeia.
+   */
+  useEffect(() => {
+    setUnauthorizedHandler(() => {
+      void (async () => {
+        await clearSession();
+        showValidationToast(t("session.expired"));
+        router.replace("/login");
+      })();
+    });
+    return () => setUnauthorizedHandler(undefined);
+  }, [t]);
 
   /** Android: esconde a barra de navegação (3 botões); reaparece ao deslizar de baixo para cima. Com gestos nativos do sistema, o efeito pode ser limitado (API do SO). */
   useEffect(() => {

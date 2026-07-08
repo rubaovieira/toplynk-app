@@ -1,6 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 
+import { resetUnauthorized } from '@/lib/session-expired';
+
 const LEGACY_LOGGED_IN = '@toplynk/logged_in';
 const ACCESS_TOKEN_KEY_NATIVE = 'toplynk_access_token';
 /** Web: SecureStore não aplica-se; JWT fica em AsyncStorage (dev). */
@@ -44,6 +46,8 @@ export async function setAccessToken(token: string): Promise<void> {
   } catch {
     /* ignore */
   }
+  // Novo token válido: rearma o disparo de sessão expirada para o próximo 401.
+  resetUnauthorized();
 }
 
 export async function clearSession(): Promise<void> {
