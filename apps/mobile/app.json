@@ -8,6 +8,12 @@
     "scheme": "mobile",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "runtimeVersion": {
+      "policy": "fingerprint"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/ab350b34-b009-462b-a0e2-e433d114b774"
+    },
     "splash": {
       "image": "./assets/images/icon.png",
       "resizeMode": "contain",
