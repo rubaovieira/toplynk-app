@@ -1,3 +1,4 @@
+import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -14,7 +15,7 @@ import {
   View,
   type ViewToken,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 
 import { LanguageSelector } from "@/components/LanguageSelector";
@@ -24,30 +25,32 @@ const { width: SCREEN_W } = Dimensions.get("window");
 
 type Slide = {
   key: string;
-  imageUri: string;
+  image: number;
   title: string;
   description: string;
 };
 
-const SLIDE_URIS = [
-  "https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/top-lynk-o4k69i/assets/2gx82nl8e1qv/ChatGPT_Image_7_de_abr._de_2026%2C_02_21_27.png",
-  "https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/top-lynk-o4k69i/assets/9w5ygkgukwoh/ChatGPT_Image_7_de_abr._de_2026%2C_02_22_43.png",
-  "https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/top-lynk-o4k69i/assets/qv740r60jgrd/ChatGPT_Image_7_de_abr._de_2026%2C_02_25_16.png",
+const SLIDE_IMAGES = [
+  require("../../assets/images/onboarding/01.jpeg"),
+  require("../../assets/images/onboarding/03.jpeg"),
+  require("../../assets/images/onboarding/06.jpeg"),
 ] as const;
 
-const ACCENT = "#2196F3";
+const GRADIENT_START = "#2AC9B0";
+const GRADIENT_END = "#3DBE6C";
 const BG = "#121212";
 
 export default function OnboardingScreen() {
   const { t, i18n } = useTranslation();
+  const insets = useSafeAreaInsets();
   const listRef = useRef<FlatList<Slide>>(null);
   const [page, setPage] = useState(0);
 
   const slides = useMemo(
     () =>
-      SLIDE_URIS.map((uri, i) => ({
+      SLIDE_IMAGES.map((image, i) => ({
         key: String(i + 1),
-        imageUri: uri,
+        image,
         title: t(`onboarding.slide${i + 1}.title`),
         description: t(`onboarding.slide${i + 1}.description`),
       })),
@@ -93,13 +96,28 @@ export default function OnboardingScreen() {
   const renderItem = useCallback(({ item }: ListRenderItemInfo<Slide>) => {
     return (
       <View style={[styles.slide, { width: SCREEN_W }]}>
-        <Image
-          source={{ uri: item.imageUri }}
-          style={styles.illustration}
-          resizeMode="cover"
+        <Image source={item.image} style={StyleSheet.absoluteFill} resizeMode="cover" />
+        <LinearGradient
+          colors={["rgba(0,0,0,0.5)", "rgba(0,0,0,0.1)", "transparent"]}
+          locations={[0, 0.5, 1]}
+          pointerEvents="none"
+          style={styles.topScrim}
         />
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.body}>{item.description}</Text>
+        <LinearGradient
+          colors={[
+            "transparent",
+            "rgba(0,0,0,0.25)",
+            "rgba(0,0,0,0.72)",
+            "rgba(0,0,0,0.92)",
+          ]}
+          locations={[0, 0.4, 0.75, 1]}
+          pointerEvents="none"
+          style={StyleSheet.absoluteFill}
+        />
+        <View style={styles.slideContent}>
+          <Text style={styles.title}>{item.title}</Text>
+          <Text style={styles.body}>{item.description}</Text>
+        </View>
       </View>
     );
   }, []);
@@ -107,60 +125,60 @@ export default function OnboardingScreen() {
   return (
     <View style={styles.root}>
       <StatusBar style="light" />
-      <SafeAreaView style={styles.safe} edges={["top", "bottom"]}>
-        <View style={styles.languageBar}>
-          <LanguageSelector compact />
-        </View>
-        <FlatList
-          ref={listRef}
-          data={slides}
-          extraData={i18n.language}
-          keyExtractor={(item) => item.key}
-          renderItem={renderItem}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onMomentumScrollEnd={onMomentumScrollEnd}
-          onViewableItemsChanged={onViewableItemsChanged}
-          viewabilityConfig={viewabilityConfig}
-          getItemLayout={(_, index) => ({
-            length: SCREEN_W,
-            offset: SCREEN_W * index,
-            index,
-          })}
-          style={styles.list}
-          bounces={false}
-        />
 
+      <FlatList
+        ref={listRef}
+        data={slides}
+        extraData={i18n.language}
+        keyExtractor={(item) => item.key}
+        renderItem={renderItem}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        onMomentumScrollEnd={onMomentumScrollEnd}
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
+        getItemLayout={(_, index) => ({
+          length: SCREEN_W,
+          offset: SCREEN_W * index,
+          index,
+        })}
+        style={styles.list}
+        bounces={false}
+      />
+
+      <View style={[styles.topBar, { top: insets.top + 12 }]} pointerEvents="box-none">
+        <Text style={styles.brand}>TOPLYNK</Text>
+        <LanguageSelector compact />
+      </View>
+
+      <SafeAreaView
+        style={styles.bottomOverlay}
+        edges={["bottom"]}
+        pointerEvents="box-none"
+      >
         <View style={styles.dots}>
           {slides.map((s, i) => (
-            <View
-              key={s.key}
-              style={[styles.dot, i === page && styles.dotActive]}
-            />
+            <View key={s.key} style={[styles.dot, i === page && styles.dotActive]} />
           ))}
         </View>
 
-        <View style={styles.actions}>
-          <Pressable
-            onPress={onSkip}
-            style={({ pressed }) => [
-              styles.btnOutline,
-              pressed && styles.pressed,
-            ]}
-          >
-            <Text style={styles.btnOutlineText}>{t("onboarding.skip")}</Text>
-          </Pressable>
-          <Pressable
-            onPress={onContinue}
-            style={({ pressed }) => [
-              styles.btnSolid,
-              pressed && styles.pressed,
-            ]}
-          >
-            <Text style={styles.btnSolidText}>{t("onboarding.continue")}</Text>
-          </Pressable>
-        </View>
+        <Pressable onPress={onContinue}>
+          {({ pressed }) => (
+            <LinearGradient
+              colors={[GRADIENT_START, GRADIENT_END]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={[styles.btnGradient, pressed && styles.pressed]}
+            >
+              <Text style={styles.btnGradientText}>{t("onboarding.continue")}</Text>
+            </LinearGradient>
+          )}
+        </Pressable>
+
+        <Pressable onPress={onSkip} hitSlop={10} style={styles.skipBtn}>
+          <Text style={styles.skipText}>{t("onboarding.skip")}</Text>
+        </Pressable>
       </SafeAreaView>
     </View>
   );
@@ -171,44 +189,58 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: BG,
   },
-  safe: {
-    flex: 1,
-  },
-  languageBar: {
-    marginTop: 10,
-    paddingHorizontal: 20,
-    paddingBottom: 4,
-  },
   list: {
     flex: 1,
   },
   slide: {
     flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 8,
-    justifyContent: "flex-start",
   },
-  illustration: {
-    width: SCREEN_W - 40,
-    height: Dimensions.get("window").height * 0.42,
-    borderRadius: 20,
-    alignSelf: "center",
-    marginBottom: 28,
+  topScrim: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    height: 220,
+  },
+  slideContent: {
+    flex: 1,
+    justifyContent: "flex-end",
+    paddingHorizontal: 28,
+    paddingBottom: 190,
   },
   title: {
     color: "#fff",
-    fontSize: 26,
-    fontWeight: "700",
+    fontSize: 28,
+    fontWeight: "800",
+    lineHeight: 34,
     textAlign: "center",
-    marginBottom: 14,
-    paddingHorizontal: 8,
+    marginBottom: 12,
   },
   body: {
-    color: "rgba(255,255,255,0.78)",
-    fontSize: 16,
-    lineHeight: 24,
+    color: "rgba(255,255,255,0.85)",
+    fontSize: 15,
+    lineHeight: 22,
     textAlign: "center",
-    paddingHorizontal: 12,
+  },
+  topBar: {
+    position: "absolute",
+    left: 20,
+    right: 20,
+    gap: 10,
+  },
+  brand: {
+    color: "#fff",
+    fontSize: 20,
+    fontWeight: "800",
+    letterSpacing: 1,
+    textAlign: "center",
+  },
+  bottomOverlay: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingHorizontal: 24,
   },
   dots: {
     flexDirection: "row",
@@ -220,43 +252,32 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: "rgba(255,255,255,0.25)",
+    backgroundColor: "rgba(255,255,255,0.35)",
   },
   dotActive: {
-    backgroundColor: ACCENT,
+    backgroundColor: "#fff",
     width: 22,
   },
-  actions: {
-    flexDirection: "row",
-    gap: 12,
-    paddingHorizontal: 20,
-    paddingBottom: 8,
-  },
-  btnOutline: {
-    flex: 1,
-    minHeight: 48,
+  btnGradient: {
+    minHeight: 56,
     borderRadius: 999,
-    borderWidth: 1,
-    borderColor: ACCENT,
     alignItems: "center",
     justifyContent: "center",
   },
-  btnOutlineText: {
-    color: ACCENT,
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  btnSolid: {
-    flex: 1,
-    minHeight: 48,
-    borderRadius: 999,
-    backgroundColor: ACCENT,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  btnSolidText: {
+  btnGradientText: {
     color: "#fff",
-    fontSize: 16,
+    fontSize: 17,
+    fontWeight: "700",
+  },
+  skipBtn: {
+    alignSelf: "center",
+    marginTop: 14,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+  },
+  skipText: {
+    color: "rgba(255,255,255,0.8)",
+    fontSize: 14,
     fontWeight: "600",
   },
   pressed: {
