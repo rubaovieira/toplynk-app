@@ -35,6 +35,7 @@ import {
 } from "@/lib/push-notifications";
 import { registerPushDeviceAfterAuth } from "@/lib/register-push-device";
 import { postMyPresence } from "@/lib/users-api";
+import { applyPendingUpdateAsync } from "@/lib/app-updates";
 
 const APP_DARK_BG = "#121212";
 
@@ -161,6 +162,17 @@ function RootLayoutNav() {
     const sub = Notifications.addNotificationResponseReceivedListener(
       routeFromNotificationResponse,
     );
+    return () => sub.remove();
+  }, []);
+
+  useEffect(() => {
+    if (Platform.OS === "web" || isExpoGo()) {
+      return;
+    }
+    void applyPendingUpdateAsync();
+    const sub = AppState.addEventListener("change", (s) => {
+      if (s === "active") void applyPendingUpdateAsync();
+    });
     return () => sub.remove();
   }, []);
 
