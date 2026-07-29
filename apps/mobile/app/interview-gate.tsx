@@ -19,7 +19,7 @@ export default function InterviewGateScreen() {
   const { t } = useTranslation();
 
   const onProceed = useCallback(() => {
-    router.replace('/entrevista-ia');
+    router.replace('/entrevista-voz');
   }, []);
 
   return (

@@ -45,7 +45,7 @@ export default function SetupStep6Screen() {
 
   const onContinue = useCallback(async () => {
     if (Platform.OS === "web") {
-      router.replace("/entrevista-ia");
+      router.replace("/interview-intro");
       return;
     }
 
@@ -105,10 +105,10 @@ export default function SetupStep6Screen() {
       }
 
       setBusy(false);
-      router.replace("/entrevista-ia");
+      router.replace("/interview-intro");
     } catch {
       setBusy(false);
-      router.replace("/entrevista-ia");
+      router.replace("/interview-intro");
     }
   }, [t]);
 

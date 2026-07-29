@@ -202,6 +202,7 @@ function RootLayoutNav() {
         <Stack.Screen name="signup" />
         <Stack.Screen name="setup" />
         <Stack.Screen name="entrevista-ia" />
+        <Stack.Screen name="entrevista-voz" />
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="matches-search" />
         <Stack.Screen name="user-profile" />

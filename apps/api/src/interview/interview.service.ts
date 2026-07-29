@@ -1,11 +1,15 @@
-import {
-  BadGatewayException,
-  Injectable,
-  ServiceUnavailableException,
-} from '@nestjs/common';
+import { BadGatewayException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { InterviewTurnDto } from './dto/interview-turn.dto';
+import { InterviewTranscribeDto } from './dto/interview-transcribe.dto';
+import { InterviewAudioService } from './interview-audio.service';
+import {
+  fetchOpenAi,
+  openAiErrorDetail,
+  readOpenAiAuth,
+  readTimeoutMs,
+} from './openai-fetch.util';
 
 const OPENAI_URL = 'https://api.openai.com/v1/chat/completions';
 
@@ -42,6 +46,11 @@ export type InterviewTurnResult = {
   interview_complete: boolean;
   fase1: InterviewFase1Payload | null;
   fase2_items: InterviewFase2ItemPayload[] | null;
+  /** 0–100 estimado pelo modelo. `null` se ele ignorar a instrução. */
+  progress: number | null;
+  /** mp3 em base64 da fala do assistente; `null` quando mudo ou o TTS falhou. */
+  audioBase64: string | null;
+  audioMimeType: string | null;
 };
 
 function isRecord(v: unknown): v is Record<string, unknown> {
@@ -79,6 +88,7 @@ OUTPUT (every reply MUST be valid JSON only, no markdown):
 {
   "assistant_message": string,
   "interview_complete": boolean,
+  "progress": number,
   "fase1": null | {
     "primaryGoals": string[],
     "professionalMoment": string,
@@ -93,6 +103,13 @@ OUTPUT (every reply MUST be valid JSON only, no markdown):
 
 When interview_complete is false: set fase1 and fase2_items to null.
 When interview_complete is true: fase1 must be fully valid; fase2_items must list each follow-up topic you asked (question = how you asked; answer = user's answer summarized faithfully as string, or string[] if they listed multiple items). Use questionIds like "f2_1", "f2_2", … in order.
+
+PROGRESS:
+- "progress" is an integer from 0 to 100 estimating how far through the interview the user is.
+- Budget it: the five fase1 topics (goals, career moment, main area, work preference, search radius) together span 0-60; the 5-7 deeper follow-ups span 60-95.
+- progress must never be lower than the value you reported in your previous reply.
+- progress is exactly 100 if and only if interview_complete is true.
+- On the very first reply (after "[START]"), progress is 0.
 
 The first user message may be "[START]": reply with a brief greeting and your first substantive question (no long preamble).`;
 }
@@ -113,6 +130,12 @@ function parseTurn(raw: string): InterviewTurnResult {
   const assistant_message =
     typeof parsed.assistant_message === 'string' ? parsed.assistant_message.trim() : '';
   const interview_complete = Boolean(parsed.interview_complete);
+
+  const rawProgress = Number(parsed.progress);
+  let progress: number | null = Number.isFinite(rawProgress)
+    ? Math.max(0, Math.min(100, Math.round(rawProgress)))
+    : null;
+  if (interview_complete) progress = 100;
 
   let fase1: InterviewFase1Payload | null = null;
   let fase2_items: InterviewFase2ItemPayload[] | null = null;
@@ -160,59 +183,62 @@ function parseTurn(raw: string): InterviewTurnResult {
     interview_complete,
     fase1,
     fase2_items: interview_complete ? fase2_items : null,
+    progress,
+    audioBase64: null,
+    audioMimeType: null,
   };
 }
 
+/**
+ * Piso de tempo abaixo do qual nem vale tentar o TTS: o cliente aborta em 45s
+ * e uma síntese iniciada tarde só serviria para estourar esse limite.
+ */
+const TTS_MIN_BUDGET_MS = 5000;
+
 @Injectable()
 export class InterviewService {
-  constructor(private readonly config: ConfigService) {}
+  constructor(
+    private readonly config: ConfigService,
+    private readonly audio: InterviewAudioService,
+  ) {}
+
+  async transcribe(dto: InterviewTranscribeDto): Promise<{ text: string }> {
+    const text = await this.audio.transcribe(dto.audioBase64, dto.mimeType, dto.locale);
+    return { text };
+  }
 
   async runTurn(dto: InterviewTurnDto): Promise<InterviewTurnResult> {
-    const apiKey = this.config.get<string>('OPENAI_API_KEY')?.trim();
-    if (!apiKey) {
-      throw new ServiceUnavailableException(
-        'OPENAI_API_KEY não está definida no servidor (apps/api/.env).',
-      );
-    }
+    const startedAt = Date.now();
+    const { headers } = readOpenAiAuth(this.config);
 
-    const model =
-      this.config.get<string>('OPENAI_MODEL')?.trim() || 'gpt-4o-mini';
-    const organization = this.config.get<string>('OPENAI_ORG_ID')?.trim();
-    const project = this.config.get<string>('OPENAI_PROJECT_ID')?.trim();
-
+    const model = this.config.get<string>('OPENAI_MODEL')?.trim() || 'gpt-4o-mini';
+    const chatTimeoutMs = readTimeoutMs(this.config, 'OPENAI_CHAT_TIMEOUT_MS', 30000);
     const system = buildInterviewSystemPrompt(dto.locale);
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    };
-    if (organization) headers['OpenAI-Organization'] = organization;
-    if (project) headers['OpenAI-Project'] = project;
 
-    const res = await fetch(OPENAI_URL, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-        model,
-        temperature: 0.55,
-        max_tokens: 1800,
-        response_format: { type: 'json_object' },
-        messages: [
-          { role: 'system', content: system },
-          ...dto.messages.map((m) => ({ role: m.role, content: m.content })),
-        ],
-      }),
-    });
+    const res = await fetchOpenAi(
+      OPENAI_URL,
+      {
+        method: 'POST',
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model,
+          temperature: 0.55,
+          max_tokens: 1800,
+          response_format: { type: 'json_object' },
+          messages: [
+            { role: 'system', content: system },
+            ...dto.messages.map((m) => ({ role: m.role, content: m.content })),
+          ],
+        }),
+      },
+      chatTimeoutMs,
+      'turno da entrevista',
+    );
 
     if (!res.ok) {
-      const errBody = await res.text();
-      let detail = '';
-      try {
-        const j = JSON.parse(errBody) as { error?: { message?: string } };
-        if (typeof j.error?.message === 'string') detail = j.error.message.trim();
-      } catch {
-        detail = errBody.trim().slice(0, 400);
-      }
-      throw new BadGatewayException(detail || `OpenAI HTTP ${res.status}`);
+      throw new BadGatewayException(
+        (await openAiErrorDetail(res)) || `OpenAI HTTP ${res.status}`,
+      );
     }
 
     const data = (await res.json()) as {
@@ -223,11 +249,28 @@ export class InterviewService {
       throw new BadGatewayException('Resposta sem conteúdo da OpenAI');
     }
 
+    let turn: InterviewTurnResult;
     try {
-      return parseTurn(content);
+      turn = parseTurn(content);
     } catch (e) {
       const msg = e instanceof Error ? e.message : 'Falha ao interpretar JSON da OpenAI';
       throw new BadGatewayException(msg);
     }
+
+    if (!dto.speak) return turn;
+
+    // O turno já está válido e pago. A síntese é um extra: se falhar ou não
+    // couber no orçamento restante, devolvemos sem áudio e o app mostra texto.
+    const remainingMs = chatTimeoutMs - (Date.now() - startedAt);
+    if (remainingMs < TTS_MIN_BUDGET_MS) return turn;
+
+    const audioBase64 = await this.audio.synthesize(
+      turn.assistant_message,
+      dto.voice,
+      remainingMs,
+    );
+    return audioBase64
+      ? { ...turn, audioBase64, audioMimeType: 'audio/mpeg' }
+      : turn;
   }
 }

@@ -64,7 +64,13 @@
           "locationWhenInUsePermission": "O TopLynk usa sua localização para mostrar profissionais e conexões próximas a você."
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "O TopLynk usa o microfone para você responder à entrevista inteligente falando, em vez de digitar."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

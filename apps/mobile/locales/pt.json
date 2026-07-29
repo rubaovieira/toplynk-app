@@ -385,25 +385,12 @@
       }
     },
     "step4": {
-      "title": "Qual é o seu objetivo?",
-      "subtitle": "Networking, parcerias, contratações ou novas oportunidades – escolha o que busca aqui.",
+      "title": "Qual é o seu principal objetivo dentro da plataforma?",
       "goals": {
-        "networking": {
-          "name": "Expandir networking",
-          "description": "Conheça profissionais e fortaleça sua rede de contatos."
-        },
-        "partnerships": {
-          "name": "Parcerias e colaborações",
-          "description": "Encontre pessoas e empresas para projetos em conjunto."
-        },
-        "hiring": {
-          "name": "Contratar talentos",
-          "description": "Busque candidatos alinhados ao que sua empresa precisa."
-        },
-        "opportunities": {
-          "name": "Novas oportunidades",
-          "description": "Explore vagas, freelas e caminhos para o próximo passo."
-        }
+        "partnerships": "Parceria de negócios",
+        "knowledge_sharing": "Compartilhar conhecimento",
+        "networking": "Ampliar rede de contatos",
+        "learn_from_experts": "Aprender com especialistas"
       }
     },
     "step5": {
@@ -512,7 +499,8 @@
         "radius_50km": "Cidade inteira (até 50 km)",
         "radius_any": "Sem preferência"
       }
-    }
+    },
+    "chatError504": "A resposta demorou demais. Tente de novo."
   },
   "modal": {
     "title": "Aviso"
@@ -521,6 +509,12 @@
     "header": "Ops!",
     "title": "Esta tela não existe.",
     "link": "Ir para a tela inicial"
+  },
+  "interviewIntro": {
+    "header": "Assistente TopLynk",
+    "lead": "Ótimo. Com base no seu objetivo e nas respostas a seguir, poderemos te conectar aos perfis mais interessantes!",
+    "format": "As perguntas serão feitas e respondidas por áudio, em formato de conversa. A mesma deve durar entre 15 e 20 minutos, em média.",
+    "cta": "Clique em continuar para completar sua entrevista na próxima tela."
   },
   "interviewGate": {
     "title": "Sua entrevista está incompleta",
@@ -554,15 +548,42 @@
     "updated": "Última atualização: 17 de junho de 2026",
     "intro": "Estes Termos de Uso (o Contrato de Licença de Usuário Final, ou \"EULA\") regem o uso do aplicativo TopLynk. Ao criar uma conta, fazer login ou usar o TopLynk, você concorda integralmente com estes termos. Se não concordar, não use o aplicativo.",
     "sections": [
-      { "heading": "1. Elegibilidade", "body": "Você deve ter pelo menos 18 anos e capacidade legal para aceitar este contrato. O TopLynk é uma rede de conexões profissionais." },
-      { "heading": "2. Tolerância zero a conteúdo ofensivo e abuso", "body": "Não há tolerância para conteúdo censurável nem para usuários abusivos. É proibido publicar, enviar ou compartilhar conteúdo ilegal, ofensivo, difamatório, de assédio, ódio, violência, conteúdo sexual explícito, spam, fraude ou que viole direitos de terceiros. Quem praticar abuso terá o conteúdo removido e a conta suspensa ou encerrada." },
-      { "heading": "3. Denúncia de conteúdo", "body": "Em qualquer perfil ou conversa você pode denunciar conteúdo censurável tocando em \"⋮\" e depois em \"Reportar\". Analisamos todas as denúncias e agimos em até 24 horas, removendo o conteúdo censurável e banindo quem o publicou." },
-      { "heading": "4. Bloqueio de usuários", "body": "Você pode bloquear qualquer usuário a qualquer momento, pelo perfil ou pela conversa (\"⋮\" > \"Bloquear\"). Pessoas bloqueadas deixam de ver você, de aparecer para você e não podem mais enviar mensagens. Gerencie a lista em Perfil > Contas bloqueadas." },
-      { "heading": "5. Conduta do usuário", "body": "Você é o único responsável pelo conteúdo que publica e pelas interações que tem. Concorda em tratar os demais com respeito e em não usar o TopLynk para fins ilícitos." },
-      { "heading": "6. Moderação e encerramento", "body": "Podemos remover conteúdo e suspender ou encerrar contas que violem estes termos, com ou sem aviso prévio, em especial nos casos de conteúdo censurável ou abuso." },
-      { "heading": "7. Exclusão de conta", "body": "Você pode apagar sua conta a qualquer momento em Perfil > Apagar minha conta. A exclusão é permanente: removemos seu conteúdo pessoal e anonimizamos seus dados." },
-      { "heading": "8. Privacidade", "body": "O tratamento dos seus dados segue a nossa Política de Privacidade, disponível em toplynk.com.br/politica-de-privacidade." },
-      { "heading": "9. Isenção de responsabilidade", "body": "O TopLynk é fornecido \"como está\". Não nos responsabilizamos pela conduta dos usuários, mas atuamos para manter a comunidade segura conforme estes termos." }
+      {
+        "heading": "1. Elegibilidade",
+        "body": "Você deve ter pelo menos 18 anos e capacidade legal para aceitar este contrato. O TopLynk é uma rede de conexões profissionais."
+      },
+      {
+        "heading": "2. Tolerância zero a conteúdo ofensivo e abuso",
+        "body": "Não há tolerância para conteúdo censurável nem para usuários abusivos. É proibido publicar, enviar ou compartilhar conteúdo ilegal, ofensivo, difamatório, de assédio, ódio, violência, conteúdo sexual explícito, spam, fraude ou que viole direitos de terceiros. Quem praticar abuso terá o conteúdo removido e a conta suspensa ou encerrada."
+      },
+      {
+        "heading": "3. Denúncia de conteúdo",
+        "body": "Em qualquer perfil ou conversa você pode denunciar conteúdo censurável tocando em \"⋮\" e depois em \"Reportar\". Analisamos todas as denúncias e agimos em até 24 horas, removendo o conteúdo censurável e banindo quem o publicou."
+      },
+      {
+        "heading": "4. Bloqueio de usuários",
+        "body": "Você pode bloquear qualquer usuário a qualquer momento, pelo perfil ou pela conversa (\"⋮\" > \"Bloquear\"). Pessoas bloqueadas deixam de ver você, de aparecer para você e não podem mais enviar mensagens. Gerencie a lista em Perfil > Contas bloqueadas."
+      },
+      {
+        "heading": "5. Conduta do usuário",
+        "body": "Você é o único responsável pelo conteúdo que publica e pelas interações que tem. Concorda em tratar os demais com respeito e em não usar o TopLynk para fins ilícitos."
+      },
+      {
+        "heading": "6. Moderação e encerramento",
+        "body": "Podemos remover conteúdo e suspender ou encerrar contas que violem estes termos, com ou sem aviso prévio, em especial nos casos de conteúdo censurável ou abuso."
+      },
+      {
+        "heading": "7. Exclusão de conta",
+        "body": "Você pode apagar sua conta a qualquer momento em Perfil > Apagar minha conta. A exclusão é permanente: removemos seu conteúdo pessoal e anonimizamos seus dados."
+      },
+      {
+        "heading": "8. Privacidade",
+        "body": "O tratamento dos seus dados segue a nossa Política de Privacidade, disponível em toplynk.com.br/politica-de-privacidade."
+      },
+      {
+        "heading": "9. Isenção de responsabilidade",
+        "body": "O TopLynk é fornecido \"como está\". Não nos responsabilizamos pela conduta dos usuários, mas atuamos para manter a comunidade segura conforme estes termos."
+      }
     ],
     "contact": "Dúvidas ou suporte: guilhermemeneguelli@gmail.com."
   },
@@ -572,12 +593,51 @@
     "updated": "Última atualização: 17 de junho de 2026",
     "intro": "Esta Política descreve quais dados o TopLynk coleta, como os usamos e como você pode exercer seus direitos. Ao usar o aplicativo, você concorda com este tratamento.",
     "sections": [
-      { "heading": "1. Dados que coletamos", "body": "Cadastro: nome, e-mail e senha (armazenada de forma criptografada). Perfil: cargo, empresa, áreas de atuação, interesses, biografia e fotos que você adiciona. Localização aproximada, quando você ativa, para sugerir conexões próximas. Uso: conversas, interesses (likes), denúncias e bloqueios, para operar e moderar o serviço." },
-      { "heading": "2. Como usamos seus dados", "body": "Para criar e manter sua conta, sugerir conexões relevantes, permitir conversas, enviar notificações e manter a comunidade segura (moderação de denúncias e bloqueios)." },
-      { "heading": "3. Compartilhamento", "body": "Não vendemos seus dados pessoais. Compartilhamos apenas com prestadores que viabilizam o serviço (por exemplo, notificações push e infraestrutura) e quando exigido por lei." },
-      { "heading": "4. Seus direitos e exclusão de conta", "body": "Você pode acessar e editar seus dados no app. Pode apagar sua conta a qualquer momento em Perfil > Apagar minha conta: a exclusão remove seu conteúdo pessoal e anonimiza seus dados de forma permanente." },
-      { "heading": "5. Segurança", "body": "Adotamos medidas técnicas e organizacionais para proteger seus dados, incluindo transmissão criptografada e armazenamento seguro de senhas." }
+      {
+        "heading": "1. Dados que coletamos",
+        "body": "Cadastro: nome, e-mail e senha (armazenada de forma criptografada). Perfil: cargo, empresa, áreas de atuação, interesses, biografia e fotos que você adiciona. Localização aproximada, quando você ativa, para sugerir conexões próximas. Uso: conversas, interesses (likes), denúncias e bloqueios, para operar e moderar o serviço."
+      },
+      {
+        "heading": "2. Como usamos seus dados",
+        "body": "Para criar e manter sua conta, sugerir conexões relevantes, permitir conversas, enviar notificações e manter a comunidade segura (moderação de denúncias e bloqueios)."
+      },
+      {
+        "heading": "3. Compartilhamento",
+        "body": "Não vendemos seus dados pessoais. Compartilhamos apenas com prestadores que viabilizam o serviço (por exemplo, notificações push e infraestrutura) e quando exigido por lei."
+      },
+      {
+        "heading": "4. Seus direitos e exclusão de conta",
+        "body": "Você pode acessar e editar seus dados no app. Pode apagar sua conta a qualquer momento em Perfil > Apagar minha conta: a exclusão remove seu conteúdo pessoal e anonimiza seus dados de forma permanente."
+      },
+      {
+        "heading": "5. Segurança",
+        "body": "Adotamos medidas técnicas e organizacionais para proteger seus dados, incluindo transmissão criptografada e armazenamento seguro de senhas."
+      }
     ],
     "contact": "Para exercer seus direitos ou tirar dúvidas: guilhermemeneguelli@gmail.com."
+  },
+  "entrevistaVoz": {
+    "title": "Entrevista por voz",
+    "stateListening": "Ouvindo",
+    "stateWaiting": "Aguarde um instante...",
+    "stateAnalyzing": "Estamos analisando suas informações...",
+    "stateSpeaking": "Assistente falando",
+    "statePaused": "Pausado",
+    "confirmHint": "Toque em ✓ quando terminar de falar",
+    "permissionDenied": "Precisamos do microfone para a entrevista por voz. Você pode responder por texto.",
+    "micUnavailable": "Não foi possível iniciar a gravação. Continue por texto.",
+    "tooShort": "Não consegui ouvir. Fale um pouco mais.",
+    "transcribeEmpty": "Não entendi. Pode repetir?",
+    "transcribeError": "Não consegui transcrever o áudio. Tente de novo.",
+    "switchToText": "Responder por texto",
+    "switchToVoice": "Responder por voz",
+    "fallbackNotice": "Sem acesso ao microfone — a entrevista continua por texto.",
+    "a11yBack": "Voltar",
+    "a11yMute": "Desativar voz do assistente",
+    "a11yUnmute": "Ativar voz do assistente",
+    "a11yPause": "Pausar",
+    "a11yResume": "Continuar",
+    "a11yConfirm": "Confirmar resposta",
+    "a11yOrb": "Assistente TopLynk"
   }
 }

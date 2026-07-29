@@ -23,6 +23,9 @@ export const DEFAULT_API_TIMEOUT_MS = 15000;
 /** Entrevista IA: a resposta passa pela OpenAI no backend e pode demorar mais. */
 export const LONG_API_TIMEOUT_MS = 45000;
 
+/** Transcrição: soma o upload do áudio ao tempo de processamento no servidor. */
+export const AUDIO_API_TIMEOUT_MS = 60000;
+
 export async function fetchWithTimeout(
   input: string,
   init: RequestInit = {},

@@ -1,7 +1,6 @@
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { CaretLeftIcon } from "phosphor-react-native";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import {
   Keyboard,
@@ -19,18 +18,7 @@ import { StatusBar } from "expo-status-bar";
 
 import { InterviewTypingIndicator } from "@/components/InterviewTypingIndicator";
 import { getApiBaseUrl } from "@/lib/api-config";
-import { runInterviewTurn } from "@/lib/entrevista-api";
-import { getSetupUserId } from "@/lib/setup-user-session";
-import { patchUserProfile } from "@/lib/users-api";
-import {
-  validateInterviewFase1,
-  type InterviewApiMessage,
-  type InterviewTurnResult,
-} from "@/lib/entrevista-chat-openai";
-import {
-  saveEntrevistaFase1,
-  saveEntrevistaFase2,
-} from "@/lib/entrevista-storage";
+import { useInterviewTurnRunner } from "@/lib/interview-turn-runner";
 import { showValidationToast } from "@/lib/validation-toast";
 import { setInterviewStatus } from "@/lib/interview-status";
 
@@ -48,43 +36,18 @@ type Role = "assistant" | "user";
 
 type ChatMsg = { id: string; role: Role; text: string };
 
-function mapInterviewErrorToUserMessage(err: unknown, t: TFunction): string {
-  const m = err instanceof Error ? err.message : String(err);
-  if (/503|OPENAI_API_KEY|não está definida|not configured/i.test(m)) {
-    return t("entrevistaIa.chatError503");
-  }
-  if (/incorrect api key|invalid_api_key|invalid x-api-key|^401$/i.test(m)) {
-    return t("entrevistaIa.chatError401");
-  }
-  if (/429|rate limit|too many requests/i.test(m)) {
-    return t("entrevistaIa.chatError429");
-  }
-  if (/502|bad gateway|OpenAI HTTP/i.test(m)) {
-    return t("entrevistaIa.chatError502");
-  }
-  if (
-    /failed to fetch|network request failed|load failed|network error/i.test(m)
-  ) {
-    return t("entrevistaIa.chatErrorNetwork");
-  }
-  if (m.length > 0 && m.length < 280) {
-    return m;
-  }
-  return t("entrevistaIa.chatErrorApi");
-}
-
 export default function EntrevistaIAScreen() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const { fallback } = useLocalSearchParams<{ fallback?: string }>();
   const scrollRef = useRef<ScrollView>(null);
-  const threadRef = useRef<InterviewApiMessage[]>([]);
   const booted = useRef(false);
 
   const [messages, setMessages] = useState<ChatMsg[]>([]);
   const [draft, setDraft] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [interviewDone, setInterviewDone] = useState(false);
   const [noApiUrl, setNoApiUrl] = useState(false);
   const blockComposer = noApiUrl;
+  /** Chegou aqui porque o microfone foi negado, não por escolha. */
+  const cameFromVoiceFallback = fallback === "1";
 
   const scrollToLatestMessage = useCallback(() => {
     const run = () => scrollRef.current?.scrollToEnd({ animated: true });
@@ -107,77 +70,27 @@ export default function EntrevistaIAScreen() {
     setMessages((prev) => [...prev, { id: `u-${ts}`, role: "user", text }]);
   }, []);
 
-  const persistComplete = useCallback(async (r: InterviewTurnResult) => {
-    if (!r.fase1 || !validateInterviewFase1(r.fase1)) return false;
-    try {
-      await saveEntrevistaFase1({
-        primaryGoals: r.fase1.primaryGoals,
-        professionalMoment: r.fase1.professionalMoment,
-        mainArea: r.fase1.mainArea.trim(),
-        workPreference: r.fase1.workPreference,
-        searchRadius: r.fase1.searchRadius,
-      });
-    } catch {
-      /* opcional */
-    }
-    const f2 = r.fase2_items ?? [];
-    try {
-      await saveEntrevistaFase2(f2);
-    } catch {
-      /* opcional */
-    }
-    const baseUrl = getApiBaseUrl();
-    const uid = await getSetupUserId();
-    if (baseUrl && uid) {
-      try {
-        await patchUserProfile(baseUrl, uid, {
-          interviewFase1: {
-            primaryGoals: r.fase1.primaryGoals,
-            professionalMoment: r.fase1.professionalMoment,
-            mainArea: r.fase1.mainArea.trim(),
-            workPreference: r.fase1.workPreference,
-            searchRadius: r.fase1.searchRadius,
-          },
-          interviewFase2Items: f2.map((item) => ({
-            questionId: item.questionId,
-            question: item.question,
-            tipo: item.tipo,
-            answer: item.answer,
-          })),
-        });
-      } catch {
-        /* sync servidor opcional se token expirou, etc. */
-      }
-    }
-    await setInterviewStatus('completed');
-    return true;
-  }, []);
-
   const goToDiscoverHome = useCallback(() => {
     Keyboard.dismiss();
     router.replace(TABS_HOME);
   }, []);
 
-  const handleTurnResult = useCallback(
-    async (r: InterviewTurnResult) => {
-      if (!r.interview_complete || !r.fase1) return;
-      if (!validateInterviewFase1(r.fase1)) {
-        appendAssistant(t("entrevistaIa.profileIncomplete"));
-        threadRef.current.push({
-          role: "assistant",
-          content: t("entrevistaIa.profileIncomplete"),
-        });
-        return;
-      }
-      const ok = await persistComplete(r);
-      if (ok) {
-        appendAssistant(t("entrevistaIa.phase2Complete"));
-        setInterviewDone(true);
-        Keyboard.dismiss();
-      }
+  const runner = useInterviewTurnRunner({
+    onAssistant: (text) => appendAssistant(text),
+    onComplete: () => {
+      appendAssistant(t("entrevistaIa.phase2Complete"));
+      Keyboard.dismiss();
     },
-    [appendAssistant, persistComplete, t],
-  );
+    // A mensagem de erro fica na UI e no toast; o runner deliberadamente não
+    // a injeta na thread enviada ao modelo.
+    onError: (msg) => {
+      showValidationToast(msg);
+      appendAssistant(msg);
+    },
+    onMissingApiUrl: () => setNoApiUrl(true),
+  });
+  const loading = runner.running;
+  const interviewDone = runner.done;
 
   /** Após nova mensagem ou quando termina o loading (resposta da IA), mostrar o fim do histórico. */
   useEffect(() => {
@@ -189,48 +102,21 @@ export default function EntrevistaIAScreen() {
     if (booted.current) return;
     booted.current = true;
 
-    const baseUrl = getApiBaseUrl();
-    if (!baseUrl) {
+    if (!getApiBaseUrl()) {
       setNoApiUrl(true);
       setMessages([
         { id: "m0", role: "assistant", text: t("entrevistaIa.intro") },
-        {
-          id: "m1",
-          role: "assistant",
-          text: t("entrevistaIa.f2ErrorNoApiUrl"),
-        },
+        { id: "m1", role: "assistant", text: t("entrevistaIa.f2ErrorNoApiUrl") },
       ]);
       return;
     }
-
-    const run = async () => {
-      setLoading(true);
-      threadRef.current = [{ role: "user", content: "[START]" }];
-      try {
-        const r = await runInterviewTurn({
-          baseUrl,
-          locale: i18n.language,
-          messages: threadRef.current,
-        });
-        threadRef.current = [
-          { role: "user", content: "[START]" },
-          { role: "assistant", content: r.assistant_message },
-        ];
-        setMessages([
-          { id: "a0", role: "assistant", text: r.assistant_message },
-        ]);
-        await handleTurnResult(r);
-      } catch (e) {
-        const userMsg = mapInterviewErrorToUserMessage(e, t);
-        showValidationToast(userMsg);
-        setMessages([{ id: "e0", role: "assistant", text: userMsg }]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    void run();
-  }, [handleTurnResult, i18n.language, t]);
+    if (cameFromVoiceFallback) {
+      setMessages([
+        { id: "fb", role: "assistant", text: t("entrevistaVoz.fallbackNotice") },
+      ]);
+    }
+    void runner.boot();
+  }, [cameFromVoiceFallback, runner, t]);
 
   const send = useCallback(async () => {
     const text = draft.trim();
@@ -239,51 +125,19 @@ export default function EntrevistaIAScreen() {
         showValidationToast(t("entrevistaIa.chatErrorEmpty"));
       return;
     }
-
-    const baseUrl = getApiBaseUrl();
-    if (!baseUrl) return;
-
     setDraft("");
     appendUser(text);
-    threadRef.current.push({ role: "user", content: text });
-
-    setLoading(true);
-    try {
-      const r = await runInterviewTurn({
-        baseUrl,
-        locale: i18n.language,
-        messages: threadRef.current,
-      });
-      threadRef.current.push({
-        role: "assistant",
-        content: r.assistant_message,
-      });
-      appendAssistant(r.assistant_message);
-      await handleTurnResult(r);
-    } catch (e) {
-      const userMsg = mapInterviewErrorToUserMessage(e, t);
-      showValidationToast(userMsg);
-      appendAssistant(userMsg);
-      threadRef.current.push({ role: "assistant", content: userMsg });
-    } finally {
-      setLoading(false);
-    }
-  }, [
-    appendAssistant,
-    appendUser,
-    draft,
-    handleTurnResult,
-    i18n.language,
-    interviewDone,
-    loading,
-    blockComposer,
-    t,
-  ]);
+    await runner.sendUserText(text);
+  }, [appendUser, blockComposer, draft, interviewDone, loading, runner, t]);
 
   const onSkip = useCallback(async () => {
     await setInterviewStatus('pending');
     goToDiscoverHome();
   }, [goToDiscoverHome]);
+
+  const onSwitchToVoice = useCallback(() => {
+    router.replace("/entrevista-voz");
+  }, []);
 
   const onOpenApp = useCallback(() => {
     goToDiscoverHome();

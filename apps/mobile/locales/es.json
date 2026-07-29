@@ -385,25 +385,12 @@
       }
     },
     "step4": {
-      "title": "¿Cuál es tu objetivo?",
-      "subtitle": "Networking, alianzas, contratación o nuevas oportunidades — elige qué buscas aquí.",
+      "title": "¿Cuál es tu principal objetivo dentro de la plataforma?",
       "goals": {
-        "networking": {
-          "name": "Hacer crecer tu red",
-          "description": "Conoce profesionales y fortalece tus contactos."
-        },
-        "partnerships": {
-          "name": "Alianzas y colaboración",
-          "description": "Encuentra personas y empresas para proyectos conjuntos."
-        },
-        "hiring": {
-          "name": "Contratar talento",
-          "description": "Encuentra candidatos alineados con lo que necesita tu empresa."
-        },
-        "opportunities": {
-          "name": "Nuevas oportunidades",
-          "description": "Explora roles, trabajo freelance y tu próximo paso."
-        }
+        "partnerships": "Alianzas de negocio",
+        "knowledge_sharing": "Compartir conocimiento",
+        "networking": "Ampliar tu red de contactos",
+        "learn_from_experts": "Aprender de especialistas"
       }
     },
     "step5": {
@@ -466,7 +453,7 @@
     "chatError401": "OpenAI rechazó la clave en el servidor (401). En apps/api/.env revisa OPENAI_API_KEY (sk-...), facturación/cuota; añade OPENAI_ORG_ID / OPENAI_PROJECT_ID si hace falta.",
     "chatError429": "Límite de velocidad de OpenAI alcanzado. Espera un momento o revisa la cuota/plan de tu cuenta.",
     "chatError502": "La API no obtuvo una respuesta válida de OpenAI. Reintenta o revisa los logs del servidor.",
-    "chatError503": "La API no está configurada para OpenAI (falta OPENAI_API_KEY en apps/api/.env).",
+    "chatError503": "La entrevista aún no está disponible. Inténtalo más tarde.",
     "chatErrorNetwork": "Error de red al llamar a la API. Comprueba EXPO_PUBLIC_API_URL (en un dispositivo real usa la IP de tu máquina, no localhost).",
     "chatErrorEmpty": "Escribe un mensaje antes de enviar.",
     "profileIncomplete": "Casi listo — faltan algunos campos estructurados (objetivos, momento, ámbito, presencial/remoto/híbrido o distancia). Responde una vez más dejándolo claro.",
@@ -512,7 +499,8 @@
         "radius_50km": "Toda la ciudad (hasta 50 km)",
         "radius_any": "Sin preferencia"
       }
-    }
+    },
+    "chatError504": "La respuesta tardó demasiado. Inténtalo de nuevo."
   },
   "modal": {
     "title": "Modal"
@@ -521,6 +509,12 @@
     "header": "¡Ups!",
     "title": "Esta pantalla no existe.",
     "link": "Ir al inicio"
+  },
+  "interviewIntro": {
+    "header": "Asistente TopLynk",
+    "lead": "¡Genial! Con base en tu objetivo y en las respuestas a continuación, podremos conectarte con los perfiles más interesantes.",
+    "format": "Las preguntas y respuestas son por audio, en formato de conversación. Suele durar entre 15 y 20 minutos.",
+    "cta": "Toca continuar para completar tu entrevista en la siguiente pantalla."
   },
   "deleteAccount": {
     "button": "Eliminar mi cuenta",
@@ -548,15 +542,42 @@
     "updated": "Última actualización: 17 de junio de 2026",
     "intro": "Estos Términos de Uso (el Acuerdo de Licencia de Usuario Final, o \"EULA\") rigen el uso de la app TopLynk. Al crear una cuenta, iniciar sesión o usar TopLynk, aceptas íntegramente estos términos. Si no estás de acuerdo, no uses la app.",
     "sections": [
-      { "heading": "1. Elegibilidad", "body": "Debes tener al menos 18 años y capacidad legal para aceptar este acuerdo. TopLynk es una app de conexiones profesionales." },
-      { "heading": "2. Tolerancia cero al contenido ofensivo y al abuso", "body": "No hay tolerancia para el contenido objetable ni para los usuarios abusivos. No puedes publicar, enviar ni compartir contenido ilegal, ofensivo, difamatorio, de acoso, odio, violencia, contenido sexual explícito, spam, fraude ni que infrinja derechos de terceros. Quien cometa abuso verá su contenido eliminado y su cuenta suspendida o cerrada." },
-      { "heading": "3. Denuncia de contenido", "body": "En cualquier perfil o conversación puedes denunciar contenido objetable tocando \"⋮\" y luego \"Denunciar\". Revisamos todas las denuncias y actuamos en un plazo de 24 horas, eliminando el contenido objetable y expulsando a los usuarios que lo publicaron." },
-      { "heading": "4. Bloqueo de usuarios", "body": "Puedes bloquear a cualquier usuario en cualquier momento desde su perfil o la conversación (\"⋮\" > \"Bloquear\"). Las personas bloqueadas dejan de verte, de aparecerte y ya no pueden enviarte mensajes. Gestiona la lista en Perfil > Cuentas bloqueadas." },
-      { "heading": "5. Conducta del usuario", "body": "Eres el único responsable del contenido que publicas y de tus interacciones. Aceptas tratar a los demás con respeto y no usar TopLynk con fines ilícitos." },
-      { "heading": "6. Moderación y cierre", "body": "Podemos eliminar contenido y suspender o cerrar cuentas que infrinjan estos términos, con o sin aviso previo, especialmente en casos de contenido objetable o abuso." },
-      { "heading": "7. Eliminación de cuenta", "body": "Puedes eliminar tu cuenta en cualquier momento en Perfil > Eliminar mi cuenta. La eliminación es permanente: quitamos tu contenido personal y anonimizamos tus datos." },
-      { "heading": "8. Privacidad", "body": "Tratamos tus datos según nuestra Política de Privacidad, disponible en toplynk.com.br/politica-de-privacidade." },
-      { "heading": "9. Limitación de responsabilidad", "body": "TopLynk se ofrece \"tal cual\". No nos responsabilizamos por la conducta de los usuarios, pero actuamos para mantener la comunidad segura conforme a estos términos." }
+      {
+        "heading": "1. Elegibilidad",
+        "body": "Debes tener al menos 18 años y capacidad legal para aceptar este acuerdo. TopLynk es una app de conexiones profesionales."
+      },
+      {
+        "heading": "2. Tolerancia cero al contenido ofensivo y al abuso",
+        "body": "No hay tolerancia para el contenido objetable ni para los usuarios abusivos. No puedes publicar, enviar ni compartir contenido ilegal, ofensivo, difamatorio, de acoso, odio, violencia, contenido sexual explícito, spam, fraude ni que infrinja derechos de terceros. Quien cometa abuso verá su contenido eliminado y su cuenta suspendida o cerrada."
+      },
+      {
+        "heading": "3. Denuncia de contenido",
+        "body": "En cualquier perfil o conversación puedes denunciar contenido objetable tocando \"⋮\" y luego \"Denunciar\". Revisamos todas las denuncias y actuamos en un plazo de 24 horas, eliminando el contenido objetable y expulsando a los usuarios que lo publicaron."
+      },
+      {
+        "heading": "4. Bloqueo de usuarios",
+        "body": "Puedes bloquear a cualquier usuario en cualquier momento desde su perfil o la conversación (\"⋮\" > \"Bloquear\"). Las personas bloqueadas dejan de verte, de aparecerte y ya no pueden enviarte mensajes. Gestiona la lista en Perfil > Cuentas bloqueadas."
+      },
+      {
+        "heading": "5. Conducta del usuario",
+        "body": "Eres el único responsable del contenido que publicas y de tus interacciones. Aceptas tratar a los demás con respeto y no usar TopLynk con fines ilícitos."
+      },
+      {
+        "heading": "6. Moderación y cierre",
+        "body": "Podemos eliminar contenido y suspender o cerrar cuentas que infrinjan estos términos, con o sin aviso previo, especialmente en casos de contenido objetable o abuso."
+      },
+      {
+        "heading": "7. Eliminación de cuenta",
+        "body": "Puedes eliminar tu cuenta en cualquier momento en Perfil > Eliminar mi cuenta. La eliminación es permanente: quitamos tu contenido personal y anonimizamos tus datos."
+      },
+      {
+        "heading": "8. Privacidad",
+        "body": "Tratamos tus datos según nuestra Política de Privacidad, disponible en toplynk.com.br/politica-de-privacidade."
+      },
+      {
+        "heading": "9. Limitación de responsabilidad",
+        "body": "TopLynk se ofrece \"tal cual\". No nos responsabilizamos por la conducta de los usuarios, pero actuamos para mantener la comunidad segura conforme a estos términos."
+      }
     ],
     "contact": "Dudas o soporte: guilhermemeneguelli@gmail.com."
   },
@@ -566,12 +587,57 @@
     "updated": "Última actualización: 17 de junio de 2026",
     "intro": "Esta Política describe qué datos recopila TopLynk, cómo los usamos y cómo puedes ejercer tus derechos. Al usar la app, aceptas este tratamiento.",
     "sections": [
-      { "heading": "1. Datos que recopilamos", "body": "Registro: nombre, correo y contraseña (almacenada cifrada). Perfil: rol, empresa, áreas, intereses, biografía y fotos que añades. Ubicación aproximada, cuando la activas, para sugerir conexiones cercanas. Uso: conversaciones, intereses (me gusta), denuncias y bloqueos, para operar y moderar el servicio." },
-      { "heading": "2. Cómo usamos tus datos", "body": "Para crear y mantener tu cuenta, sugerir conexiones relevantes, permitir conversaciones, enviar notificaciones y mantener la comunidad segura (moderación de denuncias y bloqueos)." },
-      { "heading": "3. Compartición", "body": "No vendemos tus datos personales. Solo compartimos con proveedores que hacen posible el servicio (por ejemplo, notificaciones push e infraestructura) y cuando lo exige la ley." },
-      { "heading": "4. Tus derechos y eliminación de cuenta", "body": "Puedes acceder y editar tus datos en la app. Puedes eliminar tu cuenta en cualquier momento en Perfil > Eliminar mi cuenta: la eliminación quita tu contenido personal y anonimiza tus datos de forma permanente." },
-      { "heading": "5. Seguridad", "body": "Aplicamos medidas técnicas y organizativas para proteger tus datos, incluida la transmisión cifrada y el almacenamiento seguro de contraseñas." }
+      {
+        "heading": "1. Datos que recopilamos",
+        "body": "Registro: nombre, correo y contraseña (almacenada cifrada). Perfil: rol, empresa, áreas, intereses, biografía y fotos que añades. Ubicación aproximada, cuando la activas, para sugerir conexiones cercanas. Uso: conversaciones, intereses (me gusta), denuncias y bloqueos, para operar y moderar el servicio."
+      },
+      {
+        "heading": "2. Cómo usamos tus datos",
+        "body": "Para crear y mantener tu cuenta, sugerir conexiones relevantes, permitir conversaciones, enviar notificaciones y mantener la comunidad segura (moderación de denuncias y bloqueos)."
+      },
+      {
+        "heading": "3. Compartición",
+        "body": "No vendemos tus datos personales. Solo compartimos con proveedores que hacen posible el servicio (por ejemplo, notificaciones push e infraestructura) y cuando lo exige la ley."
+      },
+      {
+        "heading": "4. Tus derechos y eliminación de cuenta",
+        "body": "Puedes acceder y editar tus datos en la app. Puedes eliminar tu cuenta en cualquier momento en Perfil > Eliminar mi cuenta: la eliminación quita tu contenido personal y anonimiza tus datos de forma permanente."
+      },
+      {
+        "heading": "5. Seguridad",
+        "body": "Aplicamos medidas técnicas y organizativas para proteger tus datos, incluida la transmisión cifrada y el almacenamiento seguro de contraseñas."
+      }
     ],
     "contact": "Para ejercer tus derechos o consultas: guilhermemeneguelli@gmail.com."
+  },
+  "entrevistaVoz": {
+    "title": "Entrevista por voz",
+    "stateListening": "Escuchando",
+    "stateWaiting": "Espera un momento...",
+    "stateAnalyzing": "Estamos analizando tus respuestas...",
+    "stateSpeaking": "El asistente está hablando",
+    "statePaused": "En pausa",
+    "confirmHint": "Toca ✓ cuando termines de hablar",
+    "permissionDenied": "Necesitamos el micrófono para la entrevista por voz. Puedes responder por texto.",
+    "micUnavailable": "No se pudo iniciar la grabación. Continúa por texto.",
+    "tooShort": "No logré escucharte. Habla un poco más.",
+    "transcribeEmpty": "No entendí. ¿Puedes repetir?",
+    "transcribeError": "No pude transcribir el audio. Inténtalo de nuevo.",
+    "switchToText": "Responder por texto",
+    "switchToVoice": "Responder por voz",
+    "fallbackNotice": "Sin acceso al micrófono: la entrevista continúa por texto.",
+    "a11yBack": "Volver",
+    "a11yMute": "Silenciar la voz del asistente",
+    "a11yUnmute": "Activar la voz del asistente",
+    "a11yPause": "Pausar",
+    "a11yResume": "Continuar",
+    "a11yConfirm": "Confirmar respuesta",
+    "a11yOrb": "Asistente TopLynk"
+  },
+  "interviewGate": {
+    "title": "Tu entrevista está incompleta",
+    "subtitle": "Crea tu perfil de forma inteligente",
+    "explanation": "La entrevista con IA permite que TopLynk sugiera profesionales y oportunidades alineadas con tus objetivos, intereses y preferencias de trabajo. ¡Complétala ahora para empezar a encontrar conexiones!",
+    "startNow": "Hacer la entrevista ahora"
   }
 }

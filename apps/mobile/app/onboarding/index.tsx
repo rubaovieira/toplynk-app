@@ -96,7 +96,11 @@ export default function OnboardingScreen() {
   const renderItem = useCallback(({ item }: ListRenderItemInfo<Slide>) => {
     return (
       <View style={[styles.slide, { width: SCREEN_W }]}>
-        <Image source={item.image} style={StyleSheet.absoluteFill} resizeMode="cover" />
+        <Image
+          source={item.image}
+          style={[StyleSheet.absoluteFill, { width: SCREEN_W, height: "100%" }]}
+          resizeMode="cover"
+        />
         <LinearGradient
           colors={["rgba(0,0,0,0.5)", "rgba(0,0,0,0.1)", "transparent"]}
           locations={[0, 0.5, 1]}
@@ -192,8 +196,11 @@ const styles = StyleSheet.create({
   list: {
     flex: 1,
   },
+  /** Item de lista horizontal: dimensões explícitas + clip. `flex: 1` aqui deixa a
+   *  largura ambígua no eixo principal e o fundo em `absoluteFill` sai da escala. */
   slide: {
-    flex: 1,
+    height: "100%",
+    overflow: "hidden",
   },
   topScrim: {
     position: "absolute",

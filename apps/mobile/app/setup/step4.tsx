@@ -1,5 +1,4 @@
 import { router } from "expo-router";
-import { Check } from "phosphor-react-native";
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -20,29 +19,28 @@ import { patchUserProfile } from "@/lib/users-api";
 import { showValidationToast } from "@/lib/validation-toast";
 
 const BG = "#121212";
-const CARD_BG = "#1E1E1E";
 const ACCENT = "#2196F3";
-const DESC_COLOR = "rgba(255,255,255,0.65)";
+const PILL_BORDER = "rgba(255,255,255,0.22)";
 
+/** Enviado como `primaryGoal` (string livre) e usado no embedding de matching. */
 const GOAL_IDS = [
-  "networking",
   "partnerships",
-  "hiring",
-  "opportunities",
+  "knowledge_sharing",
+  "networking",
+  "learn_from_experts",
 ] as const;
 type GoalId = (typeof GOAL_IDS)[number];
 
 export default function SetupStep4Screen() {
   const { t } = useTranslation();
-  const [goal, setGoal] = useState<GoalId>("networking");
+  const [goal, setGoal] = useState<GoalId>("partnerships");
   const [busy, setBusy] = useState(false);
 
   const items = useMemo(
     () =>
       GOAL_IDS.map((id) => ({
         id,
-        name: t(`setup.step4.goals.${id}.name`),
-        description: t(`setup.step4.goals.${id}.description`),
+        name: t(`setup.step4.goals.${id}`),
       })),
     [t],
   );
@@ -85,7 +83,6 @@ export default function SetupStep4Screen() {
             showsVerticalScrollIndicator={false}
           >
             <Text style={styles.title}>{t("setup.step4.title")}</Text>
-            <Text style={styles.subtitle}>{t("setup.step4.subtitle")}</Text>
 
             <View style={styles.list}>
               {items.map((item, index) => {
@@ -95,27 +92,22 @@ export default function SetupStep4Screen() {
                     key={item.id}
                     onPress={() => setGoal(item.id)}
                     style={({ pressed }) => [
-                      styles.card,
-                      index > 0 && styles.cardSpaced,
+                      styles.pill,
+                      index > 0 && styles.pillSpaced,
+                      selected && styles.pillSelected,
                       pressed && styles.pressed,
                     ]}
                     accessibilityRole="radio"
                     accessibilityState={{ selected }}
                   >
-                    <View style={styles.cardTextCol}>
-                      <Text style={styles.cardTitle}>{item.name}</Text>
-                      <Text style={styles.cardDesc}>{item.description}</Text>
-                    </View>
-                    <View
+                    <Text
                       style={[
-                        styles.radioOuter,
-                        selected && styles.radioOuterSelected,
+                        styles.pillText,
+                        selected && styles.pillTextSelected,
                       ]}
                     >
-                      {selected ? (
-                        <Check size={12} color="#fff" weight="bold" />
-                      ) : null}
-                    </View>
+                      {item.name}
+                    </Text>
                   </Pressable>
                 );
               })}
@@ -123,15 +115,6 @@ export default function SetupStep4Screen() {
           </ScrollView>
 
           <View style={styles.footerRow}>
-            <Pressable
-              onPress={onBack}
-              style={({ pressed }) => [
-                styles.ghostBtn,
-                pressed && styles.pressed,
-              ]}
-            >
-              <Text style={styles.ghostBtnText}>{t("setup.back")}</Text>
-            </Pressable>
             <Pressable
               onPress={() => void onContinue()}
               disabled={busy}
@@ -174,85 +157,49 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "#fff",
-    fontSize: 26,
-    fontWeight: "700",
-    marginBottom: 12,
-    textAlign: "left",
-  },
-  subtitle: {
-    color: "rgba(255,255,255,0.85)",
-    fontSize: 16,
-    lineHeight: 24,
-    marginBottom: 22,
-    textAlign: "left",
+    fontSize: 20,
+    fontWeight: "600",
+    lineHeight: 28,
+    marginBottom: 28,
+    textAlign: "center",
   },
   list: {
     paddingTop: 4,
   },
-  card: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: CARD_BG,
-    borderRadius: 12,
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-    gap: 14,
-  },
-  cardSpaced: {
-    marginTop: 12,
-  },
-  cardTextCol: {
-    flex: 1,
-    minWidth: 0,
-  },
-  cardTitle: {
-    color: "#fff",
-    fontSize: 17,
-    fontWeight: "700",
-    marginBottom: 6,
-  },
-  cardDesc: {
-    color: DESC_COLOR,
-    fontSize: 14,
-    lineHeight: 20,
-  },
-  radioOuter: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: ACCENT,
+  /** Pill de escolha única: sem descrição e sem radio — o próprio preenchimento indica a seleção. */
+  pill: {
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: PILL_BORDER,
+    backgroundColor: "transparent",
+    paddingVertical: 14,
+    paddingHorizontal: 20,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "transparent",
+    minHeight: 48,
   },
-  radioOuterSelected: {
+  pillSpaced: {
+    marginTop: 12,
+  },
+  pillSelected: {
     backgroundColor: ACCENT,
     borderColor: ACCENT,
   },
+  pillText: {
+    color: "#fff",
+    fontSize: 15,
+    fontWeight: "500",
+    textAlign: "center",
+  },
+  pillTextSelected: {
+    fontWeight: "700",
+  },
   footerRow: {
-    flexDirection: "row",
-    gap: 12,
     paddingHorizontal: 24,
     paddingTop: 12,
     paddingBottom: 8,
   },
-  ghostBtn: {
-    flex: 1,
-    borderRadius: 999,
-    borderWidth: 2,
-    borderColor: ACCENT,
-    paddingVertical: 14,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  ghostBtnText: {
-    color: ACCENT,
-    fontSize: 17,
-    fontWeight: "700",
-  },
   primaryBtn: {
-    flex: 1,
     backgroundColor: ACCENT,
     borderRadius: 999,
     paddingVertical: 16,

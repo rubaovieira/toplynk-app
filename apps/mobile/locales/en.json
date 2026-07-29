@@ -385,25 +385,12 @@
       }
     },
     "step4": {
-      "title": "What is your goal?",
-      "subtitle": "Networking, partnerships, hiring, or new opportunities — choose what you are looking for here.",
+      "title": "What is your main goal on the platform?",
       "goals": {
-        "networking": {
-          "name": "Grow your network",
-          "description": "Meet professionals and strengthen your connections."
-        },
-        "partnerships": {
-          "name": "Partnerships and collaboration",
-          "description": "Find people and companies for joint projects."
-        },
-        "hiring": {
-          "name": "Hire talent",
-          "description": "Find candidates aligned with what your company needs."
-        },
-        "opportunities": {
-          "name": "New opportunities",
-          "description": "Explore roles, freelance work, and your next step."
-        }
+        "partnerships": "Business partnerships",
+        "knowledge_sharing": "Share knowledge",
+        "networking": "Grow your network",
+        "learn_from_experts": "Learn from experts"
       }
     },
     "step5": {
@@ -466,7 +453,7 @@
     "chatError401": "OpenAI rejected the key on the server (401). In apps/api/.env check OPENAI_API_KEY (sk-...), billing/quota; add OPENAI_ORG_ID / OPENAI_PROJECT_ID if required.",
     "chatError429": "OpenAI rate limit reached. Wait a moment or check your account quota/plan.",
     "chatError502": "The API could not get a valid response from OpenAI. Retry or check server logs.",
-    "chatError503": "The API is not configured for OpenAI (missing OPENAI_API_KEY in apps/api/.env).",
+    "chatError503": "The interview is not available yet. Please try again later.",
     "chatErrorNetwork": "Network error calling the API. Check EXPO_PUBLIC_API_URL (on a real device use your machine's IP, not localhost).",
     "chatErrorEmpty": "Write a message before sending.",
     "profileIncomplete": "Almost there — some structured fields are still missing (goals, moment, area, in-person/remote/hybrid, or distance). Reply once more spelling those out clearly.",
@@ -512,7 +499,8 @@
         "radius_50km": "Whole city (up to 50 km)",
         "radius_any": "No preference"
       }
-    }
+    },
+    "chatError504": "The response took too long. Please try again."
   },
   "modal": {
     "title": "Modal"
@@ -521,6 +509,12 @@
     "header": "Oops!",
     "title": "This screen does not exist.",
     "link": "Go to home screen"
+  },
+  "interviewIntro": {
+    "header": "TopLynk Assistant",
+    "lead": "Great. Based on your goal and the answers that follow, we'll be able to connect you with the most interesting profiles!",
+    "format": "Questions and answers are spoken aloud, in a conversational format. It usually takes 15 to 20 minutes.",
+    "cta": "Tap continue to complete your interview on the next screen."
   },
   "interviewGate": {
     "title": "Your interview is incomplete",
@@ -554,15 +548,42 @@
     "updated": "Last updated: June 17, 2026",
     "intro": "These Terms of Use (the End User License Agreement, or \"EULA\") govern your use of the TopLynk app. By creating an account, signing in, or using TopLynk, you fully agree to these terms. If you do not agree, do not use the app.",
     "sections": [
-      { "heading": "1. Eligibility", "body": "You must be at least 18 years old and legally able to accept this agreement. TopLynk is a professional networking app." },
-      { "heading": "2. Zero tolerance for objectionable content and abuse", "body": "There is no tolerance for objectionable content or abusive users. You may not post, send, or share illegal, offensive, defamatory, harassing, hateful, violent, sexually explicit, spam, fraudulent content, or content that infringes others' rights. Anyone who engages in abuse will have their content removed and their account suspended or terminated." },
-      { "heading": "3. Reporting content", "body": "On any profile or chat you can report objectionable content by tapping \"⋮\" and then \"Report\". We review every report and act within 24 hours, removing objectionable content and ejecting the users who posted it." },
-      { "heading": "4. Blocking users", "body": "You can block any user at any time from their profile or chat (\"⋮\" > \"Block\"). Blocked people stop seeing you, stop appearing to you, and can no longer message you. Manage the list in Profile > Blocked accounts." },
-      { "heading": "5. User conduct", "body": "You are solely responsible for the content you post and your interactions. You agree to treat others with respect and not to use TopLynk for any unlawful purpose." },
-      { "heading": "6. Moderation and termination", "body": "We may remove content and suspend or terminate accounts that violate these terms, with or without notice, especially in cases of objectionable content or abuse." },
-      { "heading": "7. Account deletion", "body": "You can delete your account at any time in Profile > Delete my account. Deletion is permanent: we remove your personal content and anonymize your data." },
-      { "heading": "8. Privacy", "body": "We handle your data according to our Privacy Policy, available at toplynk.com.br/politica-de-privacidade." },
-      { "heading": "9. Disclaimer", "body": "TopLynk is provided \"as is\". We are not responsible for user conduct, but we act to keep the community safe under these terms." }
+      {
+        "heading": "1. Eligibility",
+        "body": "You must be at least 18 years old and legally able to accept this agreement. TopLynk is a professional networking app."
+      },
+      {
+        "heading": "2. Zero tolerance for objectionable content and abuse",
+        "body": "There is no tolerance for objectionable content or abusive users. You may not post, send, or share illegal, offensive, defamatory, harassing, hateful, violent, sexually explicit, spam, fraudulent content, or content that infringes others' rights. Anyone who engages in abuse will have their content removed and their account suspended or terminated."
+      },
+      {
+        "heading": "3. Reporting content",
+        "body": "On any profile or chat you can report objectionable content by tapping \"⋮\" and then \"Report\". We review every report and act within 24 hours, removing objectionable content and ejecting the users who posted it."
+      },
+      {
+        "heading": "4. Blocking users",
+        "body": "You can block any user at any time from their profile or chat (\"⋮\" > \"Block\"). Blocked people stop seeing you, stop appearing to you, and can no longer message you. Manage the list in Profile > Blocked accounts."
+      },
+      {
+        "heading": "5. User conduct",
+        "body": "You are solely responsible for the content you post and your interactions. You agree to treat others with respect and not to use TopLynk for any unlawful purpose."
+      },
+      {
+        "heading": "6. Moderation and termination",
+        "body": "We may remove content and suspend or terminate accounts that violate these terms, with or without notice, especially in cases of objectionable content or abuse."
+      },
+      {
+        "heading": "7. Account deletion",
+        "body": "You can delete your account at any time in Profile > Delete my account. Deletion is permanent: we remove your personal content and anonymize your data."
+      },
+      {
+        "heading": "8. Privacy",
+        "body": "We handle your data according to our Privacy Policy, available at toplynk.com.br/politica-de-privacidade."
+      },
+      {
+        "heading": "9. Disclaimer",
+        "body": "TopLynk is provided \"as is\". We are not responsible for user conduct, but we act to keep the community safe under these terms."
+      }
     ],
     "contact": "Questions or support: guilhermemeneguelli@gmail.com."
   },
@@ -572,12 +593,51 @@
     "updated": "Last updated: June 17, 2026",
     "intro": "This Policy describes what data TopLynk collects, how we use it, and how you can exercise your rights. By using the app, you agree to this processing.",
     "sections": [
-      { "heading": "1. Data we collect", "body": "Sign-up: name, email, and password (stored encrypted). Profile: role, company, areas, interests, bio, and photos you add. Approximate location, when you enable it, to suggest nearby connections. Usage: chats, interests (likes), reports, and blocks, to operate and moderate the service." },
-      { "heading": "2. How we use your data", "body": "To create and maintain your account, suggest relevant connections, enable chats, send notifications, and keep the community safe (moderating reports and blocks)." },
-      { "heading": "3. Sharing", "body": "We do not sell your personal data. We share only with providers that enable the service (for example, push notifications and infrastructure) and when required by law." },
-      { "heading": "4. Your rights and account deletion", "body": "You can access and edit your data in the app. You can delete your account at any time in Profile > Delete my account: deletion removes your personal content and anonymizes your data permanently." },
-      { "heading": "5. Security", "body": "We apply technical and organizational measures to protect your data, including encrypted transmission and secure password storage." }
+      {
+        "heading": "1. Data we collect",
+        "body": "Sign-up: name, email, and password (stored encrypted). Profile: role, company, areas, interests, bio, and photos you add. Approximate location, when you enable it, to suggest nearby connections. Usage: chats, interests (likes), reports, and blocks, to operate and moderate the service."
+      },
+      {
+        "heading": "2. How we use your data",
+        "body": "To create and maintain your account, suggest relevant connections, enable chats, send notifications, and keep the community safe (moderating reports and blocks)."
+      },
+      {
+        "heading": "3. Sharing",
+        "body": "We do not sell your personal data. We share only with providers that enable the service (for example, push notifications and infrastructure) and when required by law."
+      },
+      {
+        "heading": "4. Your rights and account deletion",
+        "body": "You can access and edit your data in the app. You can delete your account at any time in Profile > Delete my account: deletion removes your personal content and anonymizes your data permanently."
+      },
+      {
+        "heading": "5. Security",
+        "body": "We apply technical and organizational measures to protect your data, including encrypted transmission and secure password storage."
+      }
     ],
     "contact": "To exercise your rights or for questions: guilhermemeneguelli@gmail.com."
+  },
+  "entrevistaVoz": {
+    "title": "Voice interview",
+    "stateListening": "Listening",
+    "stateWaiting": "Just a moment...",
+    "stateAnalyzing": "Analysing your answers...",
+    "stateSpeaking": "Assistant speaking",
+    "statePaused": "Paused",
+    "confirmHint": "Tap ✓ when you finish speaking",
+    "permissionDenied": "We need the microphone for the voice interview. You can answer by text instead.",
+    "micUnavailable": "Recording could not start. Continue by text.",
+    "tooShort": "I couldn't hear that. Please speak a little longer.",
+    "transcribeEmpty": "I didn't catch that. Could you repeat?",
+    "transcribeError": "I couldn't transcribe the audio. Please try again.",
+    "switchToText": "Answer by text",
+    "switchToVoice": "Answer by voice",
+    "fallbackNotice": "No microphone access — the interview continues by text.",
+    "a11yBack": "Back",
+    "a11yMute": "Mute assistant voice",
+    "a11yUnmute": "Unmute assistant voice",
+    "a11yPause": "Pause",
+    "a11yResume": "Resume",
+    "a11yConfirm": "Confirm answer",
+    "a11yOrb": "TopLynk Assistant"
   }
 }

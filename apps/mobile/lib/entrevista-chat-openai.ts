@@ -20,6 +20,11 @@ export type InterviewTurnResult = {
   interview_complete: boolean;
   fase1: InterviewFase1Payload | null;
   fase2_items: InterviewFase2ItemPayload[] | null;
+  /** 0–100 estimado pelo modelo. Opcional: servidores antigos não enviam. */
+  progress?: number | null;
+  /** mp3 em base64 da fala do assistente; ausente quando mudo ou o TTS falhou. */
+  audioBase64?: string | null;
+  audioMimeType?: string | null;
 };
 
 const GOAL_IDS = [

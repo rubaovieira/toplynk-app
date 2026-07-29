@@ -5,7 +5,12 @@ const BASE = {
   'ngrok-skip-browser-warning': 'true',
 } as const;
 
-/** Registo, login e entrevista IA — sem Bearer. */
+/**
+ * Registo e login — sem Bearer.
+ *
+ * A entrevista IA saiu daqui: agora manda Bearer quando existe token, para o
+ * rate limit do servidor contar por usuário em vez de por IP.
+ */
 export function apiJsonHeadersPublic(extra?: Record<string, string>): Record<string, string> {
   return { ...BASE, ...extra };
 }
